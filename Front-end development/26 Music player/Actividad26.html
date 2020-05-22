@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="es-ES">
+<head>	
+	<meta charset="UTF-8">
+	<title>Actividad26</title>
+	<link rel="stylesheet" type="text/css" href="player.css">
+
+	<style>
+
+		body {
+			padding:0px;			
+			background-color:#232323;
+			display: flex;
+			position: fixed;
+			width: 100%;
+			height: 100%;
+		}
+
+		/*Contenedor de la carátula, el reproductor y la playlist*/
+		#wrapper {
+			margin: auto;
+			display: flex;
+			flex-direction: column;
+  			flex-wrap: wrap;
+ 			justify-content: center;
+ 			align-items: center;
+		 	/*background-color: green;*/
+		}
+		
+		/*Contenedor del reproductor de música*/
+		#player	{
+			border-radius: 5px;
+			background-color: #101010;
+			padding: 6px 10px 35px 10px;
+			box-sizing: border-box;
+			height: 38px;
+		}
+	
+		/*Iconos del reproductor*/
+		input[type="image"] {
+			float:left;
+			height: 20px;
+			margin-left: 7px;
+			margin-right: 5px;
+			margin-top: 5px;
+		}
+
+		/*Icono del volumen*/
+		#vol_img {
+			float: left;
+			margin-left: 10px;			
+			width:20px;
+			margin-top: 5px;
+		}
+		
+		/*Contenedor de la barra de volumen*/
+		#change_vol-container {
+			float:left;
+			/*background-color: green;*/
+			margin-top: 3px;
+			margin-left: 7px;
+		}
+		
+		/*Barra de volumen*/
+		#change_vol {
+			margin-right: 11px;
+			width: 100px;
+			-webkit-appearance: none;
+			appearance: none;
+			background: black;
+			height: 5px;
+			border-radius: 5px;
+		}
+		
+		/*Selector de la barra de volumen*/
+		#change_vol::-webkit-slider-thumb {
+			-webkit-appearance: none;
+		  	appearance: none;
+		  	width: 10px;
+		  	height: 20px;
+		  	background: white;
+		  	border-radius: 5px;
+		}
+
+		/*Quitamos el recuadro azul por defecto al seleccionar*/
+		input:focus {outline:0;}
+
+		/*Contenedor de la barra de progreso*/
+		#seekbar-container {
+			float:left;
+			/*background-color: green;*/
+			margin-top: 3px;
+			margin-right: 10px;
+			margin-left: 10px;
+		}
+
+		/*Barra de progreso de la canción*/
+		#seekbar {
+			-webkit-appearance: none;
+			appearance: none;
+			width: 260px;	
+			height: 5px;
+			background: rgb(0,0,0);
+			border-radius: 5px;
+		}
+
+		/*Al reducirse la resolución, la barra de progreso desaparece para dejar espacio*/
+		@media only screen and (max-width: 767px) {
+		    #seekbar-container {
+		    	position: absolute;
+				opacity: 0;
+			}
+		}
+
+		/*Selector de la barra de progreso*/
+		#seekbar::-webkit-slider-thumb {
+			position: relative;
+			-webkit-appearance: none;
+			appearance: none;
+			width: 20px;
+			height: 20px;
+			background: white;
+			cursor: pointer;
+			border-radius: 20px;
+		}
+
+		/*Clase general para la barra que va llenándose a la par de la de progreso*/
+		.fill-bar{
+			position: absolute;
+			width: 0px;
+			height: 5px;
+			margin-left: 2px;
+			margin-top: -9px;
+			background: white;
+			pointer-events: none;
+			border-radius: 5px;
+		}
+
+		/*Barra que va llenándose junto a la de volumen*/
+		#fill-bar_vol{
+			margin-left: 0px;
+		}
+		
+		/*Contenedor de la carátula*/
+		#image-container {
+			background-color: rgba(0,0,0,0.15);
+			width: 100%;
+			height: 200px;
+			margin-bottom: 20px;
+			overflow: hidden;
+			border-radius: 5px;
+		}
+
+		/*Contenedor de la playlist*/
+		#playlist-container {
+			background-color: rgba(0,0,0,0.15);
+			width: 100%;
+			margin-top: 20px;
+			border-radius: 5px;
+		}
+
+		/*Clase general para las canciones de la playlist*/
+		.track {
+			display: flex;
+			background-color: blue;
+			width: 99%;
+			height: 80px;
+			margin: 0.5%;
+			border-radius: 5px;
+			background-color: rgba(0,0,0,0.35);
+			cursor: default;
+		}
+
+		/*Contenedor del texto final*/
+		.text-container {
+			position: relative;
+			margin-left: 70px;
+			top: 20px;
+			width: 350px;
+			/*background-color: blue;*/
+		}
+
+		/*Formato general para los textos p*/
+		p {
+			color: white;
+			margin: 0;
+			font-family: Sans-serif;
+		}
+
+		/*Formato del título de las canciones*/
+		.title {
+			position: relative;
+			font-size: 18px;
+		}
+
+		/*Formato de el artista de las canciones*/
+		.subtitle {
+			position: relative;
+			font-size: 14px;
+			top: 5px;
+			opacity: 0.4;
+		}
+
+		/*Formato del número de la canción*/
+		.number {
+			position: relative;
+			left: 34px;
+			top: 30px;
+			font-size: 18px;
+			opacity: 0.4;
+		}
+
+		/*Formato de la duración de la canción*/
+		.duration {
+			position: relative;
+			left: 100px;
+			top: 30px;
+			opacity: 0.4;
+		}
+
+		/*Imagen de la carátula*/
+		#image {
+			width: 614px;
+			/*filter: blur(10px);*/
+		}
+
+		/*Al reducirse la resolución se readaptan varios elementos*/
+		@media only screen and (max-width: 767px) {
+		   	#image {
+				width: 332px;
+			}
+			#image-container {
+				width: 332px;			
+				height: 106px;
+			}			
+			#seekbar-container {
+				pointer-events: none;
+				opacity: 0;
+			}
+			.duration {
+				opacity: 0;
+			}
+			.text-container {
+				width: 200px;
+			}
+		}
+
+		/*Formato del texto final*/
+		.final-subtitle {
+			font-size: 11px;
+			opacity: 0.2;
+		}
+
+		/*Contenedor del texto final*/
+		#final-subtitle-container {
+			margin-top: 20px;
+			text-align: center;
+		}
+
+	</style>
+
+	<script>
+		
+		// Variable para guardar el elemento audio
+		var player;
+		// Array de booleanos para saber que canción está seleccionada
+		var songSelected = [true, false, false, false];
+		// Booleano para establecer que el reproductor está en marcha
+		var isPlaying = false;
+		// Booleano para saber si la barra de progreso está presionada
+		var seekbarPressed = false;
+
+		// Cuando el documento está cargado
+		document.addEventListener("DOMContentLoaded", function() {
+			startplayer();
+		}, false);
+
+		// Configuración inicial al cargar el reproductor
+		function startplayer() {
+			player = document.getElementById('music_player');
+			player.controls = false;
+			change_vol();
+			songSelected[0] = true;
+			document.getElementById("0").style.backgroundColor = "rgba(255,255,255,0.1)";
+			document.getElementById("pause_button").style.opacity = 0.1;
+			document.getElementById("stop_button").style.opacity = 0.1;
+			document.getElementById("prev_button").style.opacity = 0.1;
+			window.setTimeout (function() {
+				document.getElementById("seekbar").max = player.duration;
+			}, 500);
+		}
+
+		// Iniciar el reproductor
+		function play_aud() {
+
+			document.getElementById("seekbar").max = player.duration;
+			player.play();				
+			if(!isPlaying) {
+				document.getElementById("pause_button").style.opacity = 1;
+				document.getElementById("stop_button").style.opacity = 1;
+				document.getElementById("play_button").style.opacity = 0.1;
+			}
+			isPlaying = true;
+		}
+		
+		// Pausar el reproductor
+		function pause_aud() {
+			player.pause();				
+			if(isPlaying) {
+				document.getElementById("pause_button").style.opacity = 0.1;
+				document.getElementById("play_button").style.opacity = 1;
+			}
+			isPlaying = false;			
+		}
+
+		// Parar el reproductor
+		function stop_aud() {
+			player.pause();
+			player.currentTime = 0;
+			document.getElementById("seekbar").value = 0;
+			if(isPlaying) {
+				document.getElementById("pause_button").style.opacity = 0.1;					
+				document.getElementById("play_button").style.opacity = 1;
+			}
+			document.getElementById("stop_button").style.opacity = 0.1;
+			isPlaying = false;
+		}
+
+		// Cambiar volumen
+		function change_vol() {
+			player.volume = document.getElementById("change_vol").value;
+			document.getElementById("fill-bar_vol").style.width = document.getElementById("change_vol").value*95 + 5 + "px";
+		}
+
+		// Cambiar progreso
+		function change_progress() {
+			player.currentTime = document.getElementById("seekbar").value;		
+		}
+
+		// Cuando se pulsa la barra de progreso
+		function click_pressed() {
+			seekbarPressed = true;				
+		}
+
+		// Cuando deja de pulsarse la barra de progreso
+		function click_not_pressed() {
+			seekbarPressed = false;
+		}
+
+		// Cada vez que avanza un segundo en la canción
+		function actualizar_ticks() {
+
+			document.getElementById("seekbar").value = player.currentTime;
+			var ubicacionDelSelector = ((player.currentTime * 260) / player.duration);
+			
+			// Arreglo cuando el selector está cerca del inicio
+			if(ubicacionDelSelector < 50) {
+				document.getElementById("fill-bar_seekbar").style.width = ubicacionDelSelector + 3 + "px";
+			} else {
+				document.getElementById("fill-bar_seekbar").style.width = (ubicacionDelSelector - (1)) + "px";
+			}
+
+			// Arreglo cuando el selector llega al final
+			if(ubicacionDelSelector > 259) {
+
+				if(!seekbarPressed && isPlaying) {
+					next_aud();
+				}					
+			}
+		}
+
+		// Cuando seleccionas una canción
+		function select($id) {
+
+			// Retiramos el focus que puedan tener los inputs
+			deseleccionar();
+
+			if(songSelected[$id] == false) {
+				
+				// Cambiamos el booleano en el array a true para indicar que la canción está seleccionada
+				songSelected[$id] = true;
+
+				// Se ilumina el color del contenedor de la canción
+				document.getElementById($id).style.backgroundColor = "rgba(255,255,255,0.1)";
+
+				// Se oscurece el contenedor de la canción que puediese estar previamente seleccionada
+				for (var i = 0; i < songSelected.length; i++) {
+					if(i != $id) {
+						songSelected[i] = false;
+						document.getElementById(i).style.backgroundColor = "rgba(0,0,0,0.35)";
+					}
+				}
+
+				// Cambiamos la carátula
+				document.getElementById("image").src = "images/" + $id + ".jpg";
+				// Cambiamos la canción seleccionada
+				player.src = "music/" + $id + ".mp3";
+				// Se pone a 0 la barra que va rellenándose a la par de la de progreso
+				document.getElementById("fill-bar_seekbar").style.width = 0;
+
+				// Si el reproductor está activado sigue reproduciéndose la canción seleccionada					
+				if(isPlaying) {						
+					player.play();
+				}
+
+				// Establecemos el máximo de la barra de progreso con la duración de la nueva canción seleccionada
+				window.setTimeout (function() {
+					document.getElementById("seekbar").max = player.duration;
+				}, 100);
+
+				// Cambiamos la opacidad de los iconos según podamos interactuar con ellos
+				if($id == 0) {
+					document.getElementById("prev_button").style.opacity = 0.1;
+					document.getElementById("next_button").style.opacity = 1;
+				} else {
+					document.getElementById("next_button").style.opacity = 1;
+				}
+				if($id == 3) {
+					document.getElementById("next_button").style.opacity = 0.1;
+					document.getElementById("prev_button").style.opacity = 1;
+				} else {
+					if($id != 0) {
+						document.getElementById("prev_button").style.opacity = 1;
+					}						
+				}
+			}				
+		}
+
+		// Cuando pasamos el mouse sobre el contenedor de una canción, se ilumina
+		function hoverIn($id){
+			if(songSelected[$id] == false) {
+				document.getElementById($id).style.backgroundColor = "rgba(255,255,255,0.1)";
+			}
+		}
+		
+		// Cuando sacamos el mouse del contenedor de una canción, se oscurece
+		function hoverOut($id) {
+			if(songSelected[$id] == false) {
+				document.getElementById($id).style.backgroundColor = "rgba(0,0,0,0.35)";
+			}
+		}
+
+		// Al pasar a la siguiente canción
+		function prev_aud() {
+
+			var index;
+
+			for (var i = 0; i < songSelected.length; i++) {
+				if(songSelected[i]) {
+					index = i;
+				}
+			}
+
+			if(index > 0) {
+				select(index-1);
+			}
+
+			if(!isPlaying) {
+				document.getElementById("stop_button").style.opacity = 0.1;
+			}
+		}
+
+		// Al pasar a la canción anterior
+		function next_aud() {
+
+			var index;
+
+			for (var i = 0; i < songSelected.length; i++) {
+				if(songSelected[i]) {
+					index = i;
+				}
+			}
+
+			if(index < songSelected.length) {
+				select(index+1);
+				document.getElementById("prev_button").style.opacity = 1;
+			}
+
+			if(!isPlaying) {
+				document.getElementById("stop_button").style.opacity = 0.1;
+			}			
+		}
+
+		// Atajos de teclado para controlar el reproductor y navegar por la playlist
+		function upDown() {
+
+		  var x = event.keyCode;
+
+		  window.setTimeout (function() {
+			  if(x == 38) {
+				prev_aud();					
+			  }
+			  if(x == 40) {	  	
+				next_aud();
+			  }
+			  if(x == 13 || x == 32) {
+			  	if(isPlaying) {
+			  		pause_aud();
+			  	} else {
+			  		play_aud();
+			  	}			  	
+			  }
+		  }, 10); 
+		}
+
+		// Retira el focus
+		function deseleccionar(){
+			var tmp = document.createElement("input");
+			document.body.appendChild(tmp);
+			tmp.focus();
+			document.body.removeChild(tmp);
+		}
+
+	</script>
+
+</head>
+
+	<body onkeydown="upDown()">
+	
+		<!-- Contenedor de la carátula, el reproductor y la playlist -->
+		<div id="wrapper">
+
+			<!-- Contenedor de la carátula -->
+			<div id="image-container">
+				<img id="image" src="images/0.jpg" alt="">
+				</img>
+			</div>
+			
+			<!-- Contenedor del reproductor de música -->
+			<div id='player'>
+				
+				<!-- Audio que contendrá el recurso .mp3 -->
+				<audio id="music_player" ontimeupdate="actualizar_ticks()">
+					<source src="music/0.mp3"/>
+				</audio>
+
+				<!-- Iconos del reproductor -->
+				<input type="image" src="images/previa.png" onclick="prev_aud()" id="prev_button">
+				<input type="image" src="images/play.png" onclick="play_aud()" id="play_button">
+				<input type="image" src="images/pause.png" onclick="pause_aud()" id="pause_button">
+				<input type="image" src="images/stop.png" onclick="stop_aud()" id="stop_button">
+				<input type="image" src="images/siguiente.png" onclick="next_aud()" id="next_button">
+
+				<!-- Barra de progreso -->
+				<div id="seekbar-container">
+					<input id="seekbar" class="opacity" type="range" step="1" min="0" value="0" oninput="change_progress()" onmousedown="click_pressed()" onmouseup="click_not_pressed()">
+					<div id="fill-bar_seekbar" class="fill-bar"></div>
+				</div>
+
+				<!-- Icono del volumen -->
+				<img src="images/volume.png" id="vol_img" class="opacity">
+
+				<!-- Barra del volumen -->
+				<div id="change_vol-container">
+					<input id="change_vol" class="opacity" type="range" oninput="change_vol()" step="0.05" min="0" max="1" value="0.25">
+					<div id="fill-bar_vol" class="fill-bar"></div>
+				</div>			
+			</div>
+			
+			<!-- Contenedor de la playlist -->
+			<div id="playlist-container">
+				
+				<!-- Canción 1 -->
+				<div class="track" id="0" onclick="select('0')" onmouseover="hoverIn('0')" onmouseout="hoverOut('0')">
+					<p class="number">1</p>
+					<div class="text-container">
+						<p class="title">Snow (Hey Oh)</p>
+						<p class="subtitle">Red Hot Chili Peppers</p>
+					</div>
+					<p class="duration">5:34</p>			
+				</div>
+				
+				<!-- Canción 2 -->
+				<div class="track" id="1" onclick="select('1')" onmouseover="hoverIn('1')" onmouseout="hoverOut('1')">
+					<p class="number">2</p>
+					<div class="text-container">
+						<p class="title">All We Know</p>
+						<p class="subtitle">The Chainsmokers</p>
+					</div>
+					<p class="duration">3:14</p>
+				</div>
+
+				<!-- Canción 3 -->
+				<div class="track" id="2" onclick="select('2')" onmouseover="hoverIn('2')" onmouseout="hoverOut('2')">
+					<p class="number">3</p>
+					<div class="text-container">
+						<p class="title">Hijo de Hombre</p>
+						<p class="subtitle">Phill Collins</p>
+					</div>
+					<p class="duration">2:45</p>			
+				</div>
+
+				<!-- Canción 4 -->
+				<div class="track" id="3" onclick="select('3')" onmouseover="hoverIn('3')" onmouseout="hoverOut('3')">
+					<p class="number">4</p>
+					<div class="text-container">
+						<p class="title">Iñundik Iñoare</p>
+						<p class="subtitle">Huntza</p>
+					</div>
+					<p class="duration">2:39</p>			
+				</div>
+				
+			</div>
+
+			<!-- Contenedor del texto final -->
+			<div id="final-subtitle-container">
+				<p class="final-subtitle">Puede navegar por la playlist mediante las teclas de dirección (↓ ↑)</p>
+				<p class="final-subtitle">y controlar la reproducción pulsando enter (↵) o espacio</p>
+			</div>		
+
+		</div>
+		
+	</body>
+</html>
