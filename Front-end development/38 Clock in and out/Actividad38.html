@@ -1,0 +1,967 @@
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Actividad 38
+
+Se trata de realizar una aplicación en JavaScript para 
+realizar un control de acceso a la fábrica.
+
+Lo que se pretende es tener un programa activo que controle 
+las personas que han entrado o permanecen en su puesto de trabajo.
+
+Para ello, se va a utilizar el método de almacenamiento 
+Web SQL visto en el tema 6.
+
+Solo se van a controlar las entradas al puesto de trabajo; 
+no será necesario nada más que dos “botones”, uno de alta 
+(entrada a la fábrica) y otro para listar las personas que 
+han venido a trabajar.
+
+Los datos a recoger, así como la forma de almacenarlos por 
+un campo clave son decisiones del programador/programadora.
+
+Ruego que se cuide el diseño de la interfaz de forma que 
+sirva de carta de presentación por si quisieran justificar 
+aplicaciones hechas por vosotros en una entrevista de trabajo.
+
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<!DOCTYPE html>
+<!-- Idioma español -->
+<html lang="es-ES">
+<head>
+
+	<meta charset="UTF-8">
+	<title>Actividad38</title>
+
+	<!-- Librería jQuery -->
+	<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+
+	<!-- Validation.js -->
+	<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.1/dist/jquery.validate.min.js"></script>
+
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css"/>
+
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	
+	<style>
+
+		/*Aplicamos a todo*/
+		* {
+			margin: 0;
+			padding: 0;
+			overflow: hidden;
+			font-family: Helvetica;
+			transition: .1s;
+			box-sizing: border-box;		
+		}
+		
+		/*Página HTML*/
+		html {
+			background-color: rgba(26,26,26);
+		}
+
+		/*Clase para centrar Divs*/
+		.center {
+			position: relative;
+		  	display: flex;
+		  	flex-direction: column;
+		  	flex-wrap: wrap;
+		  	vertical-align: middle;
+		  	align-items: center;
+		  	justify-content: center;  
+		  	margin: auto;
+		}
+
+		/*Fondo*/
+		.background {
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			height: 100%;
+			width: 100%;
+			background: linear-gradient(to bottom, rgba(136,167,255), rgba(100,130,255));
+			z-index: 0;
+		}
+
+		/*Contenedor Flexbox en columna*/
+		.wrapper {
+			margin: auto;
+			display: flex;
+			flex-direction: column;
+			flex-wrap: wrap;
+			justify-content: center;
+			align-items: center;
+			width: 100%;
+		}
+		
+		/*Contenedor Flexbox en fila*/
+		.wrapper_row {
+			margin: auto;
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+			justify-content: center;
+			align-items: center;
+			width: 100%;
+		}
+
+		/*Contenedor principal*/
+		.main-container {
+			position: absolute;		
+			width: 100%;
+			height: 100vh;
+			display: flex;
+			overflow: auto;
+		}
+
+		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+		
+		/*Icono de menú de arriba a la izquierda*/
+		.menu-icon {
+			position: fixed;
+			color: white;
+			top: 20px;
+			left: 20px;
+			cursor: pointer;
+			font-size: 20px;
+			z-index: 200;
+		}
+		.menu-icon:active {
+			transform: scale(.95);
+		}
+		
+		/*Menú izquierdo que almacena los trabajadores que han fichado*/
+		.menu {
+			position: fixed;
+			width: 350px;
+			height: 100vh;
+			background-color: white;
+			transition: .24s;
+			transform: translateX(-350px);
+			z-index: 150;
+		}
+		
+		/*Al mostrarse el menú*/
+		.menu_shown {
+			transform: translateX(0);
+			box-shadow: 0 0px 2px 2px rgba(0, 0, 0, 0.1);
+		}
+		
+		/*Franja superior del menú*/
+		.menu_top {
+			width: 100%;
+			height: 58px;
+			background-color: rgb(62,62,62);
+			text-align: right;
+		}
+		
+		/*Título del menú ("Trabajadores")*/
+		.menu-title {
+			margin-right: 30px;
+			opacity: 0;
+			transition: .1s;
+		}
+		.menu-title p {
+			color: rgba(255,255,255,.94);
+		}		
+		/*Al mostrarse el menú*/
+		.show {
+			opacity: 1;
+		}
+		
+		/*Cada uno de los contenedores que recogen el trabajador que ha fichado*/
+		.menu_element {
+			position: relative;
+			width: 100%;
+			height: 58px;
+			border-bottom: 1px solid rgba(0,0,0,.08);
+			margin: auto;
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+			justify-content: left;
+			align-items: flex-start;
+		}
+		
+		/*Contenedor del icono del trabajador*/
+		.element-icon-container {
+		  	width: 20%;
+		  	height: 100%;
+		  	color: rgba(0,0,0,.1);
+		}
+
+		/*Contenedor del nombre del trabajador*/
+		.element-name-container {
+			width: 55%;
+			height: 100%;
+		}
+
+		/*Contenedor de las hora en la que ha fichado el trabajador*/
+		.element-time-container {
+			width: 25%;
+			height: 100%;
+		}
+
+		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+		
+		/*Mensaje de información superior (aparece al fichar)*/
+		.info-message {
+			color: white;
+			transform: translateY(5px);
+			opacity: 0;
+			transition: .3s;
+		}
+		
+		/*Al aparecer el mensaje de información*/
+		.info-message_on {
+			transform: translateY(-15px);
+			opacity: 1;
+		}
+		
+		/*Tarjeta*/
+		.card {
+			width: 350px;
+			min-width: 300px;
+			background: white;
+			margin: 50px;
+			margin-top: 0;
+			padding: 0px 30px 40px 30px;
+			border-radius: 5px;
+			box-shadow: 0 5px 15px 8px rgba(0, 0, 0, 0.1);
+			text-align: left;
+		}
+		
+		/*Contenedor de la franja luminosa superior*/
+		.top-light-container {
+			width: 100%;
+			margin-bottom: 15px;	
+			overflow: visible;
+		}
+
+		/*Franja luminosa superior (indica si el trabajador ha fichado)*/
+		.top-light {
+			width: 60%;
+			height: 14px;
+			background-color: rgba(0,0,0,.1);
+			border-radius: 0 0 8px 8px;
+			transition: .3s;
+		}
+
+		/*Luz al fichar*/
+		.login {
+			background-color: rgb(149, 239, 160);
+		}
+		
+		/*Luz al salir*/
+		.logout {
+			background-color: rgb(255, 201, 103);
+		}
+		
+		/*Luz al no ser admitido*/
+		.log-error {
+			background-color: rgb(255, 128, 128);
+		}
+		
+		/*Contenedor del teclado para introducir el pin*/
+		.keypad-container {
+			margin-top: 10px;
+			user-select: none;
+			margin-bottom: 5px;
+		}
+		
+		/*Tecla numérica del teclado*/
+		.key {
+			width: 46px;
+			height: 46px;
+			margin: 6px;
+			border: 1px solid rgba(0,0,0,.2);
+			border-radius: 4px;
+			cursor: pointer;
+			color: rgba(0,0,0,.7);
+			font-size: 26px;
+			font-weight: bold;
+			pointer-events: auto;
+		}
+		.key:hover {
+			border: 1px solid rgba(0,0,0,.0);
+			background-color: rgba(0,0,0,.8);
+			color: rgba(255,255,255,1);
+		}
+		.key:active {
+			transform: scale(.95);
+		}
+		
+		/*Clase para deshabilitar las teclas numéricas*/
+		.key-disabled {
+			border: 1px solid rgba(0,0,0,.1);
+			color: rgba(0,0,0,.2);
+			pointer-events: none;
+		}
+
+		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+		/*Texto*/
+		p {
+			margin-top: 20px;
+			margin-bottom: 12px;
+			color: rgba(0,0,0,.8);
+			user-select: none;
+		}
+		
+		/*Contenedor de los campos*/
+		.field-container {
+			user-select: none;
+		}
+
+		/*Campos*/
+		.field {
+			width: 100%;
+			height: 38px;
+			border-radius: 4px;
+			padding-left: 15px;
+			padding-right: 15px;
+			margin-bottom: 4px;
+			border: 1px solid rgba(0,0,0,.2);
+			outline: none;
+			background-color: transparent;
+			color: rgba(0,0,0,1);
+		}
+		.field:focus {
+			border: 1px solid rgba(75,86,231,1);
+		}
+		
+		/*Campo del pin*/
+		#key {
+			pointer-events: none;
+			text-align: center;
+			background-color: transparent;
+			font-size: 48px;
+			font-weight: bold;
+			border: none;
+			color: transparent;
+ 			text-shadow: 0 0 0 rgba(0,0,0,1);
+		}
+		
+		/*Formato del texto que aparece antes de introducir algo en el campo*/
+		::placeholder {
+			font-size: 24px;
+			transform: translateY(-10px);
+			color: rgba(0,0,0,.1);
+			user-select: none;
+			text-shadow: 0 0 0 rgba(0,0,0,.1);
+		}
+		
+		/*Icono para borrar cifras del pin*/
+		.backspace {
+			font-size: 24px;
+			position: absolute;
+			color: rgba(0,0,0,.2);
+			pointer-events: none;
+			cursor: pointer;
+			transform: translate(10.2em, 7px);
+		}
+		.backspace:active {
+			transform: translate(10.2em, 7px) scale(.93);
+		}
+
+		/*Al activarse el icono de borrar*/
+		.element-enabled {
+			color: rgba(0,0,0,.8);
+			pointer-events: auto;
+		}		
+
+		/*Contenedor del botón del formulario*/
+		.button-container {
+			margin: auto;
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+			justify-content: center;
+			align-items: center;
+			width: 100%;
+			width: 100%;
+			text-align: right;
+		}
+		
+		/*Botón del formulario*/
+		.form-button {
+			background: rgb(112, 142, 255);
+			color: white;
+			border-style: none;
+			padding: 13px 45px 13px 45px;
+			border-radius: 3px;
+			margin-top: 20px;
+			font-size: 16px;
+			cursor: pointer;
+			outline: none;
+			width: 100%;
+			user-select: none;
+		}
+		.form-button:hover {
+			background: rgb(92, 122, 255);
+		}
+		
+		/*Corrección de la posición del icono del botón del formulario*/
+		.font-icon {
+			transform: translateY(2px);
+		}
+
+		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+		/*Formato con el que indicaremos que se han introducido datos correctos/incorectos*/
+
+		/*Iconos de los campos de texto*/
+		.icon {
+			position: absolute;
+			transform: translate(210px, 10px);			
+			font-size: 17px;
+			display: none;
+		}
+			.check {
+				color: rgba(80,200,80,.75);
+			}
+			.times {
+				color: rgba(255,127,127,.95);
+			}
+		/*En caso de que introduzcamos un valor incorrecto en un campo de texto*/
+		.field.error {
+			background-color: rgba(255,0,0,0.01);
+			border: 1px solid rgba(255,127,127,.9);
+		}
+		/*Mensajes de error de Validate.js*/
+		label.error {
+			color: rgba(255, 80, 80, .8);
+			width: 360px;
+			font-size: 14px;
+			text-align: left;
+		}
+		
+	</style>
+	
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+	<script>
+		
+		// Cuando el documento esté cargado
+		$(document).ready(function() {
+
+			// Comenzamos ubicando el foco sobre el campo del DNI
+			$("#text").focus();
+
+			/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+			// Generamos la base de datos
+			var ddbb = openDatabase('my_DB', '1.0', 'Base de datos para la actividad 38', 1*1024*1024);
+
+			// Creamos la tabla de trabajadores y añadimos varios registros
+			ddbb.transaction(function(ssql) {
+				ssql.executeSql('CREATE TABLE IF NOT EXISTS trabajadores (dni VARCHAR (9) PRIMARY KEY NOT NULL, name VARCHAR (64), pin VARCHAR (4))');
+
+				// Trabajadores
+				insertInto(ssql, "79048512L", "Gaspar Clavell", "1234");
+				insertInto(ssql, "00000001R", "John Doe", "0000");
+				insertInto(ssql, "89236460W", "Joe Rogan", "0101");
+				insertInto(ssql, "05512354J", "Dave Rubin", "1010");
+				insertInto(ssql, "84722399J", "Steven Crowder", "1212");
+				insertInto(ssql, "71470968D", "Jordan Peterson", "2121");
+				insertInto(ssql, "96667723B", "Ben Shapiro", "1313");
+				insertInto(ssql, "71235916V", "Carl Benjamin", "3131");
+			});
+
+			// Orden para eliminar la tabla de trabajadores
+			/*ddbb.transaction(function(ssql) {
+				ssql.executeSql('DROP TABLE trabajadores');
+			});*/
+
+			// Función para insertar nuevos trabajadores
+			function insertInto(ssql, dni, name, pin) {
+				ssql.executeSql('INSERT INTO trabajadores (dni, name, pin) VALUES ("' + dni + '", "' + name + '", "' + pin + '")');
+			}
+
+			/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+			// Generamos las teclas para introducir el pin
+			generateKeyPanel();
+
+			// Función para distribuir aleatoriamente las teclas numéricas del teclado del pin
+			function generateKeyPanel() {
+
+				// Array para llevar un recuento de los números ya generados
+				var arrayNumbers = [];
+
+				// For para recorrer las 10 teclas
+				for (var i = 0; i < 10; i++) {
+
+					// Variable para guardar un número aleatorio
+					var randomNumber;
+
+					// Mientras el número aleatorio generado coincida con uno ya existente
+					do {
+
+						// Booleano para comprobar si el número generado ya existe en el teclado
+						var match = false;
+						// Generamos un número aleatorio entre 0 y 9
+						var randomNumber = Math.floor((Math.random() * 10));
+
+						// Recorremos el array de números
+						for (var j = 0; j < arrayNumbers.length; j++) {
+							if(arrayNumbers[j] == randomNumber) {
+								match = true;
+							}
+						}
+
+					} while(match);
+
+					// Añadimos el nuevo número en el array
+					arrayNumbers.push(randomNumber);
+
+					// Lo escribimos en la tecla
+					$("#key_" + i).text(randomNumber);
+				}
+			}
+
+			// Recorremos las teclas
+			for (var i=0; i < 10; i++) {				
+			  	(function(i) {
+
+			  		// Creamos su evento de click
+			    	$("#key_" + i).click(function() {
+
+			    		// Escribimos en el campo del pin el número de la tecla
+			    		$("#key").val($("#key").val() + $("#key_" + i).text());
+
+			    		// Si hay 4 cifras escritas en el campo del pin, deshabilitamos el teclado
+			    		if($("#key").val().length == 4) {			    			
+			    			$(".keypad-container").css("pointer-events", "none");
+			    			$("form").valid()
+			    			for (var j=0; j < 10; j++) {				
+							  	(function(ij) {
+							  		$("#key_" + j).addClass("key-disabled");
+							  	}(j));
+							}			    			
+			    		}
+
+			    		// Activamos el botón para borrar las cifras escritas del campo pin
+			    		$(".backspace").addClass("element-enabled");
+			    	});
+			  	}(i));
+			}
+
+			// Evento de click del botón para borrar las cifras del campo pin
+			$(".backspace").on("click", function() {
+
+				// Si hay alguna cifra escrita en el campo del pin, borramos la última
+				if($("#key").val().length > 0) {
+			    	$("#key").val($("#key").val().substring(0, $("#key").val().length - 1));
+			    	for (var j=0; j < 10; j++) {				
+					  	(function(j) {
+					  		$("#key_" + j).removeClass("key-disabled");
+					  	}(j));
+					}
+			    }
+
+			    // Si no hay nada escrito en el campo del pin, deshabilitamos el botón para borrar
+			    if($("#key").val().length == 0) {
+			    	$(".backspace").removeClass("element-enabled");
+			    }
+			});
+			
+			/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+			$(function() {
+
+				// Validación del formulario
+				$("form").validate({
+
+					// Reglas
+					rules: {
+						text: {
+							required: true,
+							dni: true,
+						},
+						key: {
+							required: true,
+							minlength: 4,
+							maxlength: 4,
+						},
+					},
+
+					// Mensajes de error
+					messages: {
+						text: {
+							required: "Campo requerido",
+							dni: "Por favor, introduzca un DNI válido",
+						},
+						key: {
+							required: "Campo requerido",
+							minlength: "Por favor, introduzca cuatro cifras",
+							maxlength: "Por favor, introduzca cuatro cifras",
+						},
+					},
+
+					// En caso de introducir los valores correctos en los campos
+					success: function(element) {
+
+						// Resaltamos en verde el campo de texto
+	                    $("#" + element.attr('for')).addClass("success");
+	                    // Malabares para que el padding de los mensajes de error no afecte a la correcta introducción de datos en los campos de texto, ya que en este caso también se añade la clase "error"
+	                    $("#" + element.attr('for') + "-error").removeClass("error");
+	                },
+				});
+
+				// Método para validar el DNI
+				$.validator.addMethod('dni', function(value,element){
+					return this.optional(element) || validar(value);
+				});
+			});
+
+			// Función para validar el DNI
+			function validar(value){
+
+				var validChars = 'TRWAGMYFPDXBNJZSQVHLCKET';
+				var nifRexp = /^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKET]$/i;
+				var nieRexp = /^[XYZ][0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKET]$/i;
+				var str = value.toString().toUpperCase();
+
+				if (!nifRexp.test(str) && !nieRexp.test(str)) return false;
+
+				var nie = str
+				.replace(/^[X]/, '0')
+				.replace(/^[Y]/, '1')
+				.replace(/^[Z]/, '2');
+
+				var letter = str.substr(-1);
+				var charIndex = parseInt(nie.substr(0, 8)) % 23;
+
+				if (validChars.charAt(charIndex) === letter) return true;
+
+				return false;
+			}
+
+			/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+			// Array para llevar el recuento de los trabajadores que han fichado
+			var registeredWorkers = [];
+
+			// Al pulsar sobre el botón del formulario
+			$(".form-button").on("click", function() {
+
+				// Comprobamos que el formulario es válido
+				var val = $("form").valid();
+
+				// En caso de que lo sea
+				if(val) {
+
+					// Deshabilitamos el botón del formulario
+					$(".form-button").css("pointer-events", "none");
+
+					// Guardamos el valor del campo del DNI
+					var textValue = $("#text").val().toUpperCase();
+					// Guardamos el valor del campo del pin
+					var keyValue = $("#key").val();
+
+					// Booleano para comprobar si el trabajador ya había fichado
+					var match = false;
+
+					// Recorremos el array de trabajadores que han fichado
+					for (var i=0; i < registeredWorkers.length; i++) {
+						if(registeredWorkers[i] == textValue) {
+							match = true;
+						}
+					}
+
+					// Select de SQL para comprobar si el DNI y el pin se corresponden con un registro de la base de datos
+					ddbb.transaction(function(ssql) {
+						ssql.executeSql('SELECT * FROM trabajadores WHERE dni = "' + textValue + '" AND pin = "' + keyValue + '"', [], 
+							
+							// En caso de que se realice correctamente la Select
+							function callback(ssql, results) {
+
+								// Longitud del resultado de la Select
+								var len = results.rows.length, i;
+
+								// Mostramos el mensaje de información superior
+								$(".info-message").addClass("info-message_on");
+
+								// Si el trabajador está en la base de datos
+								if(len != 0) {
+
+									// Dividimos el nombre obtenido de la select
+									var arrayOfStrings = results.rows.item(i).name.split(" ");
+
+									// Si el trabajador no ha fichado
+									if(!match) {
+										setTimeout(function() {
+
+											// Encendemos la luz de arriba
+											$(".top-light").addClass("login");
+											// Mostramos el mensaje de bienvenida
+											$(".info-message").text("Bienvenido " + arrayOfStrings[0]);
+
+											// Añadimos al array de trabajadores del DNI de quien acaba de fichar
+											registeredWorkers.push(results.rows.item(i).dni);
+											
+											// Guardamos el contenedor de los trabajadores
+											var parentDiv = document.getElementById('menu-container');
+
+											// Creamos:
+
+											// El div del trabajador
+											var menuElement = document.createElement('div');
+											menuElement.className = 'menu_element';
+											menuElement.id = results.rows.item(i).dni;
+
+											// El contenedor del icono del trabajador
+											var iconContainer = document.createElement('div');
+											iconContainer.className = 'element-icon-container center';
+
+											// El icono del trabajador
+											var faUser = document.createElement('div');
+											faUser.className = 'fa fa-user';
+
+											// El contenedor del nombre del trabajador
+											var nameContainer = document.createElement('div');
+											nameContainer.className = 'element-name-container';
+
+											// El nombre del trabajador
+											var name = document.createElement('p');
+											name.textContent += results.rows.item(i).name;
+
+											// El contenedor de la hora a la que ha fichado el trabajador
+											var timeContainer = document.createElement('div');
+											timeContainer.className = 'element-time-container';
+
+											// La hora a la que ha fichado el trabajador
+											var time = document.createElement('p');
+
+											// Guardamos la fecha del sistema
+											var date = new Date();
+
+											// Obtenemos los minutos
+											var minutes = date.getMinutes();
+
+											// Si son los 9 primeros minutos, añadimos un "0" al comienzo del texto que indica los minutos (para obtener el formato HH:MM)
+											if(minutes.toString().length == 1) {
+												time.textContent += date.getHours() + ":" + "0" + date.getMinutes();
+											} 
+											// A partir de dos cifras se pasa directamente el valor de los minutos
+											else {
+												time.textContent += date.getHours() + ":" + date.getMinutes();
+											}
+
+											// Incluímos cada div generado en su padre correspondiente
+											parentDiv.appendChild(menuElement);
+											menuElement.appendChild(iconContainer);
+											iconContainer.appendChild(faUser);
+											menuElement.appendChild(nameContainer);
+											nameContainer.appendChild(name);
+											menuElement.appendChild(timeContainer);
+											timeContainer.appendChild(time);
+
+											// Pasado un tiempo apagamos la luz y ocultamos el mensaje superior
+											setTimeout(function() {
+												$(".top-light").removeClass("login");	
+												$(".info-message").removeClass("info-message_on");
+												$("#text").focus();
+												$(".form-button").css("pointer-events", "auto");
+											}, 1800);						
+										}, 1);
+									} 
+
+									// Si el trabajador ya ha fichado
+									else {
+
+										// Encendemos la luz de arriba
+										$(".top-light").addClass("logout");
+										// Mostramos el mensaje de despedida
+										$(".info-message").text("Adiós " + arrayOfStrings[0]);
+
+										// Eliminamos el trabajador que ha salido del array
+										$("#" + results.rows.item(i).dni).remove();
+										registeredWorkers.splice($.inArray(results.rows.item(i).dni, registeredWorkers),1);
+
+										// Pasado un tiempo apagamos la luz y ocultamos el mensaje superior
+										setTimeout(function() {
+											$(".top-light").removeClass("logout");	
+											$(".info-message").removeClass("info-message_on");
+											$("#text").focus();
+											$(".form-button").css("pointer-events", "auto");
+										}, 1800);
+									}
+
+									// Tras fichar o salir, reiniciamos el formulario
+									var form = $("form");
+							    	form[0].reset();
+							    	form.validate().resetForm();
+
+							    	$(".backspace").removeClass("element-enabled");
+								  	for (var j=0; j < 10; j++) {				
+									  	(function(j) {
+									  		$("#key_" + j).removeClass("key-disabled");
+									  	}(j));
+									}
+
+									// Y redistribuimos las teclas del para introducir el pin
+									generateKeyPanel();
+								} 
+								// Si el trabajador no está en la base de datos
+								else {
+									// Encendemos la luz de arriba
+									$(".top-light").addClass("log-error");
+									// Mostramos el mensaje de acceso bloqueado
+									$(".info-message").text("Credenciales incorrectas");
+								}
+
+								// Pasado un tiempo apagamos la luz y ocultamos el mensaje superior
+								setTimeout(function() {
+									$(".top-light").removeClass("log-error");	
+									$(".info-message").removeClass("info-message_on");
+									$("#text").focus();
+									$(".form-button").css("pointer-events", "auto");
+								}, 1800);
+							},
+
+							// En caso de que haya algún error en la Select
+							function errorCallback(ssql, error) {
+								alert(error.message);
+							}
+						);
+					});					
+				}
+			});
+			
+			// Al hacer click en el botón de menú
+			$(".menu-icon").on("click", function() {
+				$(".menu").toggleClass("menu_shown");
+				$(".menu-title").toggleClass("show");
+				$("#text").focus();
+			});
+
+			// Al pulsar la tecla enter se dispara la validación del formulario
+			$(document).on('keypress',function(e) {
+			    if(e.which == 13) {
+			    	if($(".form-button").css("pointer-events") == "auto") {
+			    		$(".form-button").click();
+			    	}			        
+			    }
+			});
+
+			/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+			// Cada vez que se redimensione el navegador, se paran las transiciones
+			$(window).on('resize', function(){
+				$("*").css( "transition-property", "none");
+			});
+
+			// Una vez se termine de redimensionar, se restablecen las animaciones
+			var rtime;
+			var timeout = false;
+			var delta = 200;
+			$(window).resize(function() {
+				rtime = new Date();
+				if (timeout === false) {
+					timeout = true;
+					setTimeout(resizeend, delta);
+				}
+			});
+
+			function resizeend() {
+				if (new Date() - rtime < delta) {
+					setTimeout(resizeend, delta);
+				} else {
+					timeout = false;
+					$("*").css( "transition-property", "initial");
+				}               
+			}
+		});
+		
+	</script>
+</head>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<body>
+
+	<!-- Fondo -->
+	<div class="background"></div>
+	
+	<!-- Icono superior izquierdo del menú -->
+	<div class="menu-icon fa fa-bars"></div>
+	
+	<!-- Menú desplegable izquierdo -->
+	<div class="menu">
+
+		<!-- Franja superior del menú -->
+		<div class="menu_top">
+			<div class="menu-title">
+				<p>Trabajadores</p>
+			</div>			
+		</div>
+		
+		<!-- Contenedor de los trabajadores que han fichado -->
+		<div class="menu_element-container" id="menu-container"></div>		
+	</div>
+
+	<!-- Contenedor general -->
+	<div class="main-container">
+
+		<!-- Envoltorio -->
+		<div class="wrapper">
+			
+			<!-- Mensaje de información superior -->
+			<p class="info-message">Test</p>
+			
+			<!-- Tarjeta -->
+			<div class="card">
+				
+				<!-- Fraja luminosa superior -->
+				<div class="top-light-container center">
+					<div class="top-light"></div>
+				</div>
+				
+				<!-- Formulario -->
+				<form action="javascript:void(0)">
+
+					<!-- Campo de texto que recoge el nombre -->
+					<p>DNI</p>
+					<div class="field-container">
+						<input class="field" type="text" name="text" id="text">
+					</div>
+
+					<!-- Campo de texto que recoge el primer apellido -->
+					<p>Pin</p>
+					<div class="field-container">
+						<div class="backspace fas fa-backspace"></div>
+						<input class="field" type="password" name="key" id="key" placeholder="X X X X">
+					</div>
+					
+					<!-- Contenedor del teclado para introducir el pin -->
+					<div class="keypad-container">
+						<div class="wrapper_row">
+							<div class="key center" id="key_0"></div>
+							<div class="key center" id="key_1"></div>
+							<div class="key center" id="key_2"></div>
+							<div class="key center" id="key_3"></div>
+							<div class="key center" id="key_4"></div>
+						</div>
+						<div class="wrapper_row">
+							<div class="key center" id="key_5"></div>
+							<div class="key center" id="key_6"></div>
+							<div class="key center" id="key_7"></div>
+							<div class="key center" id="key_8"></div>
+							<div class="key center" id="key_9"></div>
+						</div>						
+					</div>
+
+					<!-- Botón para enviar los datos del formulario -->
+					<div class="button-container">
+						<button class="form-button"><i class="font-icon fas fa-sign-in-alt"></i> Escanear</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

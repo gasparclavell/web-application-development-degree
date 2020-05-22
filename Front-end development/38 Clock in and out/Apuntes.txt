@@ -1,0 +1,27 @@
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Funcionalidad de la aplicación
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+Una vez se validan los datos del formulario se dan 3 escenarios:
+
+  1. Si el trabajador está registrado en la base de datos
+     y aún no ha fichado, ficha y se añade al menú izquierdo.
+
+  2. Si el trabajador está registrado en la base de datos
+     y ya ha fichado, sale y se elimina del menú izquierdo.
+
+  3. Si el trabajador no está registrado en la base de datos, 
+     se comunica que las credenciales son incorrectas.
+
+Otras consideraciones:
+
+  El orden de las teclas para introducir el pin se redistribuye
+  cada vez que se recarga la página, y cada vez que entra o sale 
+  un trabajador.
+
+  El campo DNI está validado con regex, de forma que debemos
+  introducir la letra correspondiente a la sucesión previa de
+  números

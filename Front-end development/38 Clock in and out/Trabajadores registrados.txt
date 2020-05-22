@@ -1,0 +1,10 @@
+Disposición de los datos: "dni", "name", "pin";
+
+"79048512L", "Gaspar Clavell", "1234";
+"00000001R", "John Doe", "0000";
+"89236460W", "Joe Rogan", "0101";
+"05512354J", "Dave Rubin", "1010";
+"84722399J", "Steven Crowder", "1212";
+"71470968D", "Jordan Peterson", "2121";
+"96667723B", "Ben Shapiro", "1313";
+"71235916V", "Carl Benjamin", "3131";
