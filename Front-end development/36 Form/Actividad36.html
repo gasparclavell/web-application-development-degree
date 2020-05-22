@@ -1,0 +1,558 @@
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Actividad 36
+
+Se trata de realizar una aplicación el JavaScript para 
+recoger datos de personas y sus hábitos para una empresa 
+de marketing y publicidad.
+
+Se controlarán todos los datos introducidos para que no 
+haya equívocos en la introducción de los datos.
+
+Se aconseja revisar la presentación Tema 5C_validación 
+de formularios que está alojada en Moodle.
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<!DOCTYPE html>
+<!-- Idioma español -->
+<html lang="es-ES">
+<head>
+
+	<meta charset="UTF-8">
+	<title>Actividad36</title>
+
+	<!-- Librería jQuery -->
+	<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+
+	<!-- Validation.js -->
+	<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.1/dist/jquery.validate.min.js"></script>
+
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="https://cdnjs.Cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	
+	<style>
+
+		/*Aplicamos a todo*/
+		* {
+			margin: 0;
+			padding: 0;
+			overflow: hidden;
+			text-align: left;
+			font-family: Helvetica;
+			transition: .05s;
+			box-sizing: border-box;		
+		}
+		
+		/*Página HTML*/
+		html {
+			background-color: rgba(26,26,26);
+		}
+
+		/*Clase para centrar Divs*/
+		.center {
+			position: relative;
+		  	display: flex;
+		  	flex-direction: column;
+		  	flex-wrap: wrap;
+		  	vertical-align: middle;
+		  	align-items: center;
+		  	justify-content: center;  
+		  	margin: auto;
+		}
+
+		/*Fondo*/
+		.background {
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			height: 100%;
+			width: 100%;
+			background: linear-gradient(to bottom, rgba(136,167,255), rgba(100,130,255));
+			z-index: 0;
+		}
+
+		/*Contenedor principal*/
+		.main-container {
+			position: absolute;		
+			width: 100%;
+			height: 100vh;
+			display: flex;
+			overflow: auto;
+		}
+
+		/*Contenedor Flexbox*/
+		#wrapper {
+			margin: auto;
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+			justify-content: center;
+			align-items: center;
+			width: 100%;
+		}
+
+		/*Tarjeta*/
+		.card {
+			width: 650px;
+			min-width: 650px;
+			height: auto;
+			background-color: white;
+			margin: 80px;
+			padding: 50px 30px 42px 30px;
+			border-radius: 5px;
+			box-shadow: 0 5px 15px 8px rgba(0, 0, 0, 0.1);
+		}
+
+		/*Cabecera de la tarjeta*/
+		.card-header {
+			width: 700px;
+			transform: translate(-30px, -40px);
+			height: 340px;
+			background-color: white;
+			background-image: url("background.jpg");
+			background-size: cover;
+			background-position: center;
+			background-repeat: no-repeat;
+		}
+
+		.introduction-header {
+			margin-top: -25px;
+		}
+		
+		/*Texto en negrita*/
+		b {
+			font-size: 28px;
+		}
+		
+		/*Texto de introcucción al formulario*/
+		.introduction {
+			opacity: .5;
+			line-height: 22px;
+			margin-top: 25px;
+		}
+		
+		/*Línea de separación*/
+		hr {
+			height: 1px;
+			border-style: none;
+			margin-top: 35px;
+			margin-bottom: 40px;
+			border: .1px solid rgba(0,0,0,.2);
+		}
+		
+		/*Campos*/
+		.field {
+			width: 100%;
+			height: 38px;
+			border-radius: 4px;
+			padding-left: 13px;
+			padding-right: 10px;
+			margin-bottom: 4px;
+			border: 1px solid rgba(0,0,0,.2);
+			outline: none;
+		}
+		
+		/*Cuando un campo recive el foco*/
+		input:focus {
+			border: 1px solid rgba(95,106,251);
+		}
+		
+		/*Texto*/
+		p {
+			margin-top: 20px;
+			margin-bottom: 12px;
+		}
+		a {
+			color: rgba(95,106,251);
+		}
+		
+		/*Contenedor del botón*/
+		.button-container {
+			width: 100%;
+			text-align: right;
+		}
+		
+		/*Botón*/
+		button {
+			background-color: rgba(95,106,251);
+			color: white;
+			border-style: none;
+			padding: 12px 45px 12px 45px;
+			border-radius: 3px;
+			margin-top: 30px;
+			font-size: 16px;
+			cursor: pointer;
+		}
+		button:hover {
+			background-color: rgba(40,60,140);
+		}
+		
+		/*Radio buttons*/
+		.radio {
+			background-color: white;
+			margin-bottom: 7px;
+			margin-top: 0px;
+			margin-left: 5px;
+			outline: none;
+		}
+
+		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+		/*Formato con el que indicaremos que se han introducido datos correctos/incorectos*/
+
+		/*Clase para indicar que se ha introducido un valor correcto*/
+		.success {
+			background-color: rgba(0,255,0,0.04);
+			border: 1px solid rgba(80,200,80,1);
+			padding-bottom: 0;
+		}
+		/*Iconos de los campos de texto*/
+		.icon {
+			position: absolute;
+			transform: translate(560px, 10px);			
+			font-size: 17px;
+			display: none;
+		}
+			.check {
+				color: rgba(80,200,80,.75);
+			}
+			.times {
+				color: rgba(255,127,127,.95);
+			}
+		/*En caso de que introduzcamos un valor incorrecto en un campo de texto*/
+		.field.error {
+			background-color: rgba(255,0,0,0.01);
+			border: 1px solid rgba(255,127,127,.9);
+		}
+		/*Mensajes de error de Validate.js*/
+		label.error {
+			color: rgba(255, 80, 80, .8);
+			width: 360px;
+			font-size: 14px;
+			text-align: left;
+		}
+		
+	</style>
+	
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+	<script>
+		
+		// Cuando la página esté cargada
+		$(document).ready(function() {
+
+			// Comenzamos ubicando el foco sobre el primer campo de texto (nombre)
+			$("#name").focus();
+
+			$(function() {
+
+				// Validación del formulario
+				$("form").validate({
+
+					// Reglas
+					rules: {
+						name: {
+							required: true,
+							minlength: 3,
+							maxlength: 40,
+						},
+						email: {
+							required: true,
+							email: true,
+						},
+						key: {
+							required: true,
+							noSpace: true,
+							minlength: 5,
+							maxlength: 40,
+						},
+						key_confirmation: {
+							required: true,
+							noSpace: true,
+							minlength: 5,
+							maxlength: 40,
+							equalTo: '#key',
+						},
+						hobbies: {
+							required: true,
+						},
+						date: {
+							required: true,
+						},
+						planet: {
+							required: true,
+						},
+						mailing: {
+							required: true,
+						},
+					},
+
+					// Mensajes de error
+					messages: {
+						name: {
+							required: "Campo requerido",
+							minlength: "Por favor, introduzca tres caracteres por lo menos",
+							maxlength: "El campo no puede superar los 40 caracteres",
+						},
+						email: {
+							required: "Campo requerido",
+							email: "Por favor, introduzca un email válido",
+						},
+						key: {
+							required: "Campo requerido",
+							noSpace: "No se permiten espacios en blanco",
+							minlength: "Por favor, introduzca cinco caracteres por lo menos",
+							maxlength: "El campo no puede superar los 40 caracteres",
+						},
+						key_confirmation: {
+							required: "Campo requerido",
+							noSpace: "No se permiten espacios en blanco",
+							minlength: "Por favor, introduzca cinco caracteres por lo menos",
+							maxlength: "El campo no puede superar los 40 caracteres",
+							equalTo: "Las contraseñas no coinciden",
+						},
+						hobbies: {
+							required: "Campo requerido",
+						},
+						date: {
+							required: "Campo requerido",
+							min: "Por favor, introduzca una fecha válida",
+							max: "Por favor, introduzca una fecha válida",
+						},
+						planet: {
+							required: "Campo requerido",
+						},
+						mailing: {
+							required: "Campo requerido",
+						},
+					},
+
+					// Ubicación de los errores
+			        errorPlacement: function (error, element) {
+
+			        	// Si es un radio button el mensaje de error aparecerá debajo de su contenedor
+						if (element.is(":radio") || element.is(":checkbox")) {
+			                error.appendTo(element.parents('.container'));
+			            } else {
+			            	error.insertAfter(element);
+			            }
+
+			            // Ocultamos el tick y mostramos la x
+			            element.parent().find('.check').css("display", "none");
+			            element.parent().find('.times').css("display", "block");
+					},
+
+					// En caso de introducir los valores correctos en los campos
+					success: function(element) {
+
+						// Resaltamos en verde el campo de texto
+	                    $("#" + element.attr('for')).addClass("success");
+	                    // Mostramos el tick y ocultamos la x
+	                    $("#" + element.attr('for')).parent().find('.check').css("display", "block");
+	                    $("#" + element.attr('for')).parent().find('.times').css("display", "none");
+	                    // Malabares para que el padding de los mensajes de error no afecte a la correcta introducción de datos en los campos de texto, ya que en este caso también se añade la clase "error"
+	                    $("#" + element.attr('for') + "-error").removeClass("error");
+	                },
+				});
+
+				/*Regex para controlar que ho haya espacios en blanco*/
+				jQuery.validator.addMethod("noSpace", function(value, element) { 
+				  return value.indexOf(" ") < 0 && value != ""; 
+				}, "Los espacios en blanco no están permitidos");
+			});
+
+			// Establecemos el máximo y mínimo de la fecha seleccionable según la fecha de hoy
+			var today = new Date();
+			var dd = today.getDate();
+			var mm = today.getMonth() + 1;
+			var yyyy = today.getFullYear();
+
+			if(dd < 10){
+			    dd = '0'+ dd;
+			} 
+		    if(mm < 10){
+		    	mm = '0'+ mm;
+		    } 
+
+			today = yyyy + '-' + mm + '-' + dd;
+			$("#date_input").attr("max", today);
+
+			var start = new Date();
+			start = (yyyy - 100) + '-' + mm + '-' + dd; // El mínimo serán 100 años menos desde hoy
+			$("#date_input").attr("min", start);
+
+			/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+			// Guardamos las respuestas del formulario en un array y las mostramos tras pulsar el botón
+			$('button').on("click", function() {
+
+				if ($("form").valid()) {
+
+					// Apaño para poder recoger los checkbox
+					var values = [];
+					$('input[type="checkbox"]:checked').each(function(i,v){
+					  values.push($(v).val());
+					});
+
+					var array = [$('input[name$="name"]').val(), 
+						$('input[name$="email"]').val(), 
+						$('input[name$="key"]').val(), 
+						$('input[name$="key_confirmation"]').val(), 
+						values, 
+						$('input[name$="date"]').val(), 
+						$('#select_planet :selected').val(), // Uso del id para poder recoger el combobox
+						$('input[name$="mailing"]:checked').val()];
+
+					for (var i = 0; i < array.length; i++) {
+						document.write(array[i]);
+						document.write("<br>");
+					}
+				}
+			});
+
+			/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+			// Cada vez que se redimensione el navegador, se paran las transiciones
+			$(window).on('resize', function(){
+				$("*").css( "transition-property", "none");
+			});
+
+			// Una vez se termine de redimensionar, se restablecen las animaciones
+			var rtime;
+			var timeout = false;
+			var delta = 200;
+			$(window).resize(function() {
+				rtime = new Date();
+				if (timeout === false) {
+					timeout = true;
+					setTimeout(resizeend, delta);
+				}
+			});
+
+			function resizeend() {
+				if (new Date() - rtime < delta) {
+					setTimeout(resizeend, delta);
+				} else {
+					timeout = false;
+					$("*").css( "transition-property", "initial");
+				}               
+			}
+		});
+
+	</script>
+</head>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<body>
+
+	<!-- Fondo -->
+	<div class="background"></div>
+
+	<!-- Contenedor general -->
+	<div class="main-container">
+
+		<!-- Envoltorio -->
+		<div id="wrapper">
+			
+			<!-- Tarjeta -->
+			<div class="card">
+
+				<!-- Cabecera de la tarjeta -->
+				<div class="card-header"></div>
+				
+				<!-- Subcabecera previa al formulario -->
+				<div class="introduction-header">
+					<b>Sondeo</b>
+					<p class="introduction">Le agradecemos su participación. Por favor, rellene los campos que se presentan a continuación.</p>
+					<hr>
+				</div>
+				
+				<!-- Estructura del formulario -->
+				<form action="javascript:void(0)">
+
+					<!-- Campo de texto que recoge el nombre -->				
+					<p>Nombre<a> *</a></p>
+					<div class="field-container">
+						<div class="icon check fa fa-check" id="check_name"></div>
+						<div class="icon times fa fa-times" id="times_name"></div>
+						<input class="field" type="text" name="name" id="name">
+					</div>
+				
+					<!-- Campo de texto que recoge el email -->
+					<p>Email<a> *</a></p>
+					<div class="field-container">
+						<div class="icon check fa fa-check" id="check_email"></div>
+						<div class="icon times fa fa-times" id="times_email"></div>
+						<input class="field" type="email" name="email" id="email">
+					</div>
+
+					<!-- Campo de texto que recoge la contraseña -->
+					<p>Contraseña<a> *</a></p>
+					<div class="field-container">
+						<div class="icon check fa fa-check" id="check_key"></div>
+						<div class="icon times fa fa-times" id="times_key"></div>
+						<input class="field" type="password" name="key" id="key">
+					</div>
+
+					<!-- Campo de texto que recoge la confiramción de la contraseña -->
+					<p>Confirmar contraseña<a> *</a></p>
+					<div class="field-container">
+						<div class="icon check fa fa-check" id="check_key_confirmation"></div>
+						<div class="icon times fa fa-times" id="times_key_confirmation"></div>
+						<input class="field" type="password" name="key_confirmation" id="key_confirmation">
+					</div>
+
+					<!-- Grupo de checkbox para señalar las aficiones -->
+					<p>Aficiones<a> *</a></p>
+					<div class="container">
+						<input class="radio" value="Comer" type="checkbox" name="hobbies" /> Comer
+							<br />
+						<input class="radio" value="Beber" type="checkbox" name="hobbies"/> Beber<br />
+						<input class="radio" value="Dormir" type="checkbox" name="hobbies"/> Dormir<br />
+					</div>
+
+					<!-- Campo de texto que recoge la fecha de nacimiento -->
+					<p>Fecha nacimiento<a> *</a></p>
+					<div class="field-container">
+						<input class="field" type="date" name="date" id="date_input">
+					</div>
+					
+					<!-- Lista desplegable para seleccionar el planeta -->
+					<p>Planeta<a> *</a></p>
+					<div class="field-container">
+						<select class="field" name="planet" id="select_planet">
+								<option disabled selected value> -- Seleccionar -- </option>
+						 		<option value="Mercurio">Mercurio</option>
+								<option value="Venus">Venus</option>
+								<option value="Tierra">Tierra</option>
+						 		<option value="Marte">Marte</option>
+						 		<option value="Jupiter">Jupiter</option>
+								<option value="Saturno">Saturno</option>
+								<option value="Urano">Urano</option>							
+								<option value="Neptuno">Neptuno</option>							
+						</select>
+					</div>
+
+					<!-- Grupo de radio buttons para indicar si se quieren recibir correos -->
+					<p>¿Desea recibir correos de nuestra parte?<a> *</a></p>
+					<div class="container">
+						<input class="radio" value="Sí" type="radio" name="mailing" /> Sí
+							<br />
+						<input class="radio" value="Por supuesto" type="radio" name="mailing"/> Por supuesto<br />
+						<input class="radio" value="¿Tengo elección?" type="radio" name="mailing"/> ¿Tengo elección?<br />
+					</div>
+					
+					<!-- Botón para enviar los datos del formulario -->
+					<div class="button-container">
+						<button>Enviar</button>						
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>	
+</body>
+</html>
