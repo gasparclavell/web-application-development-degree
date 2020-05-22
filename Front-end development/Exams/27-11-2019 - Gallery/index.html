@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<!-- Idioma español -->
+<html lang="es-ES">
+<head>
+	<meta charset="UTF-8">
+	<title>Examen Noviembre</title>
+
+	<!-- Añadimos jQuery -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	
+	<style>
+		
+		/*Reglas generales*/
+		* {
+			font-family: Helvetica, sans-serif;
+		}
+		body {
+			padding: 0;
+			margin: 0;
+			overflow: hidden;
+		}
+
+		/*Imagen de fondo*/
+		.background {
+			position: absolute;
+			filter: grayscale(100%) contrast(150%) brightness(20%) blur(4px);
+			background-image: url('./images/background.jpg');
+			background-color: rgb(100,100,100);
+			background-size: cover;
+			background-position: center;
+			background-repeat: no-repeat;
+			width: calc(100% + 50px);
+			height: calc(100% + 50px);
+			top: -10px;
+			left: -10px;
+		}
+		
+		/*Contenedor principal que centra el contenido*/
+		.main-container {
+			position: absolute;
+			vertical-align: middle;
+			margin: auto;
+			display: flex;
+			flex-direction: column;
+			flex-wrap: wrap;
+			justify-content: center;
+			align-items: center;
+			width: 100%;
+			height: 100%;			
+		}
+
+		/*Reglas de los subcontenedores*/
+		.subcontainer {
+			position: absolute;
+			display: flex;
+			/*background-color: red;*/
+			width: 1000px;
+			height: 500px;
+			justify-content: center;
+			align-items: center;
+			color: white;			
+		}
+		/*Subcontenedor de la interfaz principal*/
+		.subcontainer_main {
+			opacity: 1;
+			/*pointer-events: none;*/
+		}
+		/*Subcontenedor del formulario*/
+		.subcontainer_column {
+			opacity: 0;
+			flex-direction: column;
+			pointer-events: none;
+		}
+		/*Subcontenedor de la galería privada*/
+		.subcontainer_img {
+			width: 1200px;
+			height: 500px;
+			opacity: 0;
+			pointer-events: none;
+			/*background-color: red;*/
+		}
+		/*Subcontenedor de la galería pública*/
+		.subcontainer_public {
+			width: 1200px;
+			height: 650px;
+			flex-direction: column;
+			/*background-color: red;*/
+			margin-top: 30px;
+			opacity: 0;
+			pointer-events: none;
+		}
+
+		/*Botones de la interfaz inicial para acceder a las diferentes galerías*/
+		.myButton {
+			display: flex;
+			flex-direction: column;
+			margin: 2%;
+			width: 50%;
+			height: 100%;
+			cursor: pointer;
+			justify-content: center;
+			align-items: center;
+			color: white;
+			background-color: rgba(255,255,255,.08);
+			transition: .2s;
+			border-radius: 20px;
+		}
+		
+		/*Contenedores de las imágenes de los botones*/
+		.myImage {
+			width: 90%;
+			height: 75%;
+			/*background-color: blue;*/
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+		/*Títulos de las galerías*/
+		.subtext {
+			width: 100%;
+			height: 25%;
+			font-size: 26px;
+			/*background-color: red;*/
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			color: white;
+			margin-top: -40px;
+		}
+
+		img {
+			width: 75%;
+		}
+
+		#right img {
+			width: 70%;
+		}
+
+		.myButton:hover {
+			background-color: rgba(255,255,255,.2);
+		}
+
+		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+		/* FORMULARIO */
+
+		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+		/*Reglas generales del formulario*/
+		.form {
+			width: 600px;
+			height: 415px;
+			background-color: rgba(255,255,255,.15);
+			transition: .2s;
+			border-radius: 20px;
+		}
+		/*Círculo superior con la imagen de un candado*/
+		.circle-container {
+			width: 100%;
+			display: flex;
+			justify-content: center;
+			align-items: center;			
+		}
+		.circle {
+			position: absolute;
+			clip-path: circle(50% at 50% 50%);
+			width: 70px;
+			height: 70px;
+			background-color: rgba(120,190,220,1);
+			vertical-align: middle;
+			margin: auto;
+			display: flex;
+			flex-direction: column;
+			flex-wrap: wrap;
+			justify-content: center;
+			align-items: center;
+		}
+		.circle img {
+			width: 60%;
+			margin-top: -5px;
+		}
+		
+		/*Contenedores de los campos de texto*/
+		.field-container {
+			width: 100%;
+			/*background-color: red;*/
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			position: relative;
+			top: 70px;
+		}
+		#nameC {
+			top: 70px;
+		}
+		#lastnameC {
+			top: 85px;
+		}
+		#keyC {
+			top: 100px;
+		}
+		#buttonC {
+			top: 130px;
+		}
+
+		/*Atributos específicos de ellos*/
+		.field-container input, .field-container button {
+			text-decoration: none;
+			width: 60%;
+			height: 48px;
+			border-radius: 10px;
+			outline: none;
+			border-color: transparent;
+		}
+
+		.field-container input {
+			text-align: left;
+			font-size: 22px;
+			transition: .2s;
+			border: 2px solid white;
+			padding-left: 6%;
+			padding-right: 6%;
+		}
+
+		#keyC input {
+			text-align: center;
+		}
+
+		.field-container input:focus{
+		    border: 2px solid rgba(120,190,220,1);
+		}
+
+		::placeholder {
+			/*font-size: 24px;*/
+			opacity: 0.2;
+			position: relative;
+			top: 0;
+		}
+
+		.field-container button {
+			width: 72%;
+			height: 60px;
+			background-color: rgba(0,0,0,0.5);
+			color: white;
+			font-size: 18px;
+			cursor: pointer;
+			transition: .2s;
+		}
+
+		.field-container button:hover {
+			background-color: rgba(140,215,250,1);
+		}
+
+		.subtitle {
+			margin-top: 30px;
+			opacity: 0.6;
+		}
+
+		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+		/* GALERÍA PRIVADA */
+
+		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+		/*Botón en el que está la flecha de retorno*/
+		#button-img {
+			position: fixed;
+			width: 60px;
+			height: 60px;
+			border-radius: 30px;
+			border: 2px solid rgba(255,255,255,0.2);
+			background-color: rgba(255,255,255,0.05);
+			margin-left: 20px;
+			margin-top: 20PX;
+			cursor: pointer;
+			z-index: 100;
+			transform: rotate(180deg);
+			outline: none;
+			opacity: 0;
+			transition: .2s;
+		}
+		/*#button-img:hover {
+			background-color: rgba(255,255,255,0.1);
+		}*/
+		
+		/*Contenedor de las pinturas*/
+		.painting-container {
+			width: 30%;
+			height: 90%;
+			margin: 1.6%;
+			display: flex;
+			flex-direction: column;
+			padding-top: 100px;
+		}
+
+		/*Atributos de las pinturas*/
+		.painting {
+			width: 100%;
+			height: 60%;
+			background-image: url('./images/1.jpg');
+			background-size: cover;
+  			background-position: center;
+  			background-repeat: no-repeat;
+  			filter: grayscale(100%);
+  			transition: .2s;
+  			cursor: pointer;
+  			border-radius: 5px;
+		}
+		#painting2 {
+			background-image: url('./images/2.jpg');
+		}
+		#painting3 {
+			background-image: url('./images/3.jpg');
+		}
+
+		.painting img {			
+			box-shadow: 0 0 12px 10px rgba(0,0,0,.2);
+		}
+		
+		/*Subtítulo de las pinturas*/
+		.painting-text {
+			width: 100%;
+			height: 40%;
+			/*background-color: green;*/
+			text-align: center;
+			font-size: 13px;		
+			padding-top: 10px;
+			opacity: 1;
+			transition: .2s;			
+		}
+
+		.painting-text p {
+			padding-right: 30px;
+			padding-left: 30px;
+		}
+
+		.painting-text #p2 {
+			padding-top: 5px;
+		}
+
+		.title-and-paragraph {
+			margin-top: -20px;
+			opacity: 0;
+			transition: .2s;
+		}
+
+		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+		/* GALERÍA PÚBLICA */
+
+		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+		/*Contenedor de la imagen ampliada y las flechas de dirección*/
+		.top-container {
+			width: 100%;
+			height: 70%;
+			/*background-color: green;*/
+			vertical-align: middle;
+			margin: auto;
+			display: flex;
+			flex-direction: column;
+			flex-wrap: wrap;
+			justify-content: center;
+			align-items: center;
+		}
+
+		/*Contenedor de las miniaturas*/
+		.bottom-container {
+			width: 100%;
+			height: 30%;
+			/*background-color: blue;*/
+			vertical-align: middle;
+			margin: auto;
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+			justify-content: center;
+			align-items: center;
+		}
+
+		/*Contenedor de las flechas*/
+		.arrow-container {
+			width: 15%;
+			height: 100%;
+			/*background-color: yellow;*/
+			vertical-align: middle;
+			margin: auto;
+			display: flex;
+			flex-direction: column;
+			flex-wrap: wrap;
+			justify-content: center;
+			align-items: center;
+			margin-top: -15px;	
+		}
+
+		.arrow-subcontainer {
+			width: 100px;
+			height: 100px;
+			/*background-color: rgba(255,255,255,.1);*/
+			background-image: url('./images/side_arrow.png');
+			background-size: 50px 50px;
+  			background-position: 54% 50%;
+  			background-repeat: no-repeat;
+  			cursor: pointer;
+  			opacity: .2;
+  			clip-path: circle(50% at 50% 50%);
+  			transition: .2s;
+		}
+
+		.arrow-subcontainer:hover {
+			background-color: rgba(255,255,255,.1);
+			opacity: .7;			
+		}
+
+		#arrow1 {
+			transform: rotate(180deg);
+		}
+
+		/*Contenedor de la imagen ampliada*/
+		.image-container {
+			width: 70%;
+			height: 100%;
+			/*background-color: black;*/
+			vertical-align: middle;
+			margin: auto;
+			display: flex;
+			flex-direction: column;
+			flex-wrap: wrap;
+			justify-content: center;
+			align-items: center;
+		}
+		.image-subcontainer {
+			width: 90%;
+			height: 90%;
+			border-radius: 5px;
+			box-shadow: 0 0 12px 10px rgba(0,0,0,.2);
+			background-image: url('./images/public_gallery/1.jpg');
+			background-size: cover;
+  			background-position: center;
+  			background-repeat: no-repeat;
+		}
+
+		/*Contenedor del texto inferior de las pinturas*/
+		.subtitle-container {
+			width: 90%;
+			height: 10%;
+			/*background-color: orange;*/
+			vertical-align: middle;
+			margin: auto;
+			display: flex;
+			flex-direction: column;
+			flex-wrap: wrap;
+			justify-content: center;
+			align-items: center;
+			opacity: .7;	
+			font-size: 14px;
+		}
+
+		/*Miniaturas de las fotos*/
+		.thumbnail {
+			width: 10%;
+			height: 75px;
+			margin: 20px;
+			/*background-color: red;*/
+			cursor: pointer;
+			background-size: cover;
+  			background-position: center;
+  			background-repeat: no-repeat;
+  			margin-top: 0px;
+  			border-radius: 5px;
+  			box-shadow: 0 0 10px 5px rgba(0,0,0,.1);
+  			filter: grayscale(100%) contrast(100%) brightness(80%);
+  			transition: .2s;
+		}
+		#th1 {
+			background-image: url('./images/public_gallery/1.jpg');
+			filter: grayscale(0%) contrast(100%) brightness(100%);
+		}
+		#th2 {
+			background-image: url('./images/public_gallery/2.jpg');
+			background-position: top;
+		}
+		#th3 {
+			background-image: url('./images/public_gallery/3.jpg');
+		}
+		#th4 {
+			background-image: url('./images/public_gallery/4.jpg');
+		}
+		#th5 {
+			background-image: url('./images/public_gallery/5.jpg');
+		}
+
+	</style>
+
+	<script>
+
+		// Creamos un array en el que guardar los datos de registro del usuario
+		var arrayRegistros = new Array();
+
+		// Creamos un registro de prueba (nombre: a, apellidos: b, clave: 0000)
+		var arrayPrueba = ["a", "b", "0000"];
+		arrayRegistros.push(arrayPrueba);
+
+		/*Cuando el documento se haya cargado*/
+		$(document).ready(function(){
+
+			/*Si clicamos sobre el botón de galería privada*/
+			$("#left").click(function() {
+
+				/*La interfaz principal de desvanece*/
+				$(".subcontainer_main").animate({opacity: 0}, {queue: false, duration: 250});
+				$(".subcontainer_main").css('pointer-events', 'auto');
+
+				/*Pasados unos milisegundos aparece el formulario*/
+				setTimeout(function() {
+					$(".subcontainer_column").animate({opacity: 1}, {queue: false, duration: 350});
+					$(".subcontainer_column").css('pointer-events', 'auto');
+
+					$("#button-img").css("opacity", "1");
+					$("#button-img").css('pointer-events', 'auto');
+				}, 200);
+
+				/*Ubicamos el focus sobre el primer campo del formulario*/
+				$("#nameC input").focus();
+			});
+
+			/*Si clicamos sobre el botón de galería pública*/
+			$("#right").click(function() {
+
+				/*La interfaz principal de desvanece*/
+				$(".subcontainer_main").animate({opacity: 0}, {queue: false, duration: 250});
+				$(".subcontainer_main").css('pointer-events', 'auto');
+
+				/*Pasados unos milisegundos aparece la galería pública*/
+				setTimeout(function() {
+					$(".subcontainer_public").animate({opacity: 1}, {queue: false, duration: 350});
+					$(".subcontainer_public").css('pointer-events', 'auto');
+
+					$("#button-img").css("opacity", "1");
+					$("#button-img").css('pointer-events', 'auto');
+				}, 200);
+			});
+
+			/*Si clicamos en el botón de retornar*/
+			$("#button-img").click(function() {
+
+				/*Aparece la interfaz principal*/
+				setTimeout(function() {
+					$(".subcontainer_main").animate({opacity: 1}, {queue: false, duration: 250});
+					$(".subcontainer_main").css('pointer-events', 'auto');
+				}, 200);
+
+				/*Desvanecemos cualquier otra interfaz que pudiera estar visible*/
+				$(".subcontainer_column").animate({opacity: 0}, {queue: false, duration: 250});
+				$(".subcontainer_column").css('pointer-events', 'none');
+
+				$(".subcontainer_img").animate({opacity: 0}, {queue: false, duration: 250});
+				$(".subcontainer_img").css('pointer-events', 'none');
+
+				$(".subcontainer_public").animate({opacity: 0}, {queue: false, duration: 250});
+				$(".subcontainer_public").css('pointer-events', 'none');
+
+				$("#button-img").css("opacity", "0");
+				$("#button-img").css("pointerEvents", "none");
+
+				/*Reiniciamos el valor de los campos de texto del formulario*/
+				$("input").val("");
+
+				/*Reiniciamos la selección de las pinturas*/
+				setTimeout(function() {
+					cleanPaintingSelection();
+					disableFormButton();
+
+					selectedImage = 1;
+					thumbnailSelection();
+				}, 600);
+				
+			});
+
+			/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */			
+
+			/*El botón de verificación del formulario empieza deshabilitado*/
+			disableFormButton();
+
+			/*Hover del botón del formulario (es necesario usar jQuery por los cambios al deshabilitarlo)*/
+			$('.field-container button').hover(function(){
+
+				$('.field-container button').css("filter", "contrast(110%) brightness(114%)");
+			
+				}, function(){
+					
+				$('.field-container button').css("filter", "none");
+									
+			});
+
+			/*Hover del botón para retornar a la interfaz principal*/
+			$('#button-img').hover(function(){
+
+				$('#button-img').css("background", "rgba(255,255,255,.1)");
+			
+				}, function(){
+					
+				$('#button-img').css("background", "rgba(255,255,255,.05)");
+									
+			});
+
+			/*Función para activar/desactivar el botón de verificación según haya o no caracteres escritos*/
+			$(".field-container input").on('input', function() {
+
+				/*Al introducir algo en los campos del formulario, el botón de verificación se activa*/				
+				if($("#nameC input").val() != "" && $("#lastnameC input").val() != "" && $("#keyC input").val() != "") {
+					$('.field-container button').attr("disabled", false);
+					$('.field-container button').css("background", "rgba(120,190,220,1)");
+					$('.field-container button').css("cursor", "pointer");
+				}
+				/*Si no hay ningún carácter en los campos de texto, el botón permanece deshabilitado*/
+				else {
+					$('.field-container button').attr("disabled", true);
+					$('.field-container button').css("background", "rgba(0,0,0,0.5)");
+					$('.field-container button').css("cursor", "default");
+				}  
+			});
+			
+			/*Al pulsar el botón del formulario*/
+			$(".field-container button").click(function() {
+
+				/*Comprobamos que la clave introducida tiene cuatro caracteres*/
+				if($("#keyC input").val().length == 4) {
+
+					/*Creamos un array temporal con el contenido de los campos del formulario*/
+					var arrayFormulario = new Array();
+					arrayFormulario.push($("#nameC input").val());
+					arrayFormulario.push($("#lastnameC input").val());
+					arrayFormulario.push($("#keyC input").val());
+
+					/*Booleano para controlar si el registro recogido del formulario existe en el array de usuarios*/
+					var match = false;
+
+					for (var i = 0; i < arrayRegistros.length && !match; i++) {
+
+						if(arrayRegistros[i].toString() == arrayFormulario.toString()) {
+							
+							match = true;
+
+							/*Desvanecemos el formulario*/
+							$(".subcontainer_column").animate({opacity: 0}, {queue: false, duration: 300});
+							$(".subcontainer_column").css('pointer-events', 'none');
+
+							/*Aparece la galería privada*/
+							setTimeout(function() {
+								$(".subcontainer_img").animate({opacity: 1}, {queue: false, duration: 400});
+								$(".subcontainer_img").css('pointer-events', 'auto');
+							}, 300);							
+						}
+					}
+
+					/*En caso de que los datos introducidos en el formulario no estén guardados, mostramos la opción de registro*/
+					if(!match) {
+
+						/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+						//                     R E G I S T R O
+						/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+						/*Si el usuario elige registrarse*/
+						if(trueIfMessage(confirm("No existen los datos, ¿desea registrarse?"))) {
+
+							var arrayTemporal = new Array();
+
+							// Declaramos un segundo booleano para saber si se ha introducido un valor válido
+        					var validInput = false;
+
+        					// Repetimos el bucle mientras los datos introducidos no sean válidos
+        					while(!validInput) {
+
+        						// Nombre
+								var name = prompt("Introduzca su nombre: ");
+
+								if(name.length == 0) {
+					                alert("Campo requerido, debe escribir un carácter por lo menos");
+						        } else if(/\d/.test(name)) {
+					                alert("Los números no están aceptados");			        	
+						        } else {
+					        		validInput = true;
+					        		arrayTemporal.push(name);					        	
+						        }
+        					}
+
+        					// Reiniciamos el booleano
+        					var validInput = false;
+
+        					// Repetimos el bucle mientras los datos introducidos no sean válidos
+        					while(!validInput) {
+
+        						// Apellidos
+								var lastname = prompt("Introduzca sus dos primeros apellidos: ");
+
+								if(lastname.length == 0) {
+					                alert("Campo requerido, debe escribir un carácter por lo menos");
+						        } else if(/\d/.test(lastname)) {
+					                alert("Los números no están aceptados");			        	
+						        }  else {
+						        	validInput = true;
+						        	arrayTemporal.push(lastname);
+						        }
+        					}
+
+        					// Reiniciamos el booleano
+        					var validInput = false;
+
+        					// Repetimos el bucle mientras los datos introducidos no sean válidos
+        					while(!validInput) {
+
+        						// Clave
+								var key = prompt("Introduzca una clave de cuatro números naturales: ");
+
+								if(key.length != 4 || isNaN(key)) {
+					                alert("La clave debe estar formada por cuatro dígitos naturales");
+						        } else {
+
+						        	// Declaramos un booleano para controlar si el nombre introducido ya está registrado
+						        	var claveValida = true;
+
+						        	// Recorremos el array principal en su busca
+						        	for (var i = 0; i < arrayRegistros.length; i++) {
+
+						        		// Si existe, aparecerá un mensaje de alerta y se repetirá el bucle
+						        		if(key == arrayRegistros[i][2]) {
+						        			alert("La clave ya está registrada, por favor, introduzca otra");
+						        			claveValida = false;
+						        		}
+						        	}
+
+						        	if(claveValida) {
+						        		validInput = true;
+						        		arrayTemporal.push(key);
+						        	}
+						        }
+        					}
+
+        					/*Añadimos el nuevo usuario al array de registros*/
+        					arrayRegistros.push(arrayTemporal);
+
+        					$("#nameC input").val(arrayTemporal[0]);
+        					$("#lastnameC input").val(arrayTemporal[1]);
+        					$("#keyC input").val(arrayTemporal[2]);
+
+        					alert("¡Registro completado con éxito!");
+
+						}
+
+						/*Si el usuario cancela, el focus lo ubicamos en el primer campo de texto del formulario*/
+						else {
+							$("#nameC input").focus();
+							$("#nameC input").select();
+						}						
+					}
+				}
+
+				/*Mensaje de alerta si introducimos una clave menor a cuatro dígitos*/
+				else {
+					alert("La clave debe tener cuatro dígitos naturales");
+					$("#keyC input").focus();
+					$("#keyC input").select();
+				}
+
+			});
+
+			/*Evitamos que el usuario pueda introducir una cifra superior a 9999 en el campo númerico de la clave*/
+			$("#keyC input").on("keypress", function(e){
+			    var currentValue = String.fromCharCode(e.which);
+			    var finalValue = $(this).val() + currentValue;
+
+			    /*Si el texto está seleccionado y escribimos sobre él, sobreescribimos su contenido*/
+			    if(finalValue.length > 4 && (window.getSelection().toString().length) != 4) {
+			        e.preventDefault();
+			    }
+			});
+
+			/*Evitamos que el usuario pueda introducir números en los campos de nombre y apellidos*/
+			$("#nameC input").on("keypress", function(e){
+			    var currentValue = String.fromCharCode(e.which);
+			    var finalValue = $(this).val() + currentValue;
+
+			    if(/\d/.test(finalValue)) {
+			        e.preventDefault();
+			    }
+			});
+			$("#lastnameC input").on("keypress", function(e){
+			    var currentValue = String.fromCharCode(e.which);
+			    var finalValue = $(this).val() + currentValue;
+
+			    if(/\d/.test(finalValue)) {
+			        e.preventDefault();
+			    }
+			});
+
+			/*Atajo de teclado para registrar nuevos nombres mediante la tecla enter si el focus lo tiene el campo de la clave*/
+			$("#keyC input").keydown(function(){
+
+				var x = event.keyCode;
+				if(x == 13 && $('.field-container button').attr("disabled") != "disabled") {
+					$(".field-container button").click();
+				}
+			});
+
+			/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+			/*Si clicamos sobre alguna de las imágenes del primer ejercicio*/
+			paintingSelection("#painting", "1");
+			paintingSelection("#painting", "2");
+			paintingSelection("#painting", "3");
+
+			/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+			/* GALERÍA PÚBLICA */
+			/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+			// Dependiendo de la miniatura seleccionada, se ampliará una imagen u otra
+			for (var i = 1; i <= 5; i++) {
+				switchImage(i);
+			}
+
+			/*Al pulsar en "siguiente foto"*/
+			$("#arrow2").click(function() {
+
+				if(selectedImage < 5) {
+					selectedImage++;
+				} else {
+					selectedImage = 1;
+				}
+				
+				thumbnailSelection();
+			});
+
+			/*Al pulsar en "foto anterior"*/
+			$("#arrow1").click(function() {
+
+				if(selectedImage > 1) {
+					selectedImage--;
+				} else {
+					selectedImage = 5;
+				}
+				
+				thumbnailSelection();
+			});		
+
+		});
+
+		/*FUNCIONES*/
+		var selectedPaintings = [false, false, false];
+
+		function trueIfMessage(message) {
+		    return (message != '' && message != null);
+		}
+
+		/*Configuración de las pinturas de la galería privada*/
+		function paintingSelection(id, number) {
+			
+			/*Su hover*/
+			$(id+number).hover(function(){
+				if(!selectedPaintings[number-1]) {
+				$(id+number).css("filter", "grayscale(100%) contrast(110%) brightness(120%)");
+			}
+				}, function(){
+					if(!selectedPaintings[number-1]) {
+						$(id+number).css("filter", "grayscale(100%)");
+					}  				
+			});
+
+			/*Qué ocurre al seleccionar alguna de ellas*/
+			$(id+number).click(function() {
+
+				cleanPaintingSelection();
+
+				$(id+number).css("filter", "grayscale(0%) contrast(100%) brightness(100%)");
+				$("#tp"+number).css({"opacity": "1", "marginTop": "0px"});
+				selectedPaintings[number-1] = true;
+			});
+		}
+
+		/*Deseleccionar las pinturas*/
+		function cleanPaintingSelection() {
+			$(".painting").css("filter", "grayscale(100%) contrast(100%) brightness(100%)");
+			$(".title-and-paragraph").css({"opacity": "0", "marginTop": "-20px"});				
+			selectedPaintings = [false, false, false];
+		}
+
+		/*Deshabilitar el botón de verificación del formulario*/
+		function disableFormButton() {
+			$('.field-container button').attr("disabled", true);
+			/*Su color se tornará gris*/
+			$('.field-container button').css("background", "rgba(0,0,0,0.5)");
+			/*Su cursor a default*/
+			$('.field-container button').css("cursor", "default");
+		}
+
+		/*Subtítulos de las fotos*/
+		var arrayPaintings = ["A Father's Love (2015) - William Roby","Paseo a Orillas del Mar (1909) - Joaquín Sorolla","La Noche Estrella (1889) - Vincent van Gogh","La Joven de la Perla (1667) - Johannes Vermeer","El Beso (1859) - Francesco Hayez"];
+		var selectedImage = 1;
+
+		/*Función para ampliar las imágenes de la galería pública*/
+		function switchImage(num) {
+			$("#th" + num).click(function() {
+				selectedImage = num;
+				$(".image-subcontainer").css("background-image", "url(./images/public_gallery/" + num + ".jpg)");
+				if(num == 2) {
+					$(".image-subcontainer").css("background-position", "top");
+				} else {
+					$(".image-subcontainer").css("background-position", "center");
+				}
+				$(".subtitle-container").text(arrayPaintings[num-1]);
+				$(".thumbnail").css("filter", "grayscale(100%) contrast(100%) brightness(80%)");
+				$("#th" + num).css("filter", "grayscale(0%) contrast(100%) brightness(100%)");
+			});
+		}
+
+		/*Configuración al seleccionar una nueva foto en la galería pública*/
+		function thumbnailSelection() {			
+			$(".image-subcontainer").css("background-image", "url(./images/public_gallery/" + selectedImage + ".jpg)");
+			$(".subtitle-container").text(arrayPaintings[selectedImage-1]);
+			$(".thumbnail").css("filter", "grayscale(100%) contrast(100%) brightness(80%)");
+			$("#th" + selectedImage).css("filter", "grayscale(0%) contrast(100%) brightness(100%)");
+			if(selectedImage == 2) {
+				$(".image-subcontainer").css("background-position", "top");
+			} else {
+				$(".image-subcontainer").css("background-position", "center");
+			}
+		}
+
+	</script>
+
+</head>
+
+<body>
+
+	<div class="background"></div>
+
+	<!-- Botón para volver a la interfaz principal -->
+	<button id="button-img">
+		<img id="back-img" src="images/arrow.png" alt="">
+	</button>
+
+	<div class="main-container">		
+
+		<!-- Interfaz principal -->
+		<div class="subcontainer subcontainer_main">
+			
+			<!-- Botón de galería privada -->
+			<div class="myButton" id="left">
+				<div class="myImage">
+					<img src="./images/lock.png">
+				</div>
+				<div class="subtext">
+					<p>GALERÍA PRIVADA</p>
+				</div>			
+			</div>
+
+			<!-- Botón de galería pública -->
+			<div class="myButton" id="right">
+				<div class="myImage">
+					<img src="./images/gallery.png">
+				</div>
+				<div class="subtext">
+					<p>GALERÍA PÚBLICA</p>					
+				</div>			
+			</div>
+
+		</div>
+
+		<!-- Formulario -->
+		<div class="subcontainer subcontainer_column">
+
+			<div class="form">
+				
+				<!-- Círculo decorativo superior -->
+				<div class="circle-container">
+					<div class="circle"><img src="./images/lock.png"></div>
+				</div>				
+
+				<!-- Nombre -->
+				<div class="field-container" id="nameC">
+					<input type="text" placeholder="Nombre">
+				</div>
+
+				<!-- Apellidos -->
+				<div class="field-container" id="lastnameC">
+					<input type="text" placeholder="Apellidos">
+				</div>
+
+				<!-- Clave -->
+				<div class="field-container" id="keyC">
+					<input type="number" min="0000" max="9999" placeholder="Clave">
+				</div>
+
+				<!-- Botón de verificación -->
+				<div class="field-container" id="buttonC">
+					<button>VERIFICAR</button>
+				</div>
+				
+			</div>
+
+			<!-- Subtítulo del formulario -->
+			<p class="subtitle">Por favor, introduzca sus datos</p>
+
+		</div>
+
+		<!-- Galería Privada -->
+		<div class="subcontainer subcontainer_img">
+
+			<!-- Primera pintura -->
+			<div class="painting-container">
+
+				<div class="painting" id="painting1">
+					
+				</div>
+				<div class="painting-text" id="text1">
+
+					<div class="title-and-paragraph" id="tp1">
+						<p>Españoles en el Colorado (2016) - Ferrer-Dalmau</p>
+						<p id="p2">Augusto Ferrer-Dalmau es un pintor barcelonés entregado a capturar los momentos cruciales de la historia militar española. Su estilo realista aúna la grandeza épica de los antiguos pintores de batallas con la hondura del romanticismo del siglo XIX.</p>
+
+					</div>
+				</div>
+				
+			</div>
+
+			<!-- Segunda pintura -->
+			<div class="painting-container">
+
+				<div class="painting" id="painting2">
+
+				</div>
+				<div class="painting-text" id="text2">
+					
+					<div class="title-and-paragraph" id="tp2">
+					<p>La Creación de Adan (1511) - Miguel Ángel</p>
+					<p id="p2">Fresco realizado por encargo del Papa Julio II, siendo uno de los nueve episodios del Génesis que decoran la boveda de la Capilla Sixtina. En él, Dios le da vida a Adán, el primer hombre. Se erige como una de las obras más apreciadas e icónicas de la historia universal. </p>
+					</div>
+
+				</div>
+				
+			</div>
+
+			<!-- Tercera pintura -->
+			<div class="painting-container">
+
+				<div class="painting" id="painting3">
+
+				</div>
+				<div class="painting-text" id="text3">
+					<div class="title-and-paragraph"  id="tp3">
+					<p>Proclamación del Imperio Alemán (1871) - Anton von Werner</p>
+					<p id="p2">La guerra Franco-Prusiana sentenció el fin del Imperio Francés y proclamó, en el mismo Palacio de Versalles, la hegemonía del nuevo Káiser. De esta contienda brotará un profundo deseo de venganza, estallando décadas más tarde en la Primera Guerra Mundial.</p>
+					</div>
+
+				</div>				
+			</div>
+
+		</div>
+
+		<!-- Galería pública -->
+		<div class="subcontainer subcontainer_public">
+			
+			<!-- Contenedor de la imagen ampliada y las flechas -->
+			<div class="top-container">
+
+				<!-- Flecha izquierda -->
+				<div class="arrow-container" id="arrow1">
+					<div class="arrow-subcontainer"></div>
+				</div>
+
+				<!-- Imagen ampliada -->
+				<div class="image-container">
+
+					<!-- Imagen -->
+					<div class="image-subcontainer">
+						
+					</div>
+
+					<!-- Pie de foto -->
+					<div class="subtitle-container">
+						<p>A Father's Love (2015) - William Roby</p>
+					</div>
+				</div>
+
+				<!-- Flecha derecha -->
+				<div class="arrow-container" id="arrow2">
+					<div class="arrow-subcontainer"></div>
+				</div>
+				
+			</div>
+
+			<!-- Contenedor de las miniaturas -->
+			<div class="bottom-container">
+
+				<div class="thumbnail" id="th1"></div>
+				<div class="thumbnail" id="th2"></div>
+				<div class="thumbnail" id="th3"></div>
+				<div class="thumbnail" id="th4"></div>
+				<div class="thumbnail" id="th5"></div>
+				
+			</div>			
+			
+		</div>
+		
+	</div>
+	
+</body>
+</html>

@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<!-- Idioma español -->
+<html lang="es-ES">
+<head>
+	<meta charset="UTF-8">
+	<title>Formulario</title>
+
+	<!-- Librería jQuery -->
+	<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+
+	<!-- Validation.js -->
+	<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.1/dist/jquery.validate.min.js"></script>
+
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="https://cdnjs.Cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+	<script>
+		
+		// Cuando el documento esté listo
+		$(document).ready(function() {
+
+			/*Orden para limpiar el localStorage*/
+			/*localStorage.clear();*/
+
+			/*Declaramos un array para guardar los usuarios registrados*/
+			var arrayRegistros = [];
+
+			/*Si la variable que utilizamos en el Local Storage no es null, volcamos su contenido en el array de registros*/
+			if(JSON.parse(localStorage.getItem("arrayRegistrosStorage")) != null) {
+				arrayRegistros = JSON.parse(localStorage.getItem("arrayRegistrosStorage"));
+			} else {
+				/*Creamos un array de prueba con los datos de un usuario*/
+				var arrayUsuario = ["johndoe@gmail.com", "John", "1234"];
+
+				/*Lo introducimos en el array de registros*/
+				arrayRegistros.push(arrayUsuario);
+			}
+
+			/*alert(arrayRegistros);*/
+
+			/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+			/*FORMULARIO DE INICIO DE SESIÓN*/
+
+			/*Email o nickname al ganar el focus*/
+			$("#login #email").focus(function() {
+
+				/*El placeholder personalizado pasa a estar por encima de su campo de texto*/
+				$("#login #placeholder_email").addClass("placeholder_up");
+				/*Se resalta el icono que ilustra el campo de texto*/
+				$("#login #fa_email").addClass("fa_up");
+			});
+			/*Email o nickname al perder el focus*/
+			$("#login #email").focusout(function(){
+
+				/*Si el campo de texto está vacío*/
+				if($("#login #email").val() == "") {
+
+					/*El placeholder vuelve a su posición original*/
+					$("#login #placeholder_email").removeClass("placeholder_up");
+					/*El icono toma su opacidad original*/
+			  		$("#login #fa_email").removeClass("fa_up");
+				}			  	
+			});
+
+			/*Contraseña al ganar el focus*/
+			$("#login #key").focus(function() {
+				$("#login #placeholder_key").addClass("placeholder_up");
+				$("#login #fa_key").addClass("fa_up");
+			});
+			/*Contraseña al perder el focus*/
+			$("#login #key").focusout(function(){
+
+				if($("#login #key").val() == "") {
+				  	$("#login #placeholder_key").removeClass("placeholder_up");
+				  	$("#login #fa_key").removeClass("fa_up");
+			  	}
+			});
+
+			/*Subtítulo para cambiar al formulario de registro*/
+			$("#main_login .payment-card-subtitle a").click(function() {
+
+				/*Desvanecemos el formulario de inicio de sesión*/
+				$("#main_login").animate({opacity: 0}, {queue: true, duration: 50});
+				$("#main_login").css('pointer-events', 'none');
+
+				$("#main_login").css('margin-left', '-600px');
+
+				/*Pasados unos milisegundos*/
+				setTimeout(function() {		
+
+					/*Hacemos aparecer el formulario de registro*/
+					$("#main_signin").animate({opacity: 1}, {queue: false, duration: 80});
+					$("#main_signin").css('pointer-events', 'auto');
+					$("#main_signin").css('margin-left', '0');					
+
+					/*Buscamos el campo vacío más cercano al top para ubicar el focus*/
+					if($("#signin #email").val() == "") {
+						$("#signin #email").focus();
+					} else if($("#signin #nickname").val() == "") {
+						$("#signin #nickname").focus();
+					} else if($("#signin #key").val() == "") {
+						$("#signin #key").focus();
+					} else if($("#signin #key-confirmation").val() == "") {
+						$("#signin #key-confirmation").focus();
+					} else {
+						$("#signin #key-confirmation").focus();
+					}
+				}, 50)
+
+				setTimeout(function() {					
+					$("#main_login").css('margin-left', '-300px');
+				}, 400)
+			});
+
+			/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+			/*FORMULARIO DE REGISTRO*/
+
+			/*Email al ganar el focus*/
+			$("#signin #email").focus(function() {
+				$("#signin #placeholder_email").addClass("placeholder_up");
+				$("#signin #fa_email").addClass("fa_up");
+			});
+			/*Email al perder el focus*/
+			$("#signin #email").focusout(function(){
+
+				if($("#signin #email").val() == "") {
+					$("#signin #placeholder_email").removeClass("placeholder_up");
+			  		$("#signin #fa_email").removeClass("fa_up");
+				}			  	
+			});
+
+			/*Nickname al ganar el focus*/
+			$("#signin #nickname").focus(function() {
+				$("#signin #placeholder_nickname").addClass("placeholder_up");
+				$("#signin #fa_nickname").addClass("fa_up");
+			});
+			/*Nickname al perder el focus*/
+			$("#signin #nickname").focusout(function(){
+
+				if($("#signin #nickname").val() == "") {
+					$("#signin #placeholder_nickname").removeClass("placeholder_up");
+			  		$("#signin #fa_nickname").removeClass("fa_up");
+				}			  	
+			});
+
+			/*Contraseña al ganar el focus*/
+			$("#signin #key").focus(function() {
+				$("#signin #placeholder_key").addClass("placeholder_up");
+				$("#signin #fa_key").addClass("fa_up");
+			});
+			/*Contraseña al perder el focus*/
+			$("#signin #key").focusout(function(){
+
+				if($("#signin #key").val() == "") {
+				  	$("#signin #placeholder_key").removeClass("placeholder_up");
+				  	$("#signin #fa_key").removeClass("fa_up");
+			  	}
+			});
+
+			/*Confirmación de la contraseña al ganar el focus*/
+			$("#signin #key-confirmation").focus(function() {
+				$("#signin #placeholder_key-confirmation").addClass("placeholder_up");
+				$("#signin #fa_key-confirmation").addClass("fa_up");
+			});
+			/*Confirmación de la contraseña al perder el focus*/
+			$("#signin #key-confirmation").focusout(function(){
+
+				if($("#signin #key-confirmation").val() == "") {
+				  	$("#signin #placeholder_key-confirmation").removeClass("placeholder_up");
+				  	$("#signin #fa_key-confirmation").removeClass("fa_up");
+			  	}
+			});
+
+			/*Subtítulo para cambiar al formulario de inicio de sesión*/
+			$("#main_signin .payment-card-subtitle a").click(function() {
+
+				$("#main_signin").animate({opacity: 0}, {queue: true, duration: 50});
+				$("#main_signin").css('pointer-events', 'none');
+
+				$("#main_signin").css('margin-left', '600px');
+
+				setTimeout(function() {
+
+					$("#main_login").animate({opacity: 1}, {queue: false, duration: 80});
+					$("#main_login").css('pointer-events', 'auto');
+					$("#main_login").css('margin-left', '0');
+
+					$("#login #email").focus();
+
+					/*Buscamos el campo vacío más cercano al top para ubicar el focus*/
+					if($("#login #email").val() == "") {
+						$("#login #email").focus();
+					} else if($("#login #key").val() == "") {
+						$("#login #key").focus();
+					} else {
+						$("#login #key").focus();
+					}
+				}, 50)
+
+				setTimeout(function() {					
+					$("#main_signin").css('margin-left', '300px');
+				}, 400)
+			});
+
+			/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+			/*Cuando iniciamos por primera vez la web el foco pasa a estar sobre el primer campo de texto*/
+			$("#login #email").focus();
+
+			/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+			/*Validación del formulario*/
+			$(function() {
+
+				/*Interfaz de inicio de sesión*/
+				$("#login form").validate({
+
+					/*Reglas*/
+					rules: {
+						/*Campo de texto del email/nick*/
+						emailNick: {							
+							required: true,
+							minlength: 3,
+							maxlength: 60,
+							noSpace: true
+						},
+						/*Campo de texto de la contraseña*/
+						key: {
+							required: true,
+							minlength: 4,
+							maxlength: 30,
+							noSpace: true
+						},						
+					},
+
+					/*Mensajes de error*/
+					messages: {
+						emailNick: {
+							required: "Campo requerido",
+							minlength: "Por favor, introduzca tres caracteres por lo menos",
+							maxlength: "El campo no puede superar los 60 caracteres",
+						},
+						key: {
+							required: "Campo requerido",
+							minlength: "Por favor, introduzca cuatro caracteres por lo menos",
+							maxlength: "El campo no puede superar los 30 caracteres",
+						}
+					},
+
+					/*En caso de introducir los valores correctos en los campos*/
+					success: function(element) {
+
+						/*Resaltamos en verde el campo de texto*/
+	                    $("#login #" + element.attr('for')).addClass("success");
+	                    /*Malabares para que el padding de los mensajes de error no afecte a la correcta introducción de datos en los campos de texto, ya que en este caso también se añade la clase "error"*/
+	                    $("#login #" + element.attr('for') + "-error").removeClass("error");
+	                },
+				});
+
+				/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+				/*Regex para el email*/
+				$.validator.addMethod("email", function(email, element) {
+				    return email.match(emailReg)
+				}, "El email debe seguir el formato *@*.*");
+
+				/*Regex para controlar que ho haya espacios en blanco*/
+				jQuery.validator.addMethod("noSpace", function(value, element) { 
+				  return value.indexOf(" ") < 0 && value != ""; 
+				}, "Los espacios en blanco no están permitidos");
+
+				/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+				/*Interfaz de registro*/
+				$("#signin form").validate({
+
+					/*Reglas*/
+					rules: {
+						/*Campo de texto del email*/
+						email: {
+							required: true,
+							minlength: 5,
+							maxlength: 60,							
+							noSpace: true,
+							email: true
+						},
+						/*Campo de texto del nombre de usuario*/
+						nickname: {							
+							required: true,
+							minlength: 3,
+							maxlength: 20,
+							noSpace: true
+						},
+						/*Campo de texto de la contraseña*/
+						key: {
+							required: true,
+							minlength: 4,
+							maxlength: 30,
+							noSpace: true
+						},
+						/*Campo de texto de la confirmación de la contraseña*/
+						key_confirmation: {
+							required: true,
+							minlength: 4,
+							maxlength: 30,
+							equalTo: "#signin #key",
+							noSpace: true
+						}					
+					},
+
+					/*Mensajes de error*/
+					messages: {
+						email: {
+							required: "Campo requerido",
+							minlength: "Por favor, introduzca cinco caracteres por lo menos",
+							maxlength: "El campo no puede superar los 60 caracteres",
+						},
+						nickname: {
+							required: "Campo requerido",
+							minlength: "Por favor, introduzca tres caracteres por lo menos",
+							maxlength: "El campo no puede superar los 40 caracteres",
+						},
+						key: {
+							required: "Campo requerido",
+							minlength: "Por favor, introduzca cuatro caracteres por lo menos",
+							maxlength: "El campo no puede superar los 30 caracteres",
+						},
+						key_confirmation: {
+							required: "Campo requerido",
+							minlength: "Por favor, introduzca cuatro caracteres por lo menos",
+							maxlength: "El campo no puede superar los 30 caracteres",
+							equalTo: "Las contraseñas no coinciden",
+						}
+					},
+
+					/*En caso de introducir los valores correctos en los campos*/
+					success: function(element) {
+
+	                    $("#signin #" + element.attr('for')).addClass("success");
+	                    $("#signin #" + element.attr('for') + "-error").removeClass("error");
+	                },
+				});
+			});
+
+			/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+			/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+			/*Al pulsar sobre el botón de iniciar sesión*/
+			$("#login-start").on("click", function() {
+
+				/*Comprobamos que el formulario es válido*/
+				var val = $("#login form").valid();
+
+				/*En caso de que lo sea*/
+				if(val) {
+
+					/*Guardamos en variables el contenido de los textfields*/
+					if($("#login #email").val().match(emailReg)) {
+						var emailNick = $("#login #email").val().toLowerCase();
+					} else {
+						var emailNick = $("#login #email").val();
+					}					
+					var key = $("#login #key").val();
+					
+					/*Declaramos un booleano para controlar si los datos están registrados*/
+					var match = false;
+
+					/*Guardamos el índice*/
+					var index = 0;
+
+					/*Recorremos los registros existentes*/
+					for (var i = 0; i < arrayRegistros.length && !match; i++) {
+
+						if((emailNick == arrayRegistros[i][0] || emailNick == arrayRegistros[i][1]) && key == arrayRegistros[i][2]) {
+							match = true;							
+						}
+
+						index = i;
+					}
+
+					/*Si no existe el registro, preguntamos si queremos registrarnos*/
+					if(!match) {
+						var conf = confirm("Usuario inexistente, ¿desea registrarse?");
+
+						/*Si aceptamos, nos dirige al formulario de registro*/
+						if(conf) {
+							$("#main_login .payment-card-subtitle a").click();
+						} else {
+							$("#login #email").focus();
+							$("#login #email").select();
+						}
+					}
+					/*Si existe, pasamos a la galería*/
+					else {
+						/*alert("¡Se ha conectado!");*/
+						localStorage.setItem("userName", arrayRegistros[index][1]);
+						window.location.href = "gallery.html";						
+					}
+				}				
+			});
+
+			/*Atajo de teclado para iniciar sesión mediante la tecla enter si el focus lo tiene el último campo*/
+			$("#login #key").keydown(function(){
+
+				var x = event.keyCode;
+				if(x == 13 && $("#login form").valid()) {
+					$("#login button").click();
+				}
+			});
+
+			/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+			/*Al pulsar sobre el botón de registrarse*/
+			$("#signin-start").on("click", function() {
+
+				/*Comprobamos que el formulario es válido*/
+				var val = $("#signin form").valid();
+
+				/*En caso de que lo sea*/
+				if(val) {
+
+					/*Guardamos en variables el contenido de los textfields*/
+					var email = $("#signin #email").val().toLowerCase();
+					var nickname = $("#signin #nickname").val();
+					var key = $("#signin #key").val();
+
+					/*Declaramos un booleano para controlar si los datos están registrados*/
+					var match = false;
+
+					/*Recorremos los registros existentes*/
+					for (var i = 0; i < arrayRegistros.length; i++) {
+						if(email == arrayRegistros[i][0]) {							
+							match = true;
+						}
+					}
+
+					/*Si no existe el registro, registramos el nuevo usuario*/
+					if(!match) {
+						var auxArray = [email, nickname, key];
+						arrayRegistros.push(auxArray);
+
+						/*Guardamos en Local Storage los datos del nuevo usuario*/
+						/*Usamos JSON para poder guardar el array*/
+						localStorage.setItem("arrayRegistrosStorage", JSON.stringify(arrayRegistros));
+
+						var conf = confirm("¡Se registrado con éxito! ¿Desea iniciar sesión?");
+
+						/*Reiniciamos los campos de texto del formulario de registro*/
+						$("#signin #email").val("");
+						$("#signin #nickname").val("");
+						$("#signin #key").val("");
+						$("#signin #key-confirmation").val("");
+
+						/*Reinicimos el formato de validación*/
+						$("#signin #email").removeClass("success");
+						$("#signin #nickname").removeClass("success");
+						$("#signin #key").removeClass("success");
+						$("#signin #key-confirmation").removeClass("success");
+
+						/*Si elegimos iniciar sesión se nos dirige al formulario de inicio*/
+						if(conf) {
+							$("#main_signin .payment-card-subtitle a").click();
+							$("#login #email").val(email);
+							$("#login #key").val("");
+						} else {
+							$("#signin #email").focus();
+						}
+					} 
+					/*Si está registrado*/
+					else {
+						alert("El email ya está registrado");
+						$("#signin #email").select();
+					}
+				}
+			});
+
+			/*Atajo de teclado para iniciar sesión mediante la tecla enter si el focus lo tiene el último campo*/
+			$("#signin #key-confirmation").keydown(function(){
+
+				var x = event.keyCode;
+				if(x == 13 && $("#signin form").valid()) {
+					$("#signin button").click();
+				}
+			});
+
+			/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+			/*Código encargado de gestionar el cambio de vista "blanco/negro"*/
+
+			/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+			$("#sun").toggleClass("hide-icon");
+
+			/*Al pulsar sobre el modo noche/día*/
+			$(".icon").click(function() {
+
+				$(".icon").toggleClass("hide-icon");
+				$(".card").toggleClass("card_night");
+				$("input").toggleClass("input_night");
+				$("button").toggleClass("button_night");
+				$("p, h1").toggleClass("text_night");
+				$(".radial-gradient").toggleClass("background_night");
+				$(".icon").toggleClass("icon_night");
+				$("hr").toggleClass("hr_night");
+				$(".fa").toggleClass("fa_night");
+				$(".payment-card-subtitle #s1").toggleClass("subtitle_night");
+				$(".payment-card-subtitle a").toggleClass("subtitle_night");
+
+				/*Efecto tipo "pulsar" en la tarjetas*/
+				$(".wrapper").css("transform", "scale(.9)");
+				setTimeout(function() {
+					$(".wrapper").css("transform", "scale(1)");
+				}, 100)
+			});
+			
+			/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+			/*Otras utilidades*/
+
+			/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+			/*Cada vez que se redimensione el navegador, se paran las transiciones*/
+			$(window).on('resize', function(){
+				$("*").css( "transition-property", "none");
+			});
+
+			/*Una vez se termine de redimensionar, se restablecen las animaciones*/
+			var rtime;
+			var timeout = false;
+			var delta = 200;
+			$(window).resize(function() {
+				rtime = new Date();
+				if (timeout === false) {
+					timeout = true;
+					setTimeout(resizeend, delta);
+				}
+			});
+
+			function resizeend() {
+				if (new Date() - rtime < delta) {
+					setTimeout(resizeend, delta);
+				} else {
+					timeout = false;
+					$("*").css( "transition-property", "initial");
+				}               
+			}
+
+			/*Regex para direcciones de correo electrónico*/
+			var emailReg = (/^([a-z\d!#$%&'*+\-\/=?^_`{|}~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+(\.[a-z\d!#$%&'*+\-\/=?^_`{|}~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+)*|"((([ \t]*\r\n)?[ \t]+)?([\x01-\x08\x0b\x0c\x0e-\x1f\x7f\x21\x23-\x5b\x5d-\x7e\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|\\[\x01-\x09\x0b\x0c\x0d-\x7f\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))*(([ \t]*\r\n)?[ \t]+)?")@(([a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF][a-z\d\-._~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]*[a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])\.)+([a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF][a-z\d\-._~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]*[a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])\.?$/i);			
+		});
+
+	</script>
+	
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+	<style>
+		
+		/*Aplicamos a todo*/
+		* {
+			margin: 0;
+			padding: 0;
+			overflow: hidden;
+			text-align: center;
+			font-family: Helvetica;
+			transition: .4s;			
+		}
+		
+		/*Página HTML*/
+		html {
+			background-color: rgba(26,26,26);
+		}
+		
+		/*Texto*/
+		h1 {
+			padding-bottom: 40px;
+			font-size: 34px;
+		}
+		h1, p {
+			user-select: none;
+		}
+		.text_night {
+			color: rgba(255,255,255,1);
+		}
+
+		/*Campos de texto y botones*/
+		input, button {
+			margin-top: 60px;
+			text-align: left;
+			width: 300px;
+			height: 46px;
+			text-decoration: none;
+			outline: none;
+			border-radius: 2px;
+			padding-left: 40px;
+			padding-right: 30px;
+			border-style: none;
+			margin-top: 14px;
+			margin-bottom: 15px;
+			background-color: transparent;
+			border: 0 solid rgba(0,0,0,.4);
+			border-bottom: 2px solid rgba(0,0,0,.15);
+			font-size: 16px;			
+		}
+		/*Formato "noche"*/
+		.input_night {
+			border-bottom: 2px solid rgba(255,255,255,.15);
+			color: rgb(255,255,255,.8);
+		}
+		.input_night:focus {
+			border-bottom: 2px solid rgba(255,255,255,.9);
+		}
+		
+		/*Placeholder personlaizado de los campos de texto*/
+		.placeholder {
+			transform: translate(38px, 46px);
+			pointer-events: none;
+			opacity: .5;
+			transition: .3s !important;
+		}
+
+		/*Iconos*/
+		.fa {
+			margin-left: 10px;
+			margin-top: 46px;
+			font-size: 17px;
+			position: absolute;
+			opacity: .5;
+			color: black;
+		}
+		.fa_night {
+			color: white;
+		}
+		.fa_up {
+			opacity: .9;
+		}
+		#moon, #sun {
+			color: white;
+		}
+		.placeholder_up {
+			transform: translate(9px, 10px);
+			opacity: .8;
+			font-size: 42px;
+		}
+	
+		/*Botones*/
+		button {
+			width: 370px;
+			background-color: black;
+			color: white;
+			text-align: center;
+			cursor: pointer;
+			border: none;
+			margin-top: 36px;
+			opacity: .88;
+		}
+		button:hover {
+			opacity: .9;
+		}
+		input:focus {
+			border-bottom: 2px solid rgba(0,0,0,.7);
+		}
+		.button_night {
+			background-color: white;
+			color: rgba(0,0,0,1);
+		}
+		.button_night:hover {
+			opacity: 1;
+		}
+		
+		/*Formulario*/
+		form {
+			display: flex;
+			flex-direction: column;
+		}
+		
+		/*Líneas de separación*/
+		hr {
+			margin-top: 10px;
+		}
+		.hr_night {
+			opacity: .5;
+		}
+
+		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+		
+		/*Contenedor del botón de cambio de tema (blanco/negro)*/
+		.theme {
+			position: fixed;
+			top: 0px;
+			left: 0px;
+			width: 80px;
+			height: 80px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;  
+			color: white;
+			font-size: 30px;
+			z-index: 100;
+		}
+
+		/*Botones encargados del cambio de tema*/
+		.theme .icon {
+			position: absolute;
+			cursor: pointer;
+			padding: 0;
+			margin:0;
+			transition: .0s;
+			opacity: .7;
+			font-size: 28px;
+		}
+		#moon {
+			opacity: .3;
+		}
+		#moon:hover {
+			transform: scale(1);
+			opacity: .8;
+		}
+		#moon:active {
+			transform: scale(.9);
+		}
+
+		.theme .icon:hover {
+			transform: scale(1);
+			opacity: 1;
+		}
+
+		.theme .icon:active {
+			transform: scale(.9);
+		}
+
+		.hide-icon {
+			display: none;
+		}
+
+		.icon_night {
+			color: black !important;
+		}
+
+		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+		/*Contenedor principal*/
+		.main-container {
+			position: absolute;		
+			width: 100%;
+			height: 100vh;
+			display: flex;
+			overflow: auto;
+		}
+
+		/*Contenedor Flexbox*/
+		.wrapper {
+			margin: auto;
+			display: flex;
+			flex-direction: column;
+			flex-wrap: wrap;
+			justify-content: center;
+			align-items: center;
+			width: 100%;
+		}
+
+		/*Interfaces de inicio y registro*/
+		#main_login {
+			
+		}
+		#main_signin {
+			/*display: none;*/
+			opacity: 0;
+			pointer-events: none;
+			margin-left: 300px;
+		}
+
+		/*Fondo*/
+		.radial-gradient {
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			height: 100%;
+			width: 100%;
+			background: linear-gradient(to right, #141e30, #243b55);
+			z-index: 0;
+		}
+		.background_night {
+			filter: invert(1) grayscale(100%) brightness(150%);
+		}
+
+		.card-wrapper {
+			padding: 30px;
+		}
+
+		/*Tarjeta contenedora*/
+		.card {
+			background-color: white;
+			border-radius: 2px;
+			padding-left: 55px;
+			padding-right: 55px;
+			padding-bottom: 55px;
+			padding-top: 55px;
+			box-shadow: 0 0 20px 10px rgba(0, 0, 0, 0.3); 
+			display: flex;
+			flex-direction: column;
+			position: relative;
+		}
+		.card_night {
+			background-color: rgba(32,32,32);
+			box-shadow: none; 
+		}
+		.card p {
+			text-align: left;
+			font-size: 15px;
+			opacity: .9;
+		}
+
+		.input-wrapper {
+			display: flex;
+			flex-direction: column;
+		}
+		
+		/*Contenedor de botones*/
+		.button-container {
+			position: relative;
+		}
+
+		/*Botón de registrar*/
+		#signin-start, #signin  {
+			left: 0;
+		}
+
+		/*Espacio de separación entre botones*/
+		.gap-container {
+			width: 100%;
+			display: flex;
+			justify-content: center;
+			padding-top: 20px;
+			padding-bottom: 14px;
+		}
+
+		/*Espacio de separación entre botones*/
+		.gap {
+			width: 80%;
+			display: flex;
+			flex-direction: row;
+		}
+		.line {
+			width: 40%;
+		}
+		.gap-text {
+			width: 20%;
+		}
+		
+		/*Clase usada para ocultar elementos*/
+		.hide {
+			opacity: 0;
+			pointer-events: none;
+			transform: translateY(2px);
+		}
+
+		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+		/*Clase para indicar que se ha introducido un valor correcto*/
+		.success {
+			background-color: rgba(0,255,0,0.04);
+			border-bottom: 2px solid rgba(80,200,80,1);
+			padding-bottom: 0;
+		}
+		/*En caso de que introduzcamos un valor incorrecto en un campo de texto*/
+		input.error {
+			background-color: rgba(255,0,0,0.05);
+			border-bottom: 2px solid rgba(255,127,127);
+		}
+		/*Mensajes de error de Validate.js*/
+		label.error {
+			color: rgba(255, 80, 80);
+			padding-bottom: 12px;
+			width: 360px;
+			font-size: 14px;
+			text-align: left;
+		}
+
+		/*Subtítulo para acceder a la otra tarjeta*/
+		.payment-card-subtitle {
+		  font-size: 0.722em;
+		  color: white;
+		  margin-top: 2.51em;
+		  display: flex;
+		  flex-direction: row;
+		}
+			.payment-card-subtitle #s1 {
+				opacity: .4;
+				color: white;
+				padding-right: 0.5em;
+				transition: 0.1s !important;
+			}			
+			.payment-card-subtitle a {
+				color: white;
+				opacity: .6; 
+				position: relative;
+				z-index: 102;
+				cursor: pointer;
+				text-decoration: underline;
+				transition: 0.1s !important;
+			}
+			.payment-card-subtitle a:hover {
+				opacity: .8; 
+			}
+		.subtitle_night {
+			color: black !important;
+		}
+
+	</style>
+
+</head>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<body>
+
+	<!-- Fondo -->
+	<div class="radial-gradient"></div>
+
+	<div class="theme">
+		<div class="icon fa fa-moon-o" id="moon"></div>
+		<div class="icon fa fa-sun-o" id="sun"></div>
+	</div>
+	
+	<!-- Contenedor general del formulario para ininiciar sesión -->
+	<div class="main-container" id="main_login">
+
+		<!-- Envoltorio -->
+		<div class="wrapper" id="wrapper_login">
+
+			<!-- Tajeta contenedora-->
+			<div class="card-wrapper" id="login">
+
+				<div class="card">
+				
+					<!-- Título -->
+					<h1>Iniciar sesión</h1>
+
+					<form action="">
+
+						<!-- Email o nickname -->
+						<div class="input-wrapper">
+
+							<div class="placeholder" id="placeholder_email">
+								<p>Email o nickname</p>
+							</div>
+							<i class="fa fa-envelope" id="fa_email"></i>
+							<input type="text" name="emailNick" id="email" class="required" autocomplete="off">
+						</div>
+
+						<!-- Contraseña -->
+						<div class="input-wrapper">
+							<div class="placeholder" id="placeholder_key">
+								<p>Contraseña</p>
+							</div>
+							<i class="fa fa-key" id="fa_key"></i>
+							<input type="password" name="key" id="key" autocomplete="off">
+						</div>
+						
+					</form>
+
+					<!-- Botones para procesar los datos del formulario -->
+					<div class="button-container">
+						<button id="login-start">Iniciar</button>
+					</div>
+				</div>
+
+				<!-- Subtítulo para acceder a la otra tarjeta -->
+				<div class="wrapper">
+					<div class="payment-card-subtitle">
+						<p id="s1">¿Aún no eres miembro?</p>
+						<p><a>¡Regístrate aquí!</a></p>	
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+	<!-- Contenedor general del formulario de registro -->
+	<div class="main-container" id="main_signin">
+		<!-- Envoltorio -->
+		<div class="wrapper" id="wrapper_signin">
+			<!-- Tajeta contenedora -->
+			<div class="card-wrapper" id="signin">
+
+				<div class="card">
+				
+					<!-- Título -->
+					<h1>Registro</h1>
+
+					<form action="">
+
+						<!-- Email -->
+						<div class="input-wrapper">
+
+							<div class="placeholder" id="placeholder_email">
+								<p>Email</p>
+							</div>
+							<i class="fa fa-envelope" id="fa_email"></i>
+							<input type="text" name="email" id="email" class="required" autocomplete="off">
+						</div>
+
+						<!-- Nickname -->
+						<div class="input-wrapper">
+
+							<div class="placeholder" id="placeholder_nickname">
+								<p>Nickname</p>
+							</div>
+							<i class="fa fa-user" id="fa_nickname"></i>
+							<input type="text" name="nickname" id="nickname" class="required" autocomplete="off">
+						</div>
+
+						<!-- Contraseña -->
+						<div class="input-wrapper">
+							<div class="placeholder" id="placeholder_key">
+								<p>Contraseña</p>
+							</div>
+							<i class="fa fa-key" id="fa_key"></i>
+							<input type="password" name="key" id="key" autocomplete="off">
+						</div>
+
+						<!-- Confirmación de la contraseña -->
+						<div class="input-wrapper">
+							<div class="placeholder" id="placeholder_key-confirmation">
+								<p>Confirmar contraseña</p>
+							</div>
+							<i class="fa fa-key" id="fa_key-confirmation"></i>
+							<input type="password" name="key_confirmation" id="key-confirmation" autocomplete="off">
+						</div>
+						
+					</form>
+
+					<!-- Botones para procesar los datos del formulario -->
+					<div class="button-container">
+						
+						<button id="signin-start">Registrar</button>
+					</div>
+				</div>
+
+				<!-- Subtítulo para acceder a la otra tarjeta -->
+				<div class="wrapper">
+					<div class="payment-card-subtitle">
+						<p id="s1">¿Ya eres miembro?</p>
+						<p><a>¡Inicia sesión!</a></p>	
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

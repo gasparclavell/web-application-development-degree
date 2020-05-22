@@ -1,0 +1,2046 @@
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+EXAMEN
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<!DOCTYPE html>
+<!-- Idioma español -->
+<html lang="es-ES">
+<head>
+
+	<meta charset="UTF-8">
+	<title>Examen</title>
+
+	<!-- Librería jQuery -->
+	<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+
+	<!-- Validation.js -->
+	<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.1/dist/jquery.validate.min.js"></script>
+
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css"/> <!-- Extra -->
+
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	
+	<style>
+
+		/*Aplicamos a todo*/
+		* {
+			margin: 0;
+			padding: 0;
+			overflow: hidden;
+			/*text-align: center;*/
+			font-family: Helvetica;
+			/*transition: .2s;*/
+			box-sizing: border-box;
+			/*user-select: none;	*/
+		}
+		
+		/*Página HTML*/
+		html {
+			background-color: rgba(26,26,26);
+		}
+
+		/*Clase para centrar Divs*/
+		.center {
+			position: relative;
+		  	display: flex;
+		  	flex-direction: column;
+		  	flex-wrap: wrap;
+		  	vertical-align: middle;
+		  	align-items: center;
+		  	justify-content: center;  
+		  	margin: auto;
+		}
+
+		/*Fondo*/
+		.background {
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			height: 100%;
+			width: 100%;
+			background: white;
+			z-index: 0;
+		}
+
+		/*Contenedor principal*/
+		.main-container {
+			position: absolute;
+			display: flex;
+		}
+
+		/*Contenedor Flexbox*/
+		.wrapper {
+			margin: auto;
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+			justify-content: center;
+			align-items: center;
+			width: 100%;
+		}
+		
+		/*Tarjeta*/
+		.card {
+			width: 100vw;
+			height: 100vh;
+			max-width: 100vw;
+			max-height: 100vh;
+			background-color: rgba(26,26,26);
+			margin: 0px;
+			border-radius: 0px;
+			box-shadow: 0 5px 15px 8px rgba(0, 0, 0, 0.1);
+			text-align: left;
+		}
+
+		a {
+			color: rgba(95,106,251);
+		}
+
+		hr {
+			width: 97%;
+			margin-top: 30px;
+			height: 1px;
+			opacity: .3;
+		}
+
+		.inner-card {
+			width: 350px;
+			padding-bottom: 20px;
+			padding-top: 20px;
+		}
+
+		.inner-container {
+			position: absolute;		
+			width: calc(100% - 270px);;
+			height: 100%;
+			display: flex;
+			overflow: auto;			
+		}
+
+		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+		/*Formato de las pestañas */
+		.tab {
+		  float: left;
+		  overflow: hidden;
+		  background-color: rgba(26,26,26);
+		  width: 270px;
+		  min-width: 270px;
+		}
+	
+		/*Clases para el toggle del modo oscuro*/
+		.buttonDark {
+			background-color: rgba(14,14,14) !important;
+		}
+		.buttonDark:hover {
+			background-color: rgba(255,255,255,.1) !important;
+		}
+		.buttonDark.active {
+			background-color: #5f6afb !important;
+		}
+
+		/*Botones dentro de cada pestaña*/
+		.tab button {
+		  width: 100%;
+		  background-color: rgba(26,26,26);
+		  float: left;
+		  border: none;
+		  outline: none;
+		  cursor: default;
+		  padding: 14px 16px;
+		  font-size: 17px;
+		  color: rgba(255,255,255,.9);
+		  padding-left: 30px;
+		  padding-right: 30px;
+		  text-align: left;
+		}
+
+		/*Al pasar por encima de los botones*/
+		.tab button:hover {
+		  background-color: rgba(255,255,255,.1);
+		}
+
+		/*Activar la pestaña correspondiente*/
+		.tab button.active {
+		  color: rgb(255, 255, 255);
+    	  background-color: #5f6afb;
+		}
+
+		/*Contenido de las pestañas*/
+		.tabcontent {
+		  display: none;
+		  padding: 38px;
+		  padding-top: 20px;
+		  background-color: white;
+		  border-top: none;
+		  min-height: 316px;
+		  float: left;
+		  width: calc(100% - 270px);
+		  min-height: 100vh;
+		  max-height: 100vh;
+		  overflow-y: auto;
+		  overflow-x: auto;
+		}
+		
+		/*Iconos de las pestañas*/
+		.icon-tab {
+			transform: translate(0, 2px);
+			margin-right: 6px;
+		}
+
+		.tabs-title {
+			color: white;
+			font-size: 24px;
+			margin-left: 30px;
+			margin-bottom: 30px;
+			margin-top: 30px;
+		}
+
+		.return_button {
+			position: absolute;
+			right: 30px;
+			font-size: 24px;
+			cursor: pointer;
+			z-index: 100;
+		}
+
+		#return_button_1:active, 
+		#return_button_2:active, 
+		#return_button_3:active,
+		#return_button_4:active {
+			transform: scale(0.9);
+		}
+
+		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+		/*OPCIONES DEL ADMIN (altas, bajas, consultas)*/
+		
+		.options-admin {
+			max-width: 600px;
+			min-width: 260px;
+		}
+
+		/*Clases para el toggle del modo oscuro*/
+		.optionDark {
+			background-color: rgba(14,14,14) !important;
+			color: white !important;
+		}
+		.optionDark:hover {
+			background-color: rgba(95,106,251) !important;
+			color: white !important;
+		}
+		.optionDark:hover .icon_admin-option, .optionDark:hover .text_admin-option {
+			color: white !important;
+		}
+		
+		.option {
+			width: 100%;			
+			height: 60px;
+			/*margin: auto;*/
+			border-radius: 4px;
+			padding-left: 10px;
+			padding-right: 10px;
+			margin-top: 10px;
+			background-color: rgba(0,0,0,.07);
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+			justify-content: left;
+			align-items: flex-start;
+			cursor: default;
+			color: white;
+		}
+
+		.option:hover {
+			background-color: rgba(95,106,251);
+			color: white;
+		}
+
+		.option:hover .icon_admin-option, .option:hover .text_admin-option {
+			color: white !important;
+		}
+
+		.icon_admin-option {
+			font-size: 32px;
+			transform: translate(13px, 13px);
+			color: rgba(110,110,110);
+		}
+
+		.text_admin-option {
+			margin-left: 35px;
+			color: rgba(30,30,30);
+		}
+
+		#viewclients-admin {
+			margin-top: 10px;
+			min-width: 630px;			
+		}
+
+		.info {
+			width: 100%;
+			transform: translateY(-20px);
+			margin-bottom: 6px;
+			z-index: 300;
+		}
+		
+		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+		/*Elementos de la consulta de datos de clientes por parte del Admin*/
+
+		/*Cada uno de los contenedores que recogen el trabajador que ha fichado*/
+		.menu_element {
+			position: relative;
+			width: 100%;
+			height: 58px;
+			border-bottom: 1px solid rgba(0,0,0,.08);
+			margin: auto;
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+			justify-content: left;
+			align-items: flex-start;
+		}
+		
+		/*Imagen por defecto*/
+		.element-icon-container-back {
+		  	width: 36px;
+		  	height: 36px;
+		  	margin-left: 30px;
+    		margin-top: 11px;
+		  	color: rgba(0,0,0,.0);
+			background-image: url("client_photos/default.png");
+			background-size: cover;
+			background-position: center;
+			background-repeat: no-repeat;
+			clip-path: circle(50% at 50% 50%);
+		}
+		
+		/*Contenedor de la imagen del cliente*/
+		.element-icon-container {
+			position: absolute;
+		  	width: 36px;
+		  	height: 36px;
+		  	margin-left: 30px;
+    		margin-top: 11px;
+		  	color: rgba(0,0,0,.0);
+			background-image: url("client_photos/default.png");
+			background-size: cover;
+			background-position: center;
+			background-repeat: no-repeat;
+			clip-path: circle(50% at 50% 50%);
+		}
+
+		/*Contenedor del nombre y apellidos del cliente*/
+		.element-name-container {
+			margin-left: 30px;
+			min-width: 250px;
+			height: 100%;
+			text-transform: capitalize;
+		}
+
+		/*Contenedor del DNI del cliente*/
+		.element-id-container {
+			margin-left: 30px;
+			min-width: 100px;
+			height: 100%;
+			text-transform: uppercase;
+		}
+
+		/*Contenedor de la matrícula del cliente*/
+		.element-carid-container {
+			position: absolute;
+			margin-left: 30px;
+			min-width: 100px;
+			height: 100%;
+			text-transform: uppercase;
+			text-align: right;
+			right: 70px;
+			display: none;
+		}
+
+		/*Contenedor del estado del cliente (en el parking o no)*/
+		.element-state-container {
+			position: absolute;
+			margin-top: 18px;
+			min-width: 20px;
+			height: 20px;
+			background-color: rgba(241, 241, 241);
+			right: 30px;
+			clip-path: circle(50% at 50% 50%);
+		}
+
+		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+		/*FORMULARIO*/
+
+		/*Texto*/
+		p {
+			margin-top: 20px;
+			margin-bottom: 12px;
+		}
+
+		form {
+			max-width: 600px;
+			min-width: 350px;
+		}
+
+		.two-fields-container {
+			margin: auto;
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+			justify-content: left;
+			align-items: top;
+			width: 100%;
+		}
+
+		.two-fields-subcontainer {
+			width: 50%;
+		}
+
+		.three-fields-subcontainer {
+			width: 25%;
+		}
+
+		/*Campos*/
+		.field {
+			width: 97%;
+			height: 38px;
+			border-radius: 4px;
+			padding-left: 10px;
+			padding-right: 10px;
+			margin-bottom: 4px;
+			border: 1px solid rgba(0,0,0,.2);
+			outline: none;
+		}
+
+		.two-fields-subcontainer .field {
+			width: 94%;
+		}
+
+		.three-fields-subcontainer .field {
+			width: 88%;
+		}
+		
+		/*Cuando un campo recibe el foco*/
+		.field:focus {
+			border: 1px solid rgba(75,86,231,1);
+		}
+
+		/*Contenedor del botón*/
+		.button-container {
+			width: 97%;
+			text-align: right;
+		}
+		
+		/*Botón*/
+		#form-button {
+			background-color: rgba(95,106,251);
+			color: white;
+			border-style: none;
+			padding: 12px 45px 12px 45px;
+			border-radius: 3px;
+			margin-top: 30px;
+			font-size: 16px;
+			cursor: pointer;
+			outline: none;
+		}
+		#form-button:hover {
+			background-color: rgba(75,86,231);
+		}
+
+		.photo-container {
+			height: 100px;
+			position: relative;
+		}
+
+		.photo-cover {
+			position: absolute;
+			width: 100px;
+			height: 100px;
+			background-color: rgba(228, 230, 231);
+			z-index: 200;
+			text-align: center;
+			padding: 0 5px 0 5px;
+			margin-top: 13px;
+			color: rgba(0,0,0,0.9);
+			display: none;
+			font-size: 14px;
+			line-height: 20px;
+		}
+
+		.photo {
+			position: absolute;
+			width: 100px;
+			height: 100px;
+			background-image: url("client_photos/default.png");
+			background-size: cover;
+			background-position: center;
+			background-repeat: no-repeat;
+			z-index: 90;
+		}
+
+		#photo_newclient {
+			position: absolute;
+			border-style: none;
+			z-index: 0;
+			bottom: 0;
+			left: 110px;
+		}
+
+		.icon_extra {
+			position: absolute;
+			font-size: 16px;
+			right: 35px;
+			top: 10px;
+			opacity: .2;
+		}
+
+		.icon-container {
+			position: relative;
+			height: auto;
+		}
+		
+		/*Query*/
+		@media only screen and (max-width: 350px) {
+			.tab {
+				width: auto;
+				float: none;
+			}
+			.tabcontent {
+				width: auto;
+			}
+		}
+
+		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+		
+		/*Contenedor del interruptor para activar el modo oscuro*/
+		.switch-container {
+			margin-top: 2px;
+			margin-bottom: 16px;
+			margin: auto;
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+			justify-content: flex-start;
+			align-items: center;
+			width: 100%;
+		}
+		
+		/*Interruptor para activar el modo oscuro*/
+		.switch {
+			position: relative;
+			display: inline-block;
+			width: 50px;
+			height: 24px;
+			margin-left: 60px;
+			margin-top: 6px;
+		}
+
+		/*Ocultar los checkboxs por defecto*/
+		.switch input {
+			opacity: 0;
+			width: 0;
+			height: 0;
+		}
+
+		/*El slider*/
+		.slider {
+			position: absolute;
+			cursor: default;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background-color: #ccc;
+			-webkit-transition: .3s;
+			transition: .3s;
+		}
+		.slider:before {
+			position: absolute;
+			content: "";
+			height: 16px;
+			width: 16px;
+			left: 4px;
+			bottom: 4px;
+			background-color: white;
+			-webkit-transition: .3s;
+			transition: .3s;
+		}
+
+		input:checked + .slider {
+			background-color: #2196F3;
+		}
+
+		input:focus + .slider {
+			box-shadow: 0 0 1px #2196F3;
+		}
+
+		input:checked + .slider:before {
+			-webkit-transform: translateX(26px);
+			-ms-transform: translateX(26px);
+			transform: translateX(26px);
+		}
+
+		/*Sliders circulares*/
+		.slider.round {
+			border-radius: 24px;
+		}
+
+		.slider.round:before {
+			border-radius: 50%;
+		}
+
+		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+		/*Formato con el que indicaremos que se han introducido datos correctos/incorectos*/
+
+		/*Clase para indicar que se ha introducido un valor correcto*/
+		/*.success {
+			background-color: rgba(0,255,0,0.04);
+			border: 1px solid rgba(80,200,80,1);
+			padding-bottom: 0;
+		}*/
+		/*Iconos de los campos de texto*/
+		.icon {
+			position: absolute;
+			right: 35px;
+			top: 10px;
+			font-size: 17px;
+			display: none;
+		}
+			.check {
+				color: rgba(80,200,80,.75);
+				opacity: 0;
+			}
+			.times {
+				color: rgba(255,127,127,.95);
+			}
+		.form-newclient .times {
+			opacity: 0;
+		}
+		/*En caso de que introduzcamos un valor incorrecto en un campo de texto*/
+		.field.error {
+			background-color: rgba(255,0,0,0.01);
+			border: 1px solid rgba(255,127,127,.9);
+		}
+		/*Mensajes de error de Validate.js*/
+		label.error {
+			color: rgba(255, 80, 80, .8);
+			width: 360px;
+			font-size: 14px;
+			text-align: left;
+		}
+		
+	</style>
+	
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+	<script>
+		
+		// Cuando el documento esté cargado
+		$(document).ready(function() {
+
+			// Orden para limpiar el localStorage
+			// localStorage.clear();
+
+			/*Declaramos un array para guardar los administradores registrados*/
+			var arrayAdministradores = [];
+
+			/*Si la variable que utilizamos en el Local Storage no es null, volcamos su contenido en el array de registros*/
+			if(JSON.parse(localStorage.getItem("arrayAdministradoresStorage")) != null) {
+				arrayAdministradores = JSON.parse(localStorage.getItem("arrayAdministradoresStorage"));
+			} else {
+				// Creamos un array de prueba con los datos de un usuario
+				var arrayAdministrador = ["gaspar", "1234"];
+				var arrayAdministrador_2 = ["jesus", "1234"];
+				var arrayAdministrador_3 = ["jesús", "1234"];
+
+				// Lo introducimos en el array de registros
+				arrayAdministradores.push(arrayAdministrador);
+				arrayAdministradores.push(arrayAdministrador_2);
+				arrayAdministradores.push(arrayAdministrador_3);
+
+				localStorage.setItem("arrayAdministradoresStorage", JSON.stringify(arrayAdministradores));
+			}
+
+			/*Declaramos un array para guardar los clientes registrados*/
+			var arrayClientes = [];
+
+			/*Si la variable que utilizamos en el Local Storage no es null, volcamos su contenido en el array de registros*/
+			if(JSON.parse(localStorage.getItem("arrayClientesStorage")) != null) {
+				arrayClientes = JSON.parse(localStorage.getItem("arrayClientesStorage"));
+			} else {
+				// Creamos un array de prueba con los datos de un usuario
+				var arrayCliente = ["john", "doe", "01/01/1990", "00000001r", "0001aaa", "0001", "4000000000001", "01/01/2024", "001"];
+				var arrayCliente_2 = ["joe", "rogan", "01/01/1967", "00000002w", "0002bbb", "0002", "4000000000002", "01/01/2024", "002"];
+				var arrayCliente_3 = ["dave", "rubin", "01/01/1976", "00000003a", "0003ccc", "0003", "4000000000003", "01/01/2024", "003"];
+				var arrayCliente_4 = ["ben", "shapiro", "01/01/1984", "00000004g", "0004ddd", "0004", "4000000000004", "01/01/2024", "004"];
+
+				// Lo introducimos en el array de registros
+				arrayClientes.push(arrayCliente);
+				arrayClientes.push(arrayCliente_2);
+				arrayClientes.push(arrayCliente_3);
+				arrayClientes.push(arrayCliente_4);
+
+				localStorage.setItem("arrayClientesStorage", JSON.stringify(arrayClientes));
+			}
+
+			/*Declaramos un array para guardar los clientes que han entrado al parking*/
+			var arrayClientesParking = [];
+
+			/*Si la variable que utilizamos en el Local Storage no es null, volcamos su contenido en el array de registros*/
+			if(JSON.parse(localStorage.getItem("arrayClientesParkingStorage")) != null) {
+				arrayClientesParking = JSON.parse(localStorage.getItem("arrayClientesParkingStorage"));
+			} else {
+
+			}
+
+			// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+			
+			updateClientList();
+
+			function updateClientList() {
+
+				// Guardamos el contenedor de los clientes
+				var parentDiv = document.getElementById('viewclients-admin');
+
+				for (var i = 0; i < arrayClientes.length; i++) {
+
+					// Creamos:
+
+					var exists = document.getElementById(arrayClientes[i][3]);
+
+					if(exists == null) {
+
+						// El div del cliente
+						var menuElement = document.createElement('div');
+						menuElement.className = 'menu_element';
+						menuElement.id = arrayClientes[i][3];
+
+						// El contenedor del icono por defecto del cliente
+						var iconBackContainer = document.createElement('div');
+						iconBackContainer.className = 'element-icon-container-back';
+
+						// El contenedor del icono del cliente
+						var iconContainer = document.createElement('div');
+						iconContainer.className = 'element-icon-container';
+						iconContainer.style["background-image"] = 'url("client_photos/' + arrayClientes[i][3] + '.jpg")';
+
+						// El icono del cliente
+						var faUser = document.createElement('div');
+						faUser.className = 'fa fa-user';
+
+						// El contenedor del nombre del cliente
+						var nameContainer = document.createElement('div');
+						nameContainer.className = 'element-name-container';
+
+						// El nombre del cliente
+						var name = document.createElement('p');
+						name.textContent += arrayClientes[i][0] + " " + arrayClientes[i][1];
+
+						var stateContainer = document.createElement('div');
+						stateContainer.className = 'element-state-container';
+
+						var idContainer = document.createElement('div');
+						idContainer.className = 'element-id-container';
+
+						// El DNI del cliente
+						var id = document.createElement('p');
+						id.textContent += arrayClientes[i][3];
+
+						// La matrícula del cliente
+						var carIdContainer = document.createElement('div');
+						carIdContainer.className = 'element-carid-container';
+
+						var carId = document.createElement('p');
+						carId.textContent += arrayClientes[i][4];
+
+						// Incluímos cada div generado en su padre correspondiente
+						parentDiv.appendChild(menuElement);
+						menuElement.appendChild(iconBackContainer);
+						menuElement.appendChild(iconContainer);
+						iconContainer.appendChild(faUser);
+						menuElement.appendChild(nameContainer);
+						nameContainer.appendChild(name);
+						menuElement.appendChild(stateContainer);
+						menuElement.appendChild(idContainer);
+						idContainer.appendChild(id);
+
+						menuElement.appendChild(carIdContainer);
+						carIdContainer.appendChild(carId);
+					}
+				}
+			}
+
+			// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+			// Al pulsar sobre alguna de las pestañas
+			$("#b1").on("click", function() {
+				openTab("1");
+				$("#id_client").focus();
+			});
+			$("#b2").on("click", function() {
+				openTab("2");
+				focusField();
+			});
+			$("#b3").on("click", function() {
+				openTab("3");
+			});
+
+			function focusField() {
+				if($(".options-admin").css("display") != "none") {
+
+				} else if($(".newclient-admin").css("display") != "none") {
+					$("#name_newclient").focus();
+				} else if($(".removeclient-admin").css("display") != "none") {
+					$("#id_removeclient").focus();
+				} else {
+					if($("#user_admin").val() == "") {
+						$("#user_admin").focus();
+					} else {
+						$("#key_admin").focus();
+					}					
+				}
+			}
+
+			// Función encargada de abrir las pestañas
+			function openTab(id) {
+
+				// Ocultamos el contenido de todas las pestañas
+				$(".tabcontent").css("display", "none");
+
+				// Quitamos el efecto "resaltado" a todas las pestañas
+				$(".tablinks").removeClass("active");
+
+				// Resaltamos únicamente la pestaña seleccionada y mostramos su contenido
+				$("#t" + id).css("display", "block");
+				$("#b" + id).addClass("active");
+			}
+
+			// Comenzamos dejando pulsada la primera pestaña
+			$("#b1").click();
+			$("#id_client").focus();
+
+			// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+			$(function() {
+			    $("input:file").change(function (){
+			       	var fileName = $(this).val();
+
+			       	if(fileName != "") {
+			       		showElement(".photo-cover");
+			       	} else {
+			       		hideElement(".photo-cover");
+			       	}			       
+			    });
+			});
+
+			// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+			$(function() {
+
+				// Validación del formulario
+				$(".form-client").validate({
+
+					// Reglas
+					rules: {
+						id_client: {
+							required: true,
+							dni: true,
+						},
+						key_client: {
+							required: true,
+							noSpace: true,
+							pin: true,
+						},
+					},
+
+					// Mensajes de error
+					messages: {
+						id_client: {
+							required: "Campo requerido",
+						},
+						key_client: {
+							required: "Campo requerido",
+						},
+					},
+
+					// Ubicación de los errores
+			        errorPlacement: function (error, element) {
+
+			        	// Si es un radio button el mensaje de error aparecerá debajo de su contenedor
+						if (element.is(":radio") || element.is(":checkbox")) {
+			                error.appendTo(element.parents('.container'));
+			            } else {
+			            	error.insertAfter(element);
+			            }
+
+			            // Ocultamos el tick y mostramos la x
+			            element.parent().find('.check').css("display", "none");
+			            element.parent().find('.times').css("display", "block");
+					},
+
+					// En caso de introducir los valores correctos en los campos
+					success: function(element) {
+
+						// Resaltamos en verde el campo de texto
+	                    $("#" + element.attr('for')).addClass("success");
+	                    // Mostramos el tick y ocultamos la x
+	                    $("#" + element.attr('for')).parent().find('.check').css("display", "block");
+	                    $("#" + element.attr('for')).parent().find('.times').css("display", "none");
+	                    // Malabares para que el padding de los mensajes de error no afecte a la correcta introducción de datos en los campos de texto, ya que en este caso también se añade la clase "error"
+	                    $("#" + element.attr('for') + "-error").removeClass("error");
+	                },
+				});
+
+				// Formulario para el inicio de sesión del administrador
+				$(".form-admin").validate({
+
+					// Reglas
+					rules: {
+						user_admin: {
+							required: true,
+							minlength: 3,
+							maxlength: 40,
+							name_reg: true,
+						},
+						key_admin: {
+							required: true,
+							noSpace: true,
+							minlength: 4,
+							maxlength: 40,
+						},
+					},
+
+					// Mensajes de error
+					messages: {
+						user_admin: {
+							required: "Campo requerido",
+							minlength: "Por favor, introduzca tres caracteres por lo menos",
+							maxlength: "El campo no puede superar los 40 caracteres",
+						},
+						key_admin: {
+							required: "Campo requerido",
+							minlength: "Por favor, introduzca cuatro caracteres por lo menos",
+							maxlength: "El campo no puede superar los 40 caracteres",
+						},
+					},
+
+					// Ubicación de los errores
+			        errorPlacement: function (error, element) {
+
+			        	// Si es un radio button el mensaje de error aparecerá debajo de su contenedor
+						if (element.is(":radio") || element.is(":checkbox")) {
+			                error.appendTo(element.parents('.container'));
+			            } else {
+			            	error.insertAfter(element);
+			            }
+
+			            // Ocultamos el tick y mostramos la x
+			            element.parent().find('.check').css("display", "none");
+			            element.parent().find('.times').css("display", "block");
+					},
+
+					// En caso de introducir los valores correctos en los campos
+					success: function(element) {
+
+						// Resaltamos en verde el campo de texto
+	                    $("#" + element.attr('for')).addClass("success");
+	                    // Mostramos el tick y ocultamos la x
+	                    $("#" + element.attr('for')).parent().find('.check').css("display", "block");
+	                    $("#" + element.attr('for')).parent().find('.times').css("display", "none");
+	                    // Malabares para que el padding de los mensajes de error no afecte a la correcta introducción de datos en los campos de texto, ya que en este caso también se añade la clase "error"
+	                    $("#" + element.attr('for') + "-error").removeClass("error");
+	                },
+				});
+
+				// Formulario para registrar a un nuevo cliente del parking
+				$(".form-newclient").validate({
+
+					// Reglas
+					rules: {
+						photo_newclient:  {
+							// required: true,
+						},
+						name_newclient: {
+							required: true,
+							minlength: 3,
+							maxlength: 40,
+							name_reg: true,
+						},
+						surname_newclient: {
+							minlength: 3,
+							maxlength: 40,
+							name_reg: true,
+						},
+						birthdate_newclient: {
+							
+						},
+						id_newclient: {
+							required: true,
+							dni: true,
+						},
+						license_newclient: {
+							required: true,
+							car_id: true,
+						},
+						key_newclient: {
+							required: true,
+							noSpace: true,
+							pin: true,
+						},
+						confirmkey_newclient: {
+							required: true,
+							noSpace: true,
+							pin: true,
+							equalTo: '#key_newclient',
+						},
+						card_newclient: {
+							required: true,
+							noSpace: true,
+							card: true,
+						},
+						expiration_newclient: {
+							required: true,
+						},
+						pass_newclient: {
+							required: true,
+							noSpace: true,
+							minlength: 3,
+							maxlength: 3,
+						},
+					},
+
+					// Mensajes de error
+					messages: {
+						photo_newclient: {
+							required: "Campo requerido",
+						},
+						name_newclient: {
+							required: "Campo requerido",
+							minlength: "Por favor, introduzca tres caracteres por lo menos",
+							maxlength: "El campo no puede superar los 40 caracteres",
+						},
+						surname_newclient: {
+							minlength: "Por favor, introduzca tres caracteres por lo menos",
+							maxlength: "El campo no puede superar los 40 caracteres",
+							name_reg: "Por favor, introduzca apellidos válidos",
+						},
+						birthdate_newclient: {
+							min: "Por favor, introduzca una fecha válida",
+							max: "Por favor, introduzca una fecha válida",
+						},
+						id_newclient: {
+							required: "Campo requerido",
+						},
+						license_newclient: {
+							required: "Campo requerido",
+							minlength: "Por favor, introduzca tres caracteres por lo menos",
+							maxlength: "El campo no puede superar los 40 caracteres",
+						},
+						key_newclient: {
+							required: "Campo requerido",
+						},
+						confirmkey_newclient: {
+							required: "Campo requerido",
+							equalTo: "Los PINs no coinciden",
+						},
+						card_newclient: {
+							required: "Campo requerido",						
+						},
+						expiration_newclient: {
+							required: "Campo requerido",
+							min: "Por favor, introduzca una fecha válida",
+							max: "Por favor, introduzca una fecha válida",
+						},
+						pass_newclient: {
+							required: "Campo requerido",
+							minlength: "Por favor, introduzca tres dígitos",
+							maxlength: "Por favor, introduzca tres dígitos",
+						},
+					},
+
+					// Ubicación de los errores
+			        errorPlacement: function (error, element) {
+
+			        	// Si es un radio button el mensaje de error aparecerá debajo de su contenedor
+						if (element.is(":radio") || element.is(":checkbox")) {
+			                error.appendTo(element.parents('.container'));
+			            } else {
+			            	error.insertAfter(element);
+			            }
+
+			            // Ocultamos el tick y mostramos la x
+			            element.parent().find('.check').css("display", "none");
+			            element.parent().find('.times').css("display", "block");
+					},
+
+					// En caso de introducir los valores correctos en los campos
+					success: function(element) {
+
+						// Resaltamos en verde el campo de texto
+	                    $("#" + element.attr('for')).addClass("success");
+	                    // Mostramos el tick y ocultamos la x
+	                    $("#" + element.attr('for')).parent().find('.check').css("display", "block");
+	                    $("#" + element.attr('for')).parent().find('.times').css("display", "none");
+	                    // Malabares para que el padding de los mensajes de error no afecte a la correcta introducción de datos en los campos de texto, ya que en este caso también se añade la clase "error"
+	                    $("#" + element.attr('for') + "-error").removeClass("error");
+	                },
+				});
+				
+				// Formulario para eliminar un cliente
+				$(".form-removeclient").validate({
+
+					// Reglas
+					rules: {
+						id_removeclient: {
+							required: true,
+							dni: true,
+						},
+						key_removeclient: {
+							required: true,
+							noSpace: true,
+							pin: true,
+						},
+					},
+
+					// Mensajes de error
+					messages: {
+						id_removeclient: {
+							required: "Campo requerido",
+						},
+						key_removeclient: {
+							required: "Campo requerido",
+						},
+					},
+
+					// Ubicación de los errores
+			        errorPlacement: function (error, element) {
+
+			        	// Si es un radio button el mensaje de error aparecerá debajo de su contenedor
+						if (element.is(":radio") || element.is(":checkbox")) {
+			                error.appendTo(element.parents('.container'));
+			            } else {
+			            	error.insertAfter(element);
+			            }
+
+			            // Ocultamos el tick y mostramos la x
+			            element.parent().find('.check').css("display", "none");
+			            element.parent().find('.times').css("display", "block");
+					},
+
+					// En caso de introducir los valores correctos en los campos
+					success: function(element) {
+
+						// Resaltamos en verde el campo de texto
+	                    $("#" + element.attr('for')).addClass("success");
+	                    // Mostramos el tick y ocultamos la x
+	                    $("#" + element.attr('for')).parent().find('.check').css("display", "block");
+	                    $("#" + element.attr('for')).parent().find('.times').css("display", "none");
+	                    // Malabares para que el padding de los mensajes de error no afecte a la correcta introducción de datos en los campos de texto, ya que en este caso también se añade la clase "error"
+	                    $("#" + element.attr('for') + "-error").removeClass("error");
+	                },
+				});
+
+				// Método para validar los nombres (números y caracteres especiales no permitidos)
+				$.validator.addMethod("name_reg", function(value, element) {
+				    return value.match(name) || value == "";
+				}, "Por favor, introduzca un nombre válido");
+
+				// Método para validar el pin
+				$.validator.addMethod("pin", function(value, element) {
+				    return value.match(positiveInteger);
+				}, "Por favor, introduzca cuatro dígitos");
+
+				// Método para controlar que ho haya espacios en blanco
+				jQuery.validator.addMethod("noSpace", function(value, element) { 
+				  return value.indexOf(" ") < 0 && value != ""; 
+				}, "Espacios en blanco no permitidos");
+
+				// Método para validar el DNI
+				$.validator.addMethod('dni', function(value,element){
+					return this.optional(element) || validar(value);
+				}, "Por favor, introduzca un DNI válido");
+
+				// Método para validar el número de la tarjeta de crédito
+				$.validator.addMethod("card", function(value, element) {
+				    return value.match(creditCard);
+				}, "Por favor, introduzca un número de tarjeta válido");
+
+				// Método para validar el número de la tarjeta de crédito
+				$.validator.addMethod("car_id", function(value, element) {
+				    return value.match(carId);
+				}, "Por favor, introduzca una matrícula de coche válida");
+			});
+
+			var name = (/^[a-zA-ZÀ-ÖØ-öø-ÿ]+$/);
+
+			var positiveInteger = (/^[0-9]{4}$/);
+			
+			// Regex para las matrículas de coche
+			var carId = (/^[0-9]{4}[a-zA-Z]{3}$/);
+
+			var creditCard = (/^(?:4\d([\- ])?\d{6}\1\d{5}|(?:4\d{3}|5[1-5]\d{2}|6011)([\- ])?\d{4}\2\d{4}\2\d{4})$/);
+
+			// Función para validar el DNI
+			function validar(value){
+
+				var validChars = 'TRWAGMYFPDXBNJZSQVHLCKET';
+				var nifRexp = /^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKET]$/i;
+				var nieRexp = /^[XYZ][0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKET]$/i;
+				var str = value.toString().toUpperCase();
+
+				if (!nifRexp.test(str) && !nieRexp.test(str)) return false;
+
+				var nie = str
+				.replace(/^[X]/, '0')
+				.replace(/^[Y]/, '1')
+				.replace(/^[Z]/, '2');
+
+				var letter = str.substr(-1);
+				var charIndex = parseInt(nie.substr(0, 8)) % 23;
+
+				if (validChars.charAt(charIndex) === letter) return true;
+
+				return false;
+			}
+
+			// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+			var aforo = 400;
+
+			function updateInfo() {
+				$(".info p").text(arrayClientesParking.length + " / " + aforo + " plazas ocupadas");
+			}
+
+			updateInfo();
+
+			// Al pulsar sobre el botón del Cliente (entrar y salir del parking)
+			$(".form-client button").on("click", function() {
+
+				// Comprobamos que haya plazas libres
+				if(arrayClientesParking.length >= aforo) {
+					alert("Lo sentimos. Están ocupadas las " + aforo + " del parking.");
+				} else {				
+
+					// Comprobamos que el formulario es válido
+					var val = $(".form-client").valid();
+
+					// En caso de que lo sea
+					if(val) {
+
+						// Guardamos en variables el contenido de los textfields
+						var clientId = $(".form-client #id_client").val().toLowerCase();
+						var clientKey = $(".form-client #key_client").val();
+						
+						// Declaramos un booleano para controlar si los datos están registrados
+						var match = false;
+
+						// Guardamos el índice
+						var index_1 = 0;
+
+						// Recorremos los registros existentes
+						for (var i = 0; i < arrayClientes.length && !match; i++) {
+
+							if(clientId == arrayClientes[i][3] && clientKey == arrayClientes[i][5]) {
+								match = true;
+								index_1 = i;						
+							}
+						}
+
+						// Si no existe el registro
+						if(!match) {
+							alert("Acceso denegado. Datos no registrados.");
+						}
+						// Si existe
+						else {
+
+							var match = false;
+							var index_2 = 0;
+
+							// Recorremos los registros existentes
+							for (var i = 0; i < arrayClientesParking.length && !match; i++) {
+
+								if(clientId == arrayClientesParking[i][0]) {
+									match = true;
+									index_2 = i;						
+								}							
+							}
+
+							// Si no está en el parking
+							if(!match) {
+
+								alert("Bienvenido al parking " + arrayClientes[index_1][0].substr(0,1).toUpperCase() + arrayClientes[index_1][0].substr(1));
+								var auxArray = [clientId];
+
+								arrayClientesParking.push(auxArray);
+
+								/*Guardamos en Local Storage los datos del nuevo cliente*/
+								/*Usamos JSON para poder guardar el array*/
+								localStorage.setItem("arrayClientesParkingStorage", JSON.stringify(arrayClientesParking));
+
+								$("#" + clientId + " .element-state-container").css("background-color", "#83d683");
+								$("#" + clientId + " .element-carid-container").css("display", "block");
+
+								updateInfo();
+							} else {
+
+								alert("Adiós " + arrayClientes[index_1][0].substr(0,1).toUpperCase() + arrayClientes[index_1][0].substr(1));
+
+								arrayClientesParking.splice(index_2, 1);
+								localStorage.setItem("arrayClientesParkingStorage", JSON.stringify(arrayClientesParking));
+
+								$("#" + clientId + " .element-state-container").css("background-color", "rgba(241, 241, 241)");
+								$("#" + clientId + " .element-carid-container").css("display", "none");
+
+								updateInfo();
+							}
+
+							resetForm(".form-client");
+							setTimeout(function() {
+								$(".form-client #id_client").focus();
+							}, 1);
+						}
+						// alert(arrayClientes);
+					}
+				}
+			});
+
+			$.fn.clearValidation = function(){var v = $(this).validate();$('[name]',this).each(function(){v.successList.push(this);v.showErrors();});v.resetForm();v.reset();};
+
+			function resetForm(form) {
+				hideElement(form);
+				$(form)[0].reset();
+				setTimeout(function() {
+				    $(form).clearValidation();
+				    showElement(form);
+				}, 1);
+			}
+
+			// Al pulsar sobre el botón del Admin
+			$(".form-admin button").on("click", function() {
+
+				// Comprobamos que el formulario es válido
+				var val = $(".form-admin").valid();
+
+				// En caso de que lo sea
+				if(val) {
+
+					// Guardamos en variables el contenido de los textfields
+					var adminName = $(".form-admin #user_admin").val().toLowerCase();
+					var adminKey = $(".form-admin #key_admin").val();
+					
+					// Declaramos un booleano para controlar si los datos están registrados
+					var match = false;
+
+					// Guardamos el índice
+					var index = 0;
+
+					// Recorremos los registros existentes
+					for (var i = 0; i < arrayAdministradores.length && !match; i++) {
+
+						if(adminName == arrayAdministradores[i][0] && adminKey == arrayAdministradores[i][1]) {
+							match = true;							
+						}
+
+						index = i;
+					}
+
+					// Si no existe el registro
+					if(!match) {
+						alert("Acceso denegado. Datos no registrados.");
+					}
+					// Si existe, pasamos a la galería
+					else {
+						alert("Bienvenido " + adminName.substr(0,1).toUpperCase() + adminName.substr(1));
+						/*alert("¡Se ha conectado!");*/
+						hideElement(".login-admin");
+						showElement(".options-admin");
+						showElement("#return_button_1");	
+						$(".form-admin #key_admin").val("");					
+					}
+				}
+			});
+
+			// Al pulsar sobre el botón de registrar nuevo cliente
+			$(".form-newclient button").on("click", function() {
+
+				// Comprobamos que el formulario es válido
+				var val = $(".form-newclient").valid();
+
+				// En caso de que lo sea
+				if(val) {
+
+					var arrayCliente = []
+
+					// Guardamos en variables el contenido de los textfields
+					var newClientName = $(".form-newclient #name_newclient").val().toLowerCase();
+					var newClientSurname = $(".form-newclient #surname_newclient").val().toLowerCase();
+					var newClientBirthdate = $(".form-newclient #birthdate_newclient").val().toLowerCase();
+					var newClientId = $(".form-newclient #id_newclient").val().toLowerCase();
+					var newClientLicense = $(".form-newclient #license_newclient").val().toLowerCase();
+					var newClientkey = $(".form-newclient #key_newclient").val();
+					var newClientCard = $(".form-newclient #card_newclient").val();
+					var newClientExpiration = $(".form-newclient #expiration_newclient").val();
+					var newClientPass = $(".form-newclient #pass_newclient").val();
+
+					arrayCliente.push(newClientName);
+					arrayCliente.push(newClientSurname);
+					arrayCliente.push(newClientBirthdate);
+					arrayCliente.push(newClientId);
+					arrayCliente.push(newClientLicense);
+					arrayCliente.push(newClientkey);
+					arrayCliente.push(newClientCard);
+					arrayCliente.push(newClientExpiration);
+					arrayCliente.push(newClientPass);
+					
+					// Declaramos un booleano para controlar si los datos están registrados
+					var match = false;
+					var match_1 = false;
+					var match_2 = false;
+					var match_3 = false;
+
+					// Guardamos el índice
+					var index = 0;
+
+					// Recorremos los registros existentes
+					for (var i = 0; i < arrayClientes.length && !match; i++) {
+
+						if(arrayCliente[3] == arrayClientes[i][3]) {
+							match_1 = true;
+							match = true;
+						} if(arrayCliente[4] == arrayClientes[i][4]) {
+							match_2 = true;
+							match = true;
+						} if(arrayCliente[6] == arrayClientes[i][6]) {
+							match_3 = true;
+							match = true;
+						}
+
+						index = i;
+					}
+
+					// Si no existe el registro
+					if(!match_1 && !match_2 && !match_3) {
+						alert("Cliente registrado correctamente");
+						arrayClientes.push(arrayCliente);
+
+						/*Guardamos en Local Storage los datos del nuevo cliente*/
+						/*Usamos JSON para poder guardar el array*/
+						localStorage.setItem("arrayClientesStorage", JSON.stringify(arrayClientes));
+
+						updateClientList();
+
+						resetForm(".form-newclient");
+						setTimeout(function() {
+							$(".form-newclient #name_newclient").focus();
+						}, 1);
+					}
+					// Si existe, pasamos a la galería
+					else if(match_1) {
+						alert("Operación interrumpida. El DNI ya está registrado.");
+					} else if(match_2) {
+						alert("Operación interrumpida. La matrícula ya está registrada.");
+					} else if(match_3) {
+						alert("Operación interrumpida. El número de la tarjeta ya está registrado.");
+					}
+				}
+			});
+
+			// Al pulsar sobre el botón de eliminar un Cliente
+			$(".form-removeclient button").on("click", function() {
+
+				// Comprobamos que el formulario es válido
+				var val = $(".form-removeclient").valid();
+
+				// En caso de que lo sea
+				if(val) {
+
+					// Guardamos en variables el contenido de los textfields
+					var removeClientId = $(".form-removeclient #id_removeclient").val().toLowerCase();
+					var removeClientKey = $(".form-removeclient #key_removeclient").val();
+
+					// alert(removeClientId + " " + removeClientKey);
+					
+					// Declaramos un booleano para controlar si los datos están registrados
+					var match = false;
+
+					// Guardamos el índice
+					var index = 0;
+
+					// alert(removeClientId + " " + removeClientKey);
+
+					// Recorremos los registros existentes
+					for (var i = 0; i < arrayClientes.length && !match; i++) {
+
+						if(removeClientId == arrayClientes[i][3] && removeClientKey == arrayClientes[i][5]) {
+							match = true;							
+						}
+
+						index = i;
+					}
+
+					// Si no existe el registro
+					if(!match) {
+						alert("Operación detenida. Datos no registrados.");
+					}
+					// Si existe, lo eliminamos
+					else {
+						alert("El cliente ha sido eliminado ecorrectamente");
+						arrayClientes.splice(index,1);
+						localStorage.setItem("arrayClientesStorage", JSON.stringify(arrayClientes));
+
+						document.getElementById(removeClientId).remove();
+
+						// Comprobamos si está en el parking
+						var match = false;
+						var index_2 = 0;
+
+						// Recorremos los registros existentes
+						for (var i = 0; i < arrayClientesParking.length && !match; i++) {
+
+							// alert("removeId: " + removeClientId + ", removeKey: " + removeClientKey + " || id: " + arrayClientes[i][3] + ", removeKey: " + arrayClientes[i][5]);
+
+							if(removeClientId == arrayClientesParking[i][0]) {
+								match = true;
+								index = i;						
+							}							
+						}
+
+						// Si no está en el parking
+						if(!match) {
+
+
+						} else {
+
+							arrayClientesParking.splice(index_2, 1);
+							localStorage.setItem("arrayClientesParkingStorage", JSON.stringify(arrayClientesParking));
+							updateInfo();
+						}
+
+						resetForm(".form-removeclient");
+						setTimeout(function() {
+							$(".form-removeclient #id_removeclient").focus();
+						}, 1);
+						// $(".login-admin").css("display", "none");
+					}
+					// alert(arrayClientes);
+				}
+			});
+
+			// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+			hideElement(".return_button");
+			hideElement(".options-admin");
+			hideElement(".newclient-admin");
+			hideElement(".removeclient-admin");
+			hideElement("#viewclients-admin");
+
+			/*hideElement(".login-admin");
+			showElement("#viewclients-admin");
+
+			$("#b2").click();*/
+
+			// Al pulsar sobre las opciones del Admin
+
+			$("#dar-alta").on("click", function() {
+				hideElement(".options-admin");
+				showElement(".newclient-admin");
+				hideElement("#return_button_1");
+				showElement("#return_button_2");
+				focusField();
+			});
+
+			$("#dar-baja").on("click", function() {
+				hideElement(".options-admin");
+				showElement(".removeclient-admin");
+				hideElement("#return_button_1");
+				showElement("#return_button_3");
+				focusField();
+			});
+
+			$("#ver").on("click", function() {
+				hideElement(".options-admin");
+				showElement("#viewclients-admin");
+				hideElement("#return_button_1");
+				showElement("#return_button_4");
+			});
+
+			function hideElement(name) {
+				$(name).css("display", "none");
+			}
+
+			function showElement(name) {
+				$(name).css("display", "block");
+			}
+
+			// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+			$("#return_button_1").on("click", function() {
+				hideElement("#return_button_1");
+				hideElement(".options-admin");
+				showElement(".login-admin");
+				focusField();
+			});
+
+			$("#return_button_2").on("click", function() {
+				hideElement("#return_button_2");
+				showElement("#return_button_1");
+				hideElement(".newclient-admin");
+				showElement(".options-admin");
+			});
+
+			$("#return_button_3").on("click", function() {
+				hideElement("#return_button_3");
+				showElement("#return_button_1");
+				hideElement(".removeclient-admin");
+				showElement(".options-admin");
+			});
+
+			$("#return_button_4").on("click", function() {
+				hideElement("#return_button_4");
+				showElement("#return_button_1");
+				hideElement("#viewclients-admin");
+				showElement(".options-admin");
+			});
+
+			// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+			// Establecemos el máximo y mínimo de la fecha seleccionable según la fecha de hoy
+			var today = new Date();
+			var dd = today.getDate();
+			var mm = today.getMonth() + 1;
+			var yyyy = today.getFullYear();
+
+			if(dd < 10){
+			    dd = '0'+ dd;
+			} 
+		    if(mm < 10){
+		    	mm = '0'+ mm;
+		    } 
+
+			today = (yyyy - 14) + '-' + mm + '-' + dd;
+			$("#birthdate_newclient").attr("max", today); // El máximo serán 14 años menos desde hoy
+
+			var start = new Date();
+			start = (yyyy - 100) + '-' + mm + '-' + dd; // El mínimo serán 100 años menos desde hoy
+			$("#birthdate_newclient").attr("min", start);
+
+			today = (yyyy) + '-' + mm + '-' + dd;
+
+			// Caducidad de la tarjeta
+			$("#expiration_newclient").attr("min", today);
+
+			var end = new Date();
+			end = (yyyy + 20) + '-' + mm + '-' + dd;
+			$("#expiration_newclient").attr("max", end);
+
+			// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+			checkActiveClients();
+
+			function checkActiveClients() {
+
+				for (var j = 0; j < arrayClientes.length; j++) {
+					
+					clientId = arrayClientes[j][3];
+					var match = false;
+
+					//alert(clientId);
+
+					// Recorremos los registros existentes
+					for (var i = 0; i < arrayClientesParking.length && !match; i++) {						
+
+						if(clientId == arrayClientesParking[i][0]) {
+							match = true;
+							//alert("clientId: " + clientId + " || id: " + arrayClientesParking[i][0]);		
+						}							
+					}
+
+					// Si no está en el parking
+					if(match) {
+						$("#" + clientId + " .element-state-container").css("background-color", "#83d683");
+						$("#" + clientId + " .element-carid-container").css("display", "block");
+					} else {
+						$("#" + clientId + " .element-state-container").css("background-color", "rgba(241, 241, 241)");
+						$("#" + clientId + " .element-carid-container").css("display", "none");
+					}
+				}
+			}
+
+			// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+			// Interruptor para activar/desactivar el modo oscuro
+			$('#check').on("click", function() {
+
+				$(".tab button").toggleClass("buttonDark");
+				$(".option").toggleClass("optionDark");
+
+				if($('#check').prop('checked')) {
+				    $(".tabcontent").css("background-color", "rgba(26,26,26)");
+				    $(".tab").css("background-color", "rgba(14,14,14)");
+
+				    $(".card").css("background-color", "rgba(14,14,14)");
+				    $("p").css("color", "white");
+				    $(".field").css("background-color", "rgba(14,14,14)");
+				    $(".field").css("color", "white");
+				    $(".return_button").css("color", "white");
+
+				    $(".menu_element").css("border-bottom", "1px solid rgba(255,255,255,.08)");	  
+				} else {
+					$(".tabcontent").css("background-color", "white");
+					$(".tab").css("background-color", "rgba(26,26,26)");
+
+				    $(".card").css("background-color", "rgba(26,26,26)");
+				    $("p").css("color", "black");
+				    $(".field").css("background-color", "white");
+				    $(".field").css("color", "black");
+				    $(".return_button").css("color", "black");
+
+				    $(".tabs-title").css("color", "white");
+
+				    $(".menu_element").css("border-bottom", "1px solid rgba(0,0,0,.08)");	
+				}
+			});
+
+			// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+			// Cada vez que se redimensione el navegador, se paran las transiciones
+			$(window).on('resize', function(){
+				$("*").css( "transition-property", "none");
+			});
+
+			// Una vez se termine de redimensionar, se restablecen las animaciones
+			var rtime;
+			var timeout = false;
+			var delta = 200;
+			$(window).resize(function() {
+				rtime = new Date();
+				if (timeout === false) {
+					timeout = true;
+					setTimeout(resizeend, delta);
+				}
+			});
+
+			function resizeend() {
+				if (new Date() - rtime < delta) {
+					setTimeout(resizeend, delta);
+				} else {
+					timeout = false;
+					$("*").css( "transition-property", "initial");
+				}               
+			}
+		});
+		
+	</script>
+</head>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<body>
+
+	<!-- Fondo -->
+	<div class="background"></div>
+
+	<!-- Contenedor general -->
+	<div class="main-container">
+
+		<!-- Envoltorio -->
+		<div class="wrapper">
+			
+			<!-- Tarjeta -->
+			<div class="card">
+
+				<!-- Contenedor de las pestañas -->
+				<div class="tab">
+
+					<p class="tabs-title">Parking Lite</p>
+
+					<!-- Primera pestaña -->
+					<button class="tablinks" id="b1"><i class="icon-tab fa fa-user"></i> Cliente</button>
+					<!-- Segunda pestaña -->
+					<button class="tablinks" id="b2"><i class="icon-tab fas fa-tools"></i> Admin</button>
+					<!-- Tercera pestaña -->
+					<button class="tablinks" id="b3"><i class="icon-tab fas fa-cog"></i> Opciones</button>
+				</div>
+
+				<!-- Contenido de la primera pestaña -->
+				<div id="t1" class="tabcontent">	
+
+					<!-- <div class="inner-container">	
+
+						<div class="wrapper">
+
+							<div class="inner-card"> -->
+								<form class="form-client" action="javascript:void(0)">
+									<!-- Campo de texto que recoge el DNI -->
+									<p>DNI</p>
+									<div class="field-container">
+										<div class="icon-container">
+											<div class="icon check fa fa-check" id="check_email"></div>
+											<div class="icon times fa fa-times" id="times_email"></div>
+											<input class="field" type="text" name="id_client" id="id_client">
+										</div>
+									</div>
+
+									<!-- Campo de texto que recoge el PIN -->
+									<p>PIN</p>
+									<div class="field-container">
+										<div class="icon-container">
+											<div class="icon check fa fa-check" id="check_key"></div>
+											<div class="icon times fa fa-times" id="times_key"></div>
+											<input class="field" type="password" name="key_client" id="key_client">
+										</div>
+									</div>
+
+									<!-- Botón para enviar los datos del formulario -->
+									<div class="button-container">
+										<button id="form-button">Escanear</button>
+									</div>
+								</form>
+							<!-- </div>
+						</div>
+					</div> -->
+				</div>
+				
+				<!-- Contenido de la segunda pestaña -->
+				<div id="t2" class="tabcontent">
+
+					<div class="return_button fas fa-arrow-left" id="return_button_1"></div>
+					<div class="return_button fas fa-arrow-left" id="return_button_2"></div>
+					<div class="return_button fas fa-arrow-left" id="return_button_3"></div>
+					<div class="return_button fas fa-arrow-left" id="return_button_4"></div>
+
+					<div class="login-admin">
+						<form class="form-admin" action="javascript:void(0)">
+							<!-- Campo de texto que recoge el usuario -->
+							<p>Usuario</p>
+							<div class="field-container">
+								<div class="icon-container">
+									<div class="icon check fa fa-check" id="check_email"></div>
+									<div class="icon times fa fa-times" id="times_email"></div>
+									<input class="field" type="text" name="user_admin" id="user_admin">
+								</div>
+							</div>
+
+							<!-- Campo de texto que recoge la contraseña -->
+							<p>Contraseña</p>
+							<div class="field-container">
+								<div class="icon-container">
+									<div class="icon check fa fa-check" id="check_key"></div>
+									<div class="icon times fa fa-times" id="times_key"></div>
+									<input class="field" type="password" name="key_admin" id="key_admin">
+								</div>
+							</div>
+
+							<!-- Botón para enviar los datos del formulario -->
+							<div class="button-container">
+								<button id="form-button">Iniciar</button>
+							</div>
+						</form>
+					</div>
+
+					<div class="options-admin">
+						<div class="option" id="dar-alta">
+							<div class="icon_admin-option fas fa-sign-in-alt"></div>
+							<p class="text_admin-option">Dar de alta a cliente</p>
+						</div>
+						<div class="option" id="dar-baja">
+							<div class="icon_admin-option fas fa-sign-out-alt"></div>
+							<p class="text_admin-option">Dar de baja a cliente</p>
+						</div>
+						<div class="option" id="ver">
+							<div class="icon_admin-option fas fa-eye"></div>
+							<p class="text_admin-option">Ver clientes</p>
+						</div>
+					</div>
+
+					<div class="newclient-admin">
+						<form class="form-newclient" action="javascript:void(0)">
+
+							<p>Foto</p>
+							<div class="photo-container">
+								<div class="photo-cover">
+									<p>Necesario PHP</p>
+								</div>
+								<div class="photo"></div>
+								<input type="file" name="photo_newclient" id="photo_newclient">
+							</div>
+							
+							<div class="two-fields-container">
+
+								<!-- Campo de texto que recoge el nombre -->								
+								<div class="field-container two-fields-subcontainer">
+									<p>Nombre<a> *</a></p>
+									<div class="icon-container">
+										<div class="icon check fa fa-check" id="check_email"></div>
+										<div class="icon times fa fa-times" id="times_email"></div>
+										<input class="field" type="text" name="name_newclient" id="name_newclient">
+									</div>
+								</div>
+
+								<!-- Campo de texto que recoge lso apellidos -->								
+								<div class="field-container two-fields-subcontainer">
+									<p>Apellidos</p>
+									<div class="icon-container">
+										<div class="icon check fa fa-check" id="check_email"></div>
+										<div class="icon times fa fa-times" id="times_email"></div>
+										<input class="field" type="text" name="surname_newclient" id="surname_newclient">
+									</div>
+								</div>
+							</div>
+							
+							<div class="two-fields-container">
+
+								<!-- Campo de texto que recoge el DNI -->								
+								<div class="field-container two-fields-subcontainer">
+									<p>DNI<a> *</a></p>
+									<div class="icon-container">
+										<div class="icon check fa fa-check" id="check_email"></div>
+										<div class="icon times fa fa-times" id="times_email"></div>
+										<input class="field" type="text" name="id_newclient" id="id_newclient">
+									</div>
+								</div>
+
+								<!-- Campo de texto que recoge la fecha de nacimiento -->								
+								<div class="field-container two-fields-subcontainer">
+									<p>Fecha de nacimiento</p>
+									<div class="icon-container">
+										<div class="icon check fa fa-check" id="check_email"></div>
+										<div class="icon times fa fa-times" id="times_email"></div>
+										<input class="field" type="date" name="birthdate_newclient" id="birthdate_newclient">
+									</div>
+								</div>
+							</div>
+
+							<!-- Campo de texto que recoge la matrícula -->
+							<p>Matrícula<a> *</a></p>
+							<div class="field-container">
+								<div class="icon-container">
+									<div class="icon check fa fa-check" id="check_email"></div>
+									<div class="icon times fa fa-times" id="times_email"></div>
+									<input class="field" type="text" name="license_newclient" id="license_newclient">
+								</div>
+							</div>
+
+							<!-- Campo de texto que recoge el pin -->
+							<div class="two-fields-container">
+							
+								<div class="field-container two-fields-subcontainer">
+									<p>PIN<a> *</a></p>
+									<div class="icon-container">
+										<div class="icon check fa fa-check" id="check_key"></div>
+										<div class="icon times fa fa-times" id="times_key"></div>
+										<input class="field" type="password" name="key_newclient" id="key_newclient">
+									</div>
+								</div>
+
+								<div class="field-container two-fields-subcontainer">
+									<p>Confirmar PIN<a> *</a></p>
+									<div class="icon-container">
+										<div class="icon check fa fa-check" id="check_key"></div>
+										<div class="icon times fa fa-times" id="times_key"></div>
+										<input class="field" type="password" name="confirmkey_newclient" id="confirmkey_newclient">
+									</div>
+								</div>
+							</div>
+
+							<!-- Campo de texto que recoge los datos de tarjeta -->
+							<div class="two-fields-container">
+
+								<!-- Campo de texto que recoge el número de tarjeta -->								
+								<div class="field-container two-fields-subcontainer">
+									<p>Número de la tarjeta<a> *</a></p>
+									<div class="icon-container">
+										<div class="icon check fa fa-check" id="check_key"></div>
+										<div class="icon times fa fa-times" id="times_key"></div>		
+										<div class="icon_extra fas fa-lock" id="times_key"></div>
+										<input class="field" type="text" name="card_newclient" id="card_newclient">
+									</div>
+								</div>
+
+								<div class="field-container three-fields-subcontainer" id="expiration">
+									<p>Caducidad<a> *</a></p>
+									<div class="icon-container">
+										<div class="icon check fa fa-check" id="check_key"></div>
+										<div class="icon times fa fa-times" id="times_key"></div>
+										<input class="field" type="date" name="expiration_newclient" id="expiration_newclient">
+									</div>
+								</div>
+
+								<div class="field-container three-fields-subcontainer" id="card-key">
+									<p>Código<a> *</a></p>
+									<div class="icon-container">
+										<div class="icon check fa fa-check" id="check_key"></div>
+										<div class="icon times fa fa-times" id="times_key"></div>
+										<div class="icon_extra fas fa-lock" id="times_key"></div>
+										<input class="field" type="text" name="pass_newclient" id="pass_newclient">
+									</div>
+								</div>
+							</div>
+
+							<!-- Botón para enviar los datos del formulario -->
+							<div class="button-container">
+								<button id="form-button">Registrar</button>
+							</div>
+							
+						</form>
+					</div>
+
+					<div class="removeclient-admin">
+						<form class="form-removeclient" action="javascript:void(0)">
+
+							<!-- Campo de texto que recoge el DNI -->
+							<p>DNI</p>
+							<div class="field-container">
+								<div class="icon-container">
+									<div class="icon check fa fa-check" id="check_email"></div>
+									<div class="icon times fa fa-times" id="times_email"></div>
+									<input class="field" type="text" name="id_removeclient" id="id_removeclient">
+								</div>
+							</div>
+
+							<!-- Campo de texto que recoge el PIN -->
+							<p>PIN</p>
+							<div class="field-container">
+								<div class="icon-container">
+									<div class="icon check fa fa-check" id="check_key"></div>
+									<div class="icon times fa fa-times" id="times_key"></div>
+									<input class="field" type="password" name="key_removeclient" id="key_removeclient">
+								</div>
+							</div>
+
+							<!-- Botón para enviar los datos del formulario -->
+							<div class="button-container">
+								<button id="form-button">Eliminar</button>
+							</div>
+						</form>
+					</div>
+
+					<div id="viewclients-admin">
+						<div class="info">
+							<p>0 / X plazas ocupadas</p>
+						</div>
+					</div>
+				</div>
+
+				<!-- Contenido de la primera pestaña -->
+				<div id="t3" class="tabcontent">					
+					<!-- Contenedor del interruptor para el modo oscuro -->
+					<div class="switch-container">
+						<p>Modo oscuro</p>
+						<label class="switch">
+						 	<input type="checkbox" id="check">
+						  	<span class="slider round"></span>
+						</label>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

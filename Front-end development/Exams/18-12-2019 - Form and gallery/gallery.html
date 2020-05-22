@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<!-- Idioma español -->
+<html lang="es-ES">
+<head>
+	<meta charset="UTF-8">
+	<title>Galería</title>
+
+	<!-- Añadimos jQuery -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="https://cdnjs.Cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+	
+	<script>
+
+		/*Cuando el documento se haya cargado*/
+		$(document).ready(function(){
+
+			/*Escribir el mensaje de bienvenida usando el nombre asociado al inicio de sesión*/
+			$("#welcome_message p").text("— Bienvenido/a a nuestra visita virtual privada, " + localStorage.getItem("userName") + " —");
+
+			$(".icon").click(function() {
+				window.location.href = "form.html";	
+			});
+
+			/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+			// Dependiendo de la miniatura seleccionada, se ampliará una imagen u otra
+			for (var i = 1; i <= 5; i++) {
+				switchImage(i);
+			}
+
+			/*Al pulsar en "siguiente foto"*/
+			$("#arrow2 .arrow-subcontainer").click(function() {
+
+				if(selectedImage < 5) {
+					selectedImage++;
+				} else {
+					selectedImage = 1;
+				}
+				
+				thumbnailSelection();
+			});
+
+			/*Al pulsar en "foto anterior"*/
+			$("#arrow1 .arrow-subcontainer").click(function() {
+
+				if(selectedImage > 1) {
+					selectedImage--;
+				} else {
+					selectedImage = 5;
+				}
+				
+				thumbnailSelection();
+			});		
+
+		});
+
+		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+		/*FUNCIONES*/
+
+		/*Subtítulos de las fotos*/
+		var arrayPaintings = ["A Father's Love (2015) - William Roby","Españoles en el Colorado (2016) - Ferrer Dalmau","Proclamación del Imperio Alemán (1871) - Anton von Werner","El Rapto de Proserpina (1622) - Lorenzo Bernini","David con la Cabeza de Goliat (1607) - Caravaggio"];
+		var selectedImage = 1;
+
+		/*Función para ampliar las imágenes de la galería pública*/
+		function switchImage(num) {
+			$("#th" + num).click(function() {
+				selectedImage = num;
+				$(".image-subcontainer").css("background-image", "url(./images/gallery/" + num + ".jpg)");
+				$(".subtitle-container p").text(arrayPaintings[num-1]);
+				$(".thumbnail").css("filter", "grayscale(100%) contrast(100%) brightness(80%)");
+				$("#th" + num).css("filter", "grayscale(0%) contrast(100%) brightness(100%)");
+			});
+		}
+
+		/*Configuración al seleccionar una nueva foto en la galería pública*/
+		function thumbnailSelection() {			
+			$(".image-subcontainer").css("background-image", "url(./images/gallery/" + selectedImage + ".jpg)");
+			$(".subtitle-container p").text(arrayPaintings[selectedImage-1]);
+			$(".thumbnail").css("filter", "grayscale(100%) contrast(100%) brightness(80%)");
+			$("#th" + selectedImage).css("filter", "grayscale(0%) contrast(100%) brightness(100%)");
+		}
+
+	</script>
+
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+	<style>
+		
+		/*Reglas generales*/
+		* {
+			font-family: Helvetica, sans-serif;
+		}
+		body {
+			padding: 0;
+			margin: 0;
+			overflow: hidden;
+		}
+
+		/*Imagen de fondo*/
+		.background {
+			position: absolute;
+			filter: grayscale(100%) contrast(150%) brightness(20%) blur(4px);
+			background-image: url('./images/background.jpg');
+			background-color: rgb(100,100,100);
+			background-size: cover;
+			background-position: center;
+			background-repeat: no-repeat;
+			width: calc(100% + 50px);
+			height: calc(100% + 50px);
+			top: -10px;
+			left: -10px;
+		}
+		
+		/*Contenedor principal que centra el contenido*/
+		.main-container {
+			position: absolute;
+			vertical-align: middle;
+			margin: auto;
+			display: flex;
+			flex-direction: column;
+			flex-wrap: wrap;
+			justify-content: center;
+			align-items: center;
+			width: 100%;
+			height: 100%;			
+		}
+
+		/*Reglas de los subcontenedores*/
+		.subcontainer {
+			position: absolute;
+			display: flex;
+			width: 1000px;
+			height: 500px;
+			justify-content: center;
+			align-items: center;
+			color: white;			
+		}
+		/*Subcontenedor de la interfaz principal*/
+		.subcontainer_main {
+			opacity: 1;
+		}
+
+		/*Subcontenedor de la galería pública*/
+		.subcontainer_public {
+			width: 1200px;
+			height: 650px;
+			flex-direction: column;
+			margin-top: 0;
+			opacity: 1;
+			pointer-events: auto;
+		}
+
+		.myButton:hover {
+			background-color: rgba(255,255,255,.2);
+		}
+
+		/*Mensaje de bienvenida*/
+		#welcome_message {
+			color: white;
+			padding-bottom: 45px;
+			opacity: .9;
+		}
+		
+		/*Botón para retornar*/
+		.theme {
+			position: fixed;
+			top: 0px;
+			left: 0px;
+			width: 80px;
+			height: 80px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;  
+			color: white;
+			font-size: 30px;
+			z-index: 100;
+		}
+		.theme .icon {
+			position: absolute;
+			cursor: pointer;
+			padding: 0;
+			margin: 0;
+			transition: .0s;
+			opacity: .3;
+			font-size: 28px;
+			color: white;
+		}
+
+		.theme .icon:hover {
+			transform: scale(1);
+			opacity: .8;
+		}
+
+		.theme .icon:active {
+			transform: scale(.9);
+		}
+
+		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+		/*Botón en el que está la flecha de retorno*/
+		#button-img {
+			position: fixed;
+			width: 60px;
+			height: 60px;
+			border-radius: 30px;
+			border: 2px solid rgba(255,255,255,0.2);
+			background-color: rgba(255,255,255,0.05);
+			margin-left: 20px;
+			margin-top: 20PX;
+			cursor: pointer;
+			z-index: 100;
+			transform: rotate(180deg);
+			outline: none;
+			opacity: 0;
+			transition: .2s;
+		}
+
+		/*Contenedor de la imagen ampliada y las flechas de dirección*/
+		.top-container {
+			width: 100%;
+			height: 88%;
+			vertical-align: middle;
+			margin: auto;
+			display: flex;
+			flex-direction: column;
+			flex-wrap: wrap;
+			justify-content: center;
+			align-items: center;
+		}
+
+		/*Contenedor de las miniaturas*/
+		.bottom-container {
+			width: 100%;
+			height: 12%;
+			vertical-align: middle;
+			margin: auto;
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+			justify-content: center;
+			align-items: center;
+		}
+
+		/*Contenedor de las flechas*/
+		.arrow-container {
+			width: 15%;
+			height: 100%;
+			vertical-align: middle;
+			margin: auto;
+			display: flex;
+			flex-direction: column;
+			flex-wrap: wrap;
+			justify-content: center;
+			align-items: center;
+			margin-top: -45px;	
+		}
+
+		.arrow-subcontainer {
+			width: 100px;
+			height: 100px;
+			background-image: url('./images/side_arrow.png');
+			background-size: 50px 50px;
+  			background-position: 54% 50%;
+  			background-repeat: no-repeat;
+  			cursor: pointer;
+  			opacity: .2;
+  			clip-path: circle(50% at 50% 50%);
+  			transition: .2s;
+		}
+
+		.arrow-subcontainer:hover {
+			background-color: rgba(255,255,255,.1);
+			opacity: .7;			
+		}
+
+		#arrow1 {
+			transform: rotate(180deg);
+		}
+		
+		/*Efecto tipo "pulsar" en las flechas de navegación*/
+		.arrow-subcontainer:active {
+			transform: scale(.8);
+			background-color: rgba(255,255,255,.3);
+		}
+
+		/*Contenedor de la imagen ampliada*/
+		.image-container {
+			width: 70%;
+			height: 100%;
+			vertical-align: middle;
+			margin: auto;
+			display: flex;
+			flex-direction: column;
+			flex-wrap: wrap;
+			justify-content: center;
+			align-items: center;
+		}
+		.image-subcontainer {
+			width: 90%;
+			height: 80%;
+			border-radius: 5px;
+			box-shadow: 0 0 12px 10px rgba(0,0,0,.2);
+			background-image: url('./images/gallery/1.jpg');
+			background-size: cover;
+  			background-position: center;
+  			background-repeat: no-repeat;
+		}
+
+		/*Contenedor del texto inferior de las pinturas*/
+		.subtitle-container {
+			width: 90%;
+			height: 20%;
+			vertical-align: middle;
+			margin: auto;
+			display: flex;
+			flex-direction: column;
+			flex-wrap: wrap;
+			justify-content: center;
+			align-items: center;
+			opacity: .7;	
+			font-size: 14px;
+		}
+		.subtitle-container p {
+			margin-top: -10px;
+		}
+
+		/*Miniaturas de las fotos*/
+		.thumbnail {
+			width: 10%;
+			height: 75px;
+			margin: 20px;
+			cursor: pointer;
+			background-size: cover;
+  			background-position: center;
+  			background-repeat: no-repeat;
+  			margin-top: 0px;
+  			border-radius: 5px;
+  			box-shadow: 0 0 10px 5px rgba(0,0,0,.1);
+  			filter: grayscale(100%) contrast(100%) brightness(80%);
+  			transition: .2s;
+		}
+		/*Efecto tipo "pulsar" en las miniaturas*/
+		/*.thumbnail:active {
+			transform: scale(.98);
+		}*/
+		#th1 {
+			background-image: url('./images/gallery/1.jpg');
+			filter: grayscale(0%) contrast(100%) brightness(100%);
+		}
+		#th2 {
+			background-image: url('./images/gallery/2.jpg');
+		}
+		#th3 {
+			background-image: url('./images/gallery/3.jpg');
+		}
+		#th4 {
+			background-image: url('./images/gallery/4.jpg');
+		}
+		#th5 {
+			background-image: url('./images/gallery/5.jpg');
+		}
+	</style>
+</head>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<body>
+
+	<div class="background"></div>
+
+	<!-- Botón para volver a la interfaz principal -->
+	<div class="theme">
+		<div class="icon fa fa-sign-out"></div>
+	</div>
+
+	<div class="main-container">
+
+		<!-- Galería -->
+		<div class="subcontainer subcontainer_public">
+
+			<div id="welcome_message">
+				<p></p>
+			</div>	
+
+			<!-- Contenedor de la imagen ampliada y las flechas -->
+			<div class="top-container">
+
+				<!-- Flecha izquierda -->
+				<div class="arrow-container" id="arrow1">
+					<div class="arrow-subcontainer"></div>
+				</div>
+
+				<!-- Imagen ampliada -->
+				<div class="image-container">
+
+					<!-- Imagen -->
+					<div class="image-subcontainer">
+						
+					</div>
+
+					<!-- Pie de foto -->
+					<div class="subtitle-container">
+						<p>A Father's Love (2015) - William Roby</p>
+					</div>
+				</div>
+
+				<!-- Flecha derecha -->
+				<div class="arrow-container" id="arrow2">
+					<div class="arrow-subcontainer"></div>
+				</div>
+				
+			</div>
+
+			<!-- Contenedor de las miniaturas -->
+			<div class="bottom-container">
+
+				<div class="thumbnail" id="th1"></div>
+				<div class="thumbnail" id="th2"></div>
+				<div class="thumbnail" id="th3"></div>
+				<div class="thumbnail" id="th4"></div>
+				<div class="thumbnail" id="th5"></div>				
+			</div>			
+		</div>		
+	</div>	
+</body>
+</html>
