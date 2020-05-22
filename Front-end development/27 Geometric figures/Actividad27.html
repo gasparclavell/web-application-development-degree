@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es-ES">
+<head>
+	<meta charset="UTF-8">
+	<title>Actividad27</title>
+
+	<!--
+	En esta práctica se ha seguido explorando el uso de las tarjetas
+	como recurso para ordenar información. Esta vez el diseño es
+	adaptativo (a diferencia de la Actividad 8 de Diseño Web), 
+	se puede reducir la anchura del navegador y hacer scroll para 
+	ver las partes desplazadas por Flexbox.
+
+	Los documentos son: dos HTML, un CSS y un archivo JavaScript.
+
+	El código JavaScript se centra en controlar el cambio de datos
+	interactivo de las ecuaciones de las figuras geométricas.
+
+	Aparte de jQuery, se ha hecho uso de la librería MathJax para
+	la definición de dichas ecuaciones.
+	-->
+
+	<!-- Añadimos la hoja de estilo -->
+	<link rel="stylesheet" href="style.css">
+
+	<!-- Añadimos jQuery -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+	<script>
+
+		/*Cuando la página web esté lista*/
+		$(document).ready(function() {
+
+			/*Al hacer click en el botón de las figuras geométricas de dos dimensiones*/
+			$("button").click(function() {
+
+				/*Ocultamos el contenido de la tarjeta*/
+				$("#card3-content").hide();
+				$("#card-front_3").hide();
+				$("#card_3 .card-inner").hide();
+				$("#subtitle-container_3").hide();				
+				$("#card-subinner_3").css("background", "white");
+
+				/*Realizamos una animación de "inmersión" a la tarjeta*/
+				$("#card-subinner_3").animate({
+					marginLeft: '-=70vw',
+					marginTop: '-=55vh',
+					width: "+=100vw", 
+					height: "+=100vh"
+				}, 350, function(){
+				    location.href='Actividad27_aux.html';
+				});
+			});
+		});
+			
+	</script>
+
+</head>
+<body>
+
+	<div class="main-container">
+	
+		<!-- Contenedor general -->
+		<div id="wrapper">
+
+			<!-- Título y subtítulo -->
+			<p id="top-title">Figuras Geométricas</p>
+			<p id="top-subtitle">— Conjunto cuyos elementos son puntos —</p>
+
+			<!-- Contenedor de las tarjetas -->
+			<div id="container">
+
+				<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+				<!-- Primera tarjeta -->
+				<div id="card_1" class="card">
+					<div class="card-inner">
+
+						<!-- Tarjeta frontal -->
+						<div class="card-front">
+							<div class="text-container">
+								<p class="title">0</p>
+								<p class="text">DIMENSIONES</p>
+							</div>
+						</div>
+
+						<!-- Tarjeta trasera -->
+						<div class="card-back">
+							<div class="back-text-container">
+								<p class="back-figure">•</p>
+								<p class="back-title">Punto</p>
+								<p class="back-text">Figura que no tiene ni profundidad ni anchura. Las demás figuras geométricas son la unión de muchos de ellos.</p>
+							</div>
+						</div>
+
+					</div>
+
+					<!-- Subtítulo -->
+					<div class="subtitle-container">
+						<p class="subtitle">No hacen falta coordenadas</p>
+					</div>
+				</div>
+
+				<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+				<!-- Segunda tarjeta -->
+				<div id="card_2" class="card">
+					<div class="card-inner">
+
+						<!-- Tarjeta frontal -->
+						<div class="card-front">
+							<div class="text-container">
+								<p class="title">1</p>
+								<p class="text">DIMENSIÓN</p>
+							</div>
+						</div>
+
+						<!-- Tarjeta trasera -->
+						<div class="card-back">
+							<div class="back-text-container">
+								<p id="line"></p>
+								<p class="back-title back-title_2">Recta</p>
+								<p class="back-text back-text_2">Sucesión de puntos alineados.</p>
+								<!-- <hr> -->
+								<svg id="curve">
+								  <path d="M 0 40 q 70 40 140 0" stroke="black"
+								  stroke-width="4" fill="none" stroke-linecap="round"/>
+								</svg>
+								<p class="back-title back-title_2">Curva</p>
+								<p class="back-text back-text_2">Sucesión de puntos desalineados que no forman ángulos.</p>
+							</div>
+						</div>
+
+					</div>
+
+					<!-- Subtítulo -->
+					<div class="subtitle-container">
+						<p class="subtitle">Es necesaria una coordenada para definir un punto</p>
+					</div>
+				</div>
+
+				<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+				<!-- Tercera tarjeta -->
+				<div id="card_3" class="card">
+
+					<div id="card-subinner_3">
+
+						<div id="card-inner_3" class="card-inner">
+							
+							<!-- Tarjeta frontal -->
+							<div id="card-front_3" class="card-front">
+								<div class="text-container">
+									<p class="title">2</p>
+									<p class="text">DIMENSIONES</p>
+								</div>
+							</div>
+
+							<!-- Tarjeta trasera -->
+							<div id="card-back_3" class="card-back">
+								
+								<div id="card3-content">
+									<div class="category-container category-container_top">
+
+										<!-- Imagen de un polígono -->
+										<div class="image-container">
+											<div id="triangle"></div>
+											<div id="triangle_2"></div>
+										</div>
+
+										<!-- Definición de polígono -->
+										<div class="text_3-container">
+											<p class="back-title back-title_3">Polígonos</p>
+											<p class="back-text back-text_3">Secuencia finita de segmentos consecutivos que encierran una región en el plano.</p>
+										</div>
+									</div>
+
+									<div class="category-container">
+
+										<!-- Imagen de una figura curva -->
+										<div class="image-container">
+											<div id="circle"></div>
+											<div id="circle_2"></div>
+										</div>
+
+										<!-- Definición de figura curva -->
+										<div class="text_3-container">
+											<p class="back-title back-title_3">Figuras Curvas</p>
+											<p class="back-text back-text_3">Línea curva o mixta que encierra una región en el plano.</p>
+										</div>
+									</div>
+									
+									<!-- Botón para enlazar con las ecuaciones -->
+									<button>ECUACIONES</button>
+								</div>		
+							</div>							
+						</div>
+					</div>
+
+					<!-- Subtítulo -->
+					<div id="subtitle-container_3" class="subtitle-container">
+						<p class="subtitle">Son necesarias dos coordenadas para definir un punto</p>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,722 @@
+/*Eliminamos márgenes por defecto*/
+body {
+	padding: 0;
+	margin: 0;
+	overflow-x: hidden;
+}
+
+/*Contenedor principal*/
+.main-container {
+	padding: 0;			
+	background-color: rgb(34,42,48);
+	width: 100%;
+	height: 100vh;
+	font-family: serif;
+	display: flex;
+}
+
+/*Contenedor Flexbox*/
+#wrapper {
+	padding-top: 6vh;
+	background-color: rgb(34,42,48);
+	margin: auto;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	padding-bottom: 7vh;
+}
+
+/*Contenedor de las tarjetas de la interfaz principal*/
+#container {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	margin: auto;
+	text-align: center;
+	width: 100%;
+	cursor: default;
+}
+
+/*Tarjetas de la interfaz principal*/
+.card {
+	margin: 30px;
+	width: 270px;
+	height: 340px;	
+	background-color: transparent;
+	perspective: 1000px;
+	margin-bottom: 100px;
+}
+
+/*Contenedor interno*/
+.card-inner {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	transition: transform 0.6s;
+	transform-style: preserve-3d;
+}
+
+/*Giro al pasar el puntero sobre ellas*/
+.card:hover .card-inner {
+  	transform: rotateY(180deg);
+}
+
+/*Parte frontal y trasera de las tarjetas de la interfaz principal*/
+.card-front, .card-back {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	backface-visibility: hidden;
+	background-color: white;
+	border-radius: 20px;
+	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+/*Arreglo en la tercera para una carga rápida al girarse*/
+#card-back_3 {
+	backface-visibility: visible;
+}
+.card-back {
+	transform: rotateY(180deg);
+}
+
+#card-subinner_3 {
+	width: 270px;
+	height: 340px;
+	border-radius: 20px;
+}
+
+/*Título de la interfaz principal*/
+#top-title {
+	font-size: 60px;
+	color: white;
+	margin-bottom: 10px;
+	margin-top: 30px;
+}
+
+/*Al reducir el ancho del navegador se reduce el tamaño del título*/
+@media only screen and (max-width: 767px) {
+    #top-title {
+		font-size: 40px;
+	}
+ }
+
+/*Subtítulo de la interfaz principal*/
+#top-subtitle {
+	font-size: 14px;
+	color: white;
+	margin-bottom: 45px;
+	font-style: italic;
+}
+
+/*Contenedor del subtítulo de las tarjetas*/
+.subtitle-container {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	pointer-events: none;
+}
+
+/*Subtítulo de las tarjetas*/
+.subtitle {
+	margin-top: 40px;
+	font-size: 12px;
+	color: white;
+	opacity: 0.2;
+	width: 180px;
+	line-height: 15px;
+}
+
+/*Número de dimensiones*/
+.title {
+	margin-top: 27px;
+	margin-bottom: 0px;
+	font-size: 185px;
+}
+.text {
+	font-size: 23px;
+}
+
+/*Contenedor del texto de la parte trasera de las tarjetas*/
+.back-text-container {
+	width: 100%;
+	margin: auto;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+	margin-top: -10px;
+}
+
+/*Punto de las 0 dimensiones*/
+.back-figure {
+	margin: 0;
+	font-size: 125px;
+	margin-bottom: -20px;
+	margin-top: 30px;
+}
+
+/*Título de la parte trasera de las tarjetas*/
+.back-title {
+	margin: 0;
+	font-size: 25px;
+}
+
+/*Texto de la parte trasera de las tarjetas*/
+.back-text {
+	margin: 0;
+	margin-top: 20px;
+	font-size: 15px;
+	width: 80%;
+}
+.back-text_2 {
+	margin-top: 10px;
+	font-size: 14.8px;
+}
+
+/*Dibujo de una línea; 1 dimensión*/
+#line{
+	margin: 0;
+	margin-top: -10px;
+	margin-bottom: 20px;
+	width: 140px;
+	height: 77px;
+	border-bottom: 4px solid black;
+}
+
+/*Dibujo de una curva; 1 dimensión*/
+#curve {
+  width: 150px; 
+  height: 80px;
+  margin-top: 5px;
+  margin-bottom: 0px;
+}
+
+/*Contenedor de las categorías de figuras geométricas de 2 dimensiones*/
+.category-container {
+	display: flex;
+	flex-direction: row;
+	width: 98%;
+	margin-left: 10%;
+	margin-bottom: 20px;
+}
+.category-container_top {
+	margin-top: 40px;	
+}
+
+/*Imagen de la figura*/
+.image-container {
+	height: 50px;
+	width: 25%;
+}
+
+/*Dibujo de un triángulo; 2 dimensiones*/
+#triangle {
+	margin-top: 12px;
+	width: 53px;
+	height: 53px;
+	background-color: black;
+	clip-path: polygon(47% 0%, 0% 94%, 94% 94%);
+	transform: rotate(10deg);
+	margin-left: 4px;
+}
+#triangle_2 {
+	position: absolute;
+	margin-top: -47px;
+	width: 44px;
+	height: 43.6px;
+	background-color: white;
+	clip-path: polygon(47% 0%, 0% 94%, 94% 94%);
+	transform: rotate(10deg);
+	margin-left: 8px;
+}
+
+/*Dibujo de un círculo; 2 dimensiones*/
+#circle {
+	margin-top: 13px;
+	margin-left: -2px;
+	width: 57px;
+	height: 57px;
+	background-color: black;
+	clip-path: circle(45% at 50% 50%);
+}
+#circle_2 {
+	position: absolute;
+	margin-top: -54px;
+	margin-left: 1px;
+	width: 51px;
+	height: 51px;
+	background-color: white;
+	clip-path: circle(45% at 50% 50%);
+}
+
+/*Contenedor del texto de la figura*/
+.text_3-container {
+	/*background-color: red;*/
+	width: 70%;
+	text-align: left;
+	margin: 0;
+	padding: 0;
+}
+
+/*Nombre de la figura*/
+.back-title_3 {
+	font-size: 20px;
+	margin-top: 2px;
+	margin-bottom: -10px;
+}
+
+/*Texto (definición) de la figura*/
+.back-text_3 {
+	font-size: 12.2px;
+}
+
+/*Botón para enlazar con las ecuaciones*/
+button {
+	text-decoration: none;
+	border: none;
+	width: 80%;
+	height: 40px;
+	font-size: 16px;
+	color: white;
+	border-radius: 10px;
+	cursor: pointer;
+	transition-duration: 200ms;
+	background-color: rgba(0,0,0,0.9);
+	outline: none;
+	margin-top: 23px;
+}
+button:hover {
+	background-color: rgba(0,0,0,1);
+}
+
+/*- - - - - - - - - - - - - - - - - - - - - - -*/
+/*Clases e Ids del segundo HTML*/
+/*- - - - - - - - - - - - - - - - - - - - - - -*/
+
+/*Flecha de retorno*/
+#black-container {
+	position: fixed;
+}
+
+/*Imagen de la flecha*/
+#back-img {
+	width: 50px;
+	transform: rotate(180deg);
+	opacity: 0.7;
+	margin-left: -4px;
+	margin-top: 5px;
+}
+
+/*Botón en el que está la flecha*/
+#button-img {
+	position: fixed;
+	width: 60px;
+	height: 60px;
+	border-radius: 30px;
+	background-color: rgba(0,0,0,0.05);
+	margin-left: 20px;
+	z-index: 100;
+}
+#button-img:hover {
+	background-color: rgba(0,0,0,0.1);
+}
+
+/*Contenedor Flexbox*/
+#wrapper_2 {
+	position: absolute;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 100%;
+	/*opacity: 0;*/
+}
+
+/*Contenedor del título (Polígonos y Figuras Curvas)*/
+.title-container {
+	display: flex;
+	position: relative;
+}
+
+/*Título*/
+.title-pag2 {
+	font-size: 70px;
+	margin: 0;
+	text-align: center;
+}
+
+/*Atributos de las barras*/
+hr {
+	width: 20vw;
+	height: 0.1px;
+	margin-top: 45px;
+	margin-left: 50px;
+	margin-right: 50px;
+	opacity: 0.6;
+	/*border-top: 0.1px solid black;*/
+}
+
+/*Al reducir el ancho del navegador se reduce el tamaño del título y las barras laterales desaparecen*/
+@media only screen and (max-width: 767px) {
+    .title-pag2 {
+		font-size: 55px;		
+	}
+	hr {
+		width: 0;
+		opacity: 0;
+	}
+}
+
+/*Título de los Polígonos*/
+#title-container_1 {
+	margin-top: 60px;
+	opacity: 0;
+}
+/*Título de las figuras curvas*/
+#title-container_2 {
+	opacity: 0;
+}
+
+/*Barras laterales de los títulos*/
+#title-container_2 hr {
+	width: 15vw;
+}
+
+/*Contenedor de las tarjetas*/
+.card-container {
+	padding-top: 0px;
+	padding-bottom: 90px;
+	width: 85%;
+	/*background-color: red;*/
+	margin: auto;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+	align-items: initial;
+}
+/*Contenedor de las tarjetas y los subtítulos*/
+.card-aux-subcontainer{
+	opacity: 0;
+}
+
+/*Tarjetas de la interfaz secundaria*/
+.card-aux {
+	margin: 30px;
+	width: 290px;
+	height: 360px;	
+	background-color: white;
+	border-color: rgba(0,0,0,0.1);
+	border-width: 2px;
+	border-style: solid;
+	margin-bottom: 100px;
+	margin-top: 140px;
+	border-radius: 20px;
+	/*box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);*/
+}
+
+/*Contenedor de la imagen de carga*/
+.loading-container {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+}
+
+/*Imagen de carga*/
+.loading {
+	position: absolute;
+	margin-top: 110px;
+}
+
+/*Contenedor del círculo superior de las tarjetas*/
+.circle-container {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+}
+.circle-subcontainer {
+    border: 2px solid rgba(0,0,0,0.1);    
+    border-radius: 50%;
+    width: 130px;
+    height: 130px;
+    margin-top: -70px;
+    background-color: white;
+}
+
+.card-subcontainer {
+	margin-top: 0px;
+	display: flex;
+	justify-content: center;
+	width: 100%;
+}
+
+/*Título de la tarjeta (nombre de la figura)*/
+.card-title-container {
+	display: flex;
+	justify-content: center;
+	width: 100%;
+}
+.card-title {
+	font-size: 20px;
+	margin: 0;
+	margin-top: 10px;
+}
+
+/*Contenedor de las ecuaciones*/
+.ecuation-container {
+	margin-top: 20px;
+	margin-left: 10%;
+	width: 80%;
+	height: 40px;
+	display: flex;
+	justify-content: left;
+	opacity: 0;
+}
+
+/*Area o perímetro*/
+.ecuation-container-left {
+	width: 12%;
+	text-align: left;
+}
+
+/*Alinearlos a la izquierda*/
+.ecuation-container-left p .MathJax_Display {
+  text-align: left !important;
+}
+
+/*Símbolos de "="*/
+.ecuation-container-equals {
+	width: 5%;
+	/*background-color: pink;*/
+}
+
+/*Subcontenedor con las ecuaciones*/
+.ecuation-container-middle {
+	width: 53%;
+	/*background-color: yellow;*/
+}
+
+/*Subcontenedor con los resultados del área y el perímetro*/
+.ecuation-container-right {
+	width: 25%;	
+	text-align: right;
+	/*background-color: green;*/
+}
+
+/*Margen extra para las ecuaciones que contienen divisiones*/
+.division {
+	margin-top: -8px;
+}
+.division_plus {
+	margin-top: -14px;
+}
+
+/*Margen extra para las potencias*/
+.superscript {
+	margin-top: 12px;
+	margin-right: -7px;
+}
+.superscript-math {
+	margin-top: 7px;
+	margin-right: -7px;
+}
+
+/*Contenedor del perímetro*/
+.perimeter-container {
+	margin-top: 0;
+}
+
+/*Contenedor de los campos de las variables*/
+.data-container {
+	margin-top: 30px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 15px;
+}
+
+/*Parte izquierda*/
+.data-container-left {
+	margin-right: 7px;
+	width: 50%;
+}
+/*Parte derecha*/
+.data-container-right {
+	margin-left: 7px;
+	width: 50%;
+}
+
+/*Contenedor de las etiquetas y del campo de texto de las variables*/
+.number-container {
+	display: flex;
+	justify-content: center;
+	margin-bottom: 10px;
+}
+
+/*Etiqueta con el nombre de las variables*/
+.number-tag {
+	display: flex;
+	justify-content: center;
+	background-color: rgba(0,0,0,0.2);
+	color: rgba(0,0,0,0.7);
+	width: 24%;
+	height: 27px;
+	border-radius: 10px 0 0 10px;
+}
+.number-tag p {
+	margin-top: 4px;
+	margin-left: 2px;
+}
+
+/*Texto que aparece mientras no haya nada escrito en los campos de texto*/
+::placeholder {
+  opacity: 0.9;
+  font-size: 13.5px;
+}
+
+/*Campos de texto (únicos inputs)*/
+input {
+	width: 70%;
+	outline: none;
+	border: none;
+	background-color: rgba(0,0,0,0.05);
+	height: 25px;
+	border-radius: 0 10px 10px 0;
+	padding-left: 8%;
+}
+
+/*Atributos comunes a los dibujos de las figuras*/
+.shape {
+	background-color: rgba(0,0,0,0.8);
+}
+.shape_2 {
+	/*background-color: white;*/
+}
+
+/*Mensaje de error del triángulo*/
+#triangle-error {
+	width: 100%;
+	text-align: center;
+	margin-top: 47px;
+	font-size: 13.5px;
+	color: red;
+	opacity: 0;
+}
+
+/*Dibujo de un triángulo*/
+#triangle-card {
+	margin-top: 26px;
+	clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+	width: 65px;
+	height: 65px;
+}
+#triangle-card_2 {
+	position: absolute;
+	margin-top: 30px;
+	clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+	width: 59px;
+	height: 59px;
+}
+
+/*Dibujo de un cuadrado*/
+#square-card {
+	margin-top: 34px;
+	width: 60px;
+	height: 60px;
+}
+#square-card_2 {
+	position: absolute;
+	margin-top: 36px;	
+	width: 56px;
+	height: 56px;
+}
+
+/*Dibujo de un rectángulo*/
+#rectangle-card {
+	margin-top: 28px;
+	clip-path: polygon(0 15%, 100% 15%, 100% 85%, 0 85%);
+	width: 75px;
+	height: 75px;
+}
+
+/*Dibujo de un rombo*/
+#rhombus-card {
+	margin-top: 20px;
+	clip-path: polygon(50% 0%, 90% 49%, 50% 100%, 10% 50%);
+	width: 90px;
+	height: 90px;
+}
+
+/*Dibujo de un romboide*/
+#rhomboid-card {
+	margin-top: 20px;
+	width: 90px;
+	height: 90px;
+	clip-path: polygon(25% 25%, 100% 25%, 75% 75%, 0 75%);
+}
+
+/*Dibujo de un trapecio*/
+#trapezoid-card {
+	margin-top: 23px;
+	width: 80px;
+	height: 80px;
+	clip-path: polygon(20% 20%, 80% 20%, 100% 80%, 0 80%);
+}
+
+/*Dibujo de un pentágono*/
+#pentagon-card {
+	margin-top: 24px;
+	width: 75px;
+	height: 75px;
+	clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+}
+
+/*Dibujo de un hexágono*/
+#hexagon-card {
+	margin-top: 25px;
+	width: 70px;
+	height: 80px;
+	clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+
+/*Dibujo de un círculo*/
+#circle-card {
+	margin-top: 30px;
+	width: 70px;
+	height: 70px;
+	clip-path: circle(45% at 50% 50%);
+}
+
+/*Dibujo de una elipse*/
+#ellipse-card {
+	margin-top: 10px;
+	width: 110px;
+	height: 110px;
+	clip-path: ellipse(25% 40% at 50% 50%);
+	transform: rotate(90deg);
+}
+
+/*Contenedor del subtítulo de las tarjetas de la segunda interfaz*/
+.subtitle-card-container {
+	width: 290px;
+	margin: auto;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+	margin-top: -90px;
+}
+
+/*Subtítulo*/
+.card-aux-text {
+	color: rgba(0,0,0,0.6);
+	font-size: 12px;
+	text-align: center;
+	width: 80%;
+	line-height: 16px;
+}

@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="es-ES">
+<head>
+	<meta charset="UTF-8">
+	<title>Actividad27_aux</title>
+
+	<!-- Añadimos la hoja de estilo -->
+	<link rel="stylesheet" href="style.css">
+
+	<!-- Añadimos jQuery -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+	<!-- Librería para ecuaciones matemáticas -->
+	<script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'>
+
+		// Evitamos el parpadeo de las ecuaciones al actualizarlas
+		MathJax.Hub.processSectionDelay = 0;
+		MathJax.Hub.Config({
+			"fast-preview": {disabled: true},
+			messageStyle: "none",
+			tex2jax: {
+		      inlineMath: [['$','$'], ["\\(","\\)"]],
+		      processEscapes: true,
+		      preview: "none"
+		    }
+		});
+
+		// Se muestran las ecuaciones al cargar por primera vez la página
+		MathJax.Hub.Register.StartupHook("End",function () {
+			$(".ecuation-container").css("opacity", "1.0");
+			$(".loading").css("opacity", "0");
+		});
+
+	</script>
+	
+	<!-- Añadimos el archivo JavaScript -->
+	<script src="js.js"></script>
+
+</head>
+
+<body style="background-color: white">
+	
+	<!-- Botón para volver a la interfaz principal -->
+	<button id="button-img" onclick="location.href='Actividad27.html'">
+		<img id="back-img" src="images/arrow.png" alt="">
+	</button>	
+
+	<!-- Contenedor general -->
+	<div id="wrapper_2">
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- POLÍGONOS -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<div id="title-container_1" class="title-container">			
+			<hr>
+			<p class="title-pag2">Polígonos</p>
+			<hr>			
+		</div>
+
+		<!-- Contenedor de las tarjetas de polígonos -->
+		<div class="card-container">
+			
+			<div id="triangle-card-aux" class="card-aux-subcontainer">
+
+				<!-- Triángulo -->
+				<div class="card-aux">
+
+					<!-- Contenedor del círculo en el que incluir la imagen de la figura -->
+					<div class="circle-container">
+						<div class="circle-subcontainer">
+							<div class="card-subcontainer">
+								<div id="triangle-card" class="shape"></div>
+								<div id="triangle-card_2" class="shape_2"></div>					
+							</div>
+						</div>
+					</div>
+					
+					<!-- Contenedor de la imagen de carga -->
+					<div class="loading-container">					
+						<div class="loading">
+							<img src="images/loading.gif" alt="" width="50px">
+						</div>
+					</div>
+					
+					<!-- Nombre de la figura geométrica -->
+					<div class="card-title-container">
+						<p class="card-title">Triángulo</p>
+					</div>
+
+					<!-- Contenedor de la ecuación del área -->
+					<div class="ecuation-container">
+						<div class="ecuation-container-left">
+							<p class="mathjax">$${A}$$</p>
+						</div>
+						<div class="ecuation-container-equals"><p>=</p></div>
+						<div class="ecuation-container-middle">
+							<p id="triangle-area" class="mathjax division">$${b · h \over 2}$$</p>
+						</div>
+						<div class="ecuation-container-equals"><p>=</p></div>
+						<div class="ecuation-container-right">
+							<p id="triangle-area-result" class="superscript">... u<sup>2</sup></p>
+						</div>		
+					</div>
+					
+					<!-- Contenedor de la ecuación del perímetro -->
+					<div class="ecuation-container perimeter-container">
+						<div class="ecuation-container-left">
+							<p class="mathjax">$${P}$$</p>
+						</div>
+						<div class="ecuation-container-equals"><p>=</p></div>
+						<div id="triangle-perimeter" class="mathjax ecuation-container-middle">
+							$${a + b + c}$$
+						</div>
+						<div class="ecuation-container-equals"><p>=</p></div>
+						<div class="ecuation-container-right">
+							<p id="triangle-perimeter-result">... u</p>
+						</div>
+					</div>
+
+					<!-- Contenedor de los campos numéricos para asignar valor a las variables -->
+					<div class="ecuation-container data-container">
+						<div class="data-container-left">
+							<div class="number-container">
+								<div class="number-tag"><p>b</p></div>
+								<input id="triangle-b" type="number" placeholder="base" step="1" min="1" max="99.99">
+							</div>
+							<div class="number-container">
+								<div class="number-tag"><p>a</p></div>
+								<input id="triangle-a" type="number" placeholder="lado" step="1" min="1" max="99.99">
+							</div>					
+						</div>
+						<div class="data-container-right">
+							<div class="number-container">
+								<div class="number-tag"><p>h</p></div>
+								<input id="triangle-h" type="number" placeholder="altura" step="1" min="1" max="99.99">
+							</div>
+							<div class="number-container">
+								<div class="number-tag"><p>c</p></div>
+								<input id="triangle-c" type="number" placeholder="lado" step="1" min="1" max="99.99">
+							</div>	
+						</div>
+					</div>
+					<p id="triangle-error">Triángulo imposible</p>
+				</div>
+
+				<!-- Subtítulo -->
+				<div class="subtitle-card-container">
+					<p class="card-aux-text">Figura plana de tres lados</p>
+				</div>
+
+			</div>
+
+			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+			
+			<div id="square-card-aux" class="card-aux-subcontainer">
+
+				<!-- Cuadrado -->
+				<div class="card-aux">
+
+					<!-- Contenedor del círculo en el que incluir la imagen de la figura -->
+					<div class="circle-container">
+						<div class="circle-subcontainer">
+							<div class="card-subcontainer">
+								<div id="square-card" class="shape"></div>
+								<div id="square-card_2" class="shape_2"></div>
+							</div>
+						</div>
+					</div>
+					
+					<!-- Contenedor de la imagen de carga -->
+					<div class="loading-container">					
+						<div class="loading">
+							<img src="images/loading.gif" alt="" width="50px">
+						</div>
+					</div>
+					
+					<!-- Nombre de la figura geométrica -->
+					<div class="card-title-container">
+						<p class="card-title">Cuadrado</p>
+					</div>
+					
+					<!-- Contenedor de la ecuación del área -->
+					<div class="ecuation-container">
+						<div class="ecuation-container-left">
+							<p class="mathjax">$${A}$$</p>
+						</div>
+						<div class="ecuation-container-equals"><p>=</p></div>
+						<div class="ecuation-container-middle">
+							<p id="square-area" class="mathjax superscript-math">$${l^2}$$</p>
+						</div>
+						<div class="ecuation-container-equals"><p>=</p></div>
+						<div class="ecuation-container-right">
+							<p id="square-area-result" class="superscript">... u<sup>2</sup></p>
+						</div>		
+					</div>
+
+					<!-- Contenedor de la ecuación del perímetro -->
+					<div class="ecuation-container perimeter-container">
+						<div class="ecuation-container-left">
+							<p class="mathjax">$${P}$$</p>
+						</div>
+						<div class="ecuation-container-equals"><p>=</p></div>
+						<div id="square-perimeter" class="mathjax ecuation-container-middle">
+							$${l · 4}$$
+						</div>
+						<div class="ecuation-container-equals"><p>=</p></div>
+						<div class="ecuation-container-right">
+							<p id="square-perimeter-result">... u</p>
+						</div>
+					</div>
+
+					<!-- Contenedor de los campos numéricos para asignar valor a las variables -->
+					<div class="ecuation-container data-container">
+						<div class="data-container-left">
+							<div class="number-container">
+								<div class="number-tag"><p>l</p></div>
+								<input id="square-l" type="number" placeholder="lado" step="1" min="1" max="99.99">
+							</div>				
+						</div>
+					</div>
+				</div>
+
+				<!-- Subtítulo -->
+				<div class="subtitle-card-container">
+					<p class="card-aux-text">Único cuadrilátero regular: cuatro lados iguales y cuatro ángulos rectos (90°)</p>
+				</div>
+				
+			</div>
+
+			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+			<div id="rectangle-card-aux" class="card-aux-subcontainer">
+
+				<!-- Rectángulo -->
+				<div class="card-aux">
+
+					<!-- Contenedor del círculo en el que incluir la imagen de la figura -->
+					<div class="circle-container">
+						<div class="circle-subcontainer">
+							<div class="card-subcontainer">
+								<div id="rectangle-card" class="shape"></div>					
+							</div>
+						</div>
+					</div>
+					
+					<!-- Contenedor de la imagen de carga -->
+					<div class="loading-container">					
+						<div class="loading">
+							<img src="images/loading.gif" alt="" width="50px">
+						</div>
+					</div>
+					
+					<!-- Nombre de la figura geométrica -->
+					<div class="card-title-container">
+						<p class="card-title">Rectángulo</p>
+					</div>
+
+					<!-- Contenedor de la ecuación del área -->
+					<div class="ecuation-container">
+						<div class="ecuation-container-left">
+							<p class="mathjax">$${A}$$</p>
+						</div>
+						<div class="ecuation-container-equals"><p>=</p></div>
+						<div class="ecuation-container-middle">
+							<p id="rectangle-area" class="mathjax">$${b · h}$$</p>
+						</div>
+						<div class="ecuation-container-equals"><p>=</p></div>
+						<div class="ecuation-container-right">
+							<p id="rectangle-area-result" class="superscript">... u<sup>2</sup></p>
+						</div>		
+					</div>
+					
+					<!-- Contenedor de la ecuación del perímetro -->
+					<div class="ecuation-container perimeter-container">
+						<div class="ecuation-container-left">
+							<p class="mathjax">$${P}$$</p>
+						</div>
+						<div class="ecuation-container-equals"><p>=</p></div>
+						<div id="rectangle-perimeter" class="mathjax ecuation-container-middle">
+							$${2(b + h)}$$
+						</div>
+						<div class="ecuation-container-equals"><p>=</p></div>
+						<div class="ecuation-container-right">
+							<p id="rectangle-perimeter-result">... u</p>
+						</div>
+					</div>
+
+					<!-- Contenedor de los campos numéricos para asignar valor a las variables -->
+					<div class="ecuation-container data-container">
+						<div class="data-container-left">
+							<div class="number-container">
+								<div class="number-tag"><p>b</p></div>
+								<input id="rectangle-b" type="number" placeholder="base" step="1" min="1" max="99.99">
+							</div>				
+						</div>
+						<div class="data-container-right">
+							<div class="number-container">
+								<div class="number-tag"><p>h</p></div>
+								<input id="rectangle-h" type="number" placeholder="altura" step="1" min="1" max="99.99">
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<!-- Subtítulo -->
+				<div class="subtitle-card-container">
+					<p class="card-aux-text">Paralelogramo formado por lados opuestos iguales y cuatro ángulos rectos (90°)</p>
+				</div>
+
+			</div>
+
+			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+			
+			<div id="rhombus-card-aux" class="card-aux-subcontainer">
+
+				<!-- Rombo -->
+				<div class="card-aux">
+
+					<!-- Contenedor del círculo en el que incluir la imagen de la figura -->
+					<div class="circle-container">
+						<div class="circle-subcontainer">
+							<div class="card-subcontainer">
+								<div id="rhombus-card" class="shape"></div>					
+							</div>
+						</div>
+					</div>
+					
+					<!-- Contenedor de la imagen de carga -->
+					<div class="loading-container">					
+						<div class="loading">
+							<img src="images/loading.gif" alt="" width="50px">
+						</div>
+					</div>
+					
+					<!-- Nombre de la figura geométrica -->
+					<div class="card-title-container">
+						<p class="card-title">Rombo</p>
+					</div>
+
+					<!-- Contenedor de la ecuación del área -->
+					<div class="ecuation-container">
+						<div class="ecuation-container-left">
+							<p class="mathjax">$${A}$$</p>
+						</div>
+						<div class="ecuation-container-equals"><p>=</p></div>
+						<div class="ecuation-container-middle">
+							<p id="rhombus-area" class="mathjax division_plus">$${\overline{AC}·\overline{BD} \over 2}$$</p>
+						</div>
+						<div class="ecuation-container-equals"><p>=</p></div>
+						<div class="ecuation-container-right">
+							<p id="rhombus-area-result" class="superscript">... u<sup>2</sup></p>
+						</div>		
+					</div>
+					
+					<!-- Contenedor de la ecuación del perímetro -->
+					<div class="ecuation-container perimeter-container">
+						<div class="ecuation-container-left">
+							<p class="mathjax">$${P}$$</p>
+						</div>
+						<div class="ecuation-container-equals"><p>=</p></div>
+						<div id="rhombus-perimeter" class="mathjax ecuation-container-middle">
+							$${l · 4}$$
+						</div>
+						<div class="ecuation-container-equals"><p>=</p></div>
+						<div class="ecuation-container-right">
+							<p id="rhombus-perimeter-result">... u</p>
+						</div>
+					</div>
+
+					<!-- Contenedor de los campos numéricos para asignar valor a las variables -->
+					<div class="ecuation-container data-container">
+						<div class="data-container-left">
+							<div class="number-container">
+								<div class="number-tag"><p style="text-decoration:overline; font-size: 11px; margin-top: 8px">AC</p></div>
+								<input id="rhombus-ac" type="number" placeholder="d. menor" step="1" min="1" max="99.99">
+							</div>
+							<div class="number-container">
+								<div class="number-tag"><p>l</p></div>
+								<input id="rhombus-l" type="number" placeholder="lado" step="1" min="1" max="99.99">							
+							</div>					
+						</div>
+						<div class="data-container-right">
+							<div class="number-container">
+								<div class="number-tag"><p style="text-decoration:overline; font-size: 11px; margin-top: 8px">BD</p></div>
+								<input id="rhombus-bd" type="number" placeholder="d. mayor" step="1" min="1" max="99.99">
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Subtítulo -->
+				<div class="subtitle-card-container">
+					<p class="card-aux-text">Paralelogramo formado por cuatro lados iguales y dos pares de ángulos iguales</p>
+				</div>
+
+			</div>
+
+			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+			<div id="rhomboid-card-aux" class="card-aux-subcontainer">	
+		
+				<!-- Romboide -->
+				<div class="card-aux">
+
+					<!-- Contenedor del círculo en el que incluir la imagen de la figura -->
+					<div class="circle-container">
+						<div class="circle-subcontainer">
+							<div class="card-subcontainer">
+								<div id="rhomboid-card" class="shape"></div>					
+							</div>
+						</div>
+					</div>
+					
+					<!-- Contenedor de la imagen de carga -->
+					<div class="loading-container">					
+						<div class="loading">
+							<img src="images/loading.gif" alt="" width="50px">
+						</div>
+					</div>
+					
+					<!-- Nombre de la figura geométrica -->
+					<div class="card-title-container">
+						<p class="card-title">Romboide</p>
+					</div>
+
+					<!-- Contenedor de la ecuación del área -->
+					<div class="ecuation-container">
+						<div class="ecuation-container-left">
+							<p class="mathjax">$${A}$$</p>
+						</div>
+						<div class="ecuation-container-equals"><p>=</p></div>
+						<div class="ecuation-container-middle">
+							<p id="rhomboid-area" class="mathjax">$${b · h}$$</p>
+						</div>
+						<div class="ecuation-container-equals"><p>=</p></div>
+						<div class="ecuation-container-right">
+							<p id="rhomboid-area-result" class="superscript">... u<sup>2</sup></p>
+						</div>		
+					</div>
+					
+					<!-- Contenedor de la ecuación del perímetro -->
+					<div class="ecuation-container perimeter-container">
+						<div class="ecuation-container-left">
+							<p class="mathjax">$${P}$$</p>
+						</div>
+						<div class="ecuation-container-equals"><p>=</p></div>
+						<div id="rhomboid-perimeter" class="mathjax ecuation-container-middle">
+							$${2(b + h)}$$
+						</div>
+						<div class="ecuation-container-equals"><p>=</p></div>
+						<div class="ecuation-container-right">
+							<p id="rhomboid-perimeter-result">... u</p>
+						</div>
+					</div>
+
+					<!-- Contenedor de los campos numéricos para asignar valor a las variables -->
+					<div class="ecuation-container data-container">
+						<div class="data-container-left">
+							<div class="number-container">
+								<div class="number-tag"><p>b</p></div>
+								<input id="rhomboid-b" type="number" placeholder="base" step="1" min="1" max="99.99">
+							</div>				
+						</div>
+						<div class="data-container-right">
+							<div class="number-container">
+								<div class="number-tag"><p>h</p></div>
+								<input id="rhomboid-h" type="number" placeholder="altura" step="1" min="1" max="99.99">
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Subtítulo -->
+				<div class="subtitle-card-container">
+					<p class="card-aux-text">Paralelogramo formado por lados opuestos iguales y dos pares de ángulos iguales</p>
+				</div>
+
+			</div>
+
+			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	
+			<div id="trapezoid-card-aux" class="card-aux-subcontainer">
+
+				<!-- Trapecio -->
+				<div class="card-aux">
+
+					<!-- Contenedor del círculo en el que incluir la imagen de la figura -->
+					<div class="circle-container">
+						<div class="circle-subcontainer">
+							<div class="card-subcontainer">
+								<div id="trapezoid-card" class="shape"></div>					
+							</div>
+						</div>
+					</div>
+					
+					<!-- Contenedor de la imagen de carga -->
+					<div class="loading-container">					
+						<div class="loading">
+							<img src="images/loading.gif" alt="" width="50px">
+						</div>
+					</div>
+					
+					<!-- Nombre de la figura geométrica -->
+					<div class="card-title-container">
+						<p class="card-title">Trapecio</p>
+					</div>
+					
+					<!-- Contenedor de la ecuación del área -->
+					<div class="ecuation-container">
+						<div class="ecuation-container-left">
+							<p class="mathjax">$${A}$$</p>
+						</div>
+						<div class="ecuation-container-equals"><p>=</p></div>
+						<div class="ecuation-container-middle division">
+							<p id="trapezoid-area" class="mathjax superscript-math">$${h·{a + b \over 2}}$$</p>
+						</div>
+						<div class="ecuation-container-equals"><p>=</p></div>
+						<div class="ecuation-container-right">
+							<p id="trapezoid-area-result" class="superscript">... u<sup>2</sup></p>
+						</div>		
+					</div>
+
+					<!-- Contenedor de la ecuación del perímetro -->
+					<div class="ecuation-container perimeter-container">
+						<div class="ecuation-container-left">
+							<p class="mathjax">$${P}$$</p>
+						</div>
+						<div class="ecuation-container-equals"><p>=</p></div>
+						<div id="trapezoid-perimeter" class="mathjax ecuation-container-middle">
+							$${a + b + c + d}$$
+						</div>
+						<div class="ecuation-container-equals"><p>=</p></div>
+						<div class="ecuation-container-right">
+							<p id="trapezoid-perimeter-result">... u</p>
+						</div>
+					</div>
+
+					<!-- Contenedor de los campos numéricos para asignar valor a las variables -->
+					<div class="ecuation-container data-container">
+						<div class="data-container-left">
+							<div class="number-container">
+								<div class="number-tag"><p>h</p></div>
+								<input id="trapezoid-h" type="number" placeholder="altura" step="1" min="1" max="99.99">
+							</div>						
+							<div class="number-container">
+								<div class="number-tag"><p>b</p></div>
+								<input id="trapezoid-b" type="number" placeholder="b. menor" step="1" min="1" max="99.99">
+							</div>
+							<div class="number-container">
+								<div class="number-tag"><p>d</p></div>
+								<input id="trapezoid-d" type="number" placeholder="lado" step="1" min="1" max="99.99">
+							</div>		
+						</div>
+						<div class="data-container-right">
+							<div class="number-container">
+								<div class="number-tag"><p>a</p></div>
+								<input id="trapezoid-a" type="number" placeholder="b. mayor" step="1" min="1" max="99.99">
+							</div>
+							<div class="number-container">
+								<div class="number-tag"><p>c</p></div>
+								<input id="trapezoid-c" type="number" placeholder="lado" step="1" min="1" max="99.99">
+							</div>	
+						</div>
+					</div>
+				</div>
+
+				<!-- Subtítulo -->
+				<div class="subtitle-card-container">
+					<p class="card-aux-text">Cuadrilátero irregular con un par de lados opuestos paralelos</p>
+				</div>
+
+			</div>			
+
+			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	
+			<div id="pentagon-card-aux" class="card-aux-subcontainer">
+
+				<!-- Pentágono -->
+				<div class="card-aux">
+
+					<!-- Contenedor del círculo en el que incluir la imagen de la figura -->
+					<div class="circle-container">
+						<div class="circle-subcontainer">
+							<div class="card-subcontainer">
+								<div id="pentagon-card" class="shape"></div>					
+							</div>
+						</div>
+					</div>
+					
+					<!-- Contenedor de la imagen de carga -->
+					<div class="loading-container">					
+						<div class="loading">
+							<img src="images/loading.gif" alt="" width="50px">
+						</div>
+					</div>
+					
+					<!-- Nombre de la figura geométrica -->
+					<div class="card-title-container">
+						<p class="card-title">Pentágono</p>
+					</div>
+					
+					<!-- Contenedor de la ecuación del área -->
+					<div class="ecuation-container">
+						<div class="ecuation-container-left">
+							<p class="mathjax">$${A}$$</p>
+						</div>
+						<div class="ecuation-container-equals"><p>=</p></div>
+						<div class="ecuation-container-middle division">
+							<p id="pentagon-area" class="mathjax superscript-math">$${l·5·a \over 2}$$</p>
+						</div>
+						<div class="ecuation-container-equals"><p>=</p></div>
+						<div class="ecuation-container-right">
+							<p id="pentagon-area-result" class="superscript">... u<sup>2</sup></p>
+						</div>		
+					</div>
+
+					<!-- Contenedor de la ecuación del perímetro -->
+					<div class="ecuation-container perimeter-container">
+						<div class="ecuation-container-left">
+							<p class="mathjax">$${P}$$</p>
+						</div>
+						<div class="ecuation-container-equals"><p>=</p></div>
+						<div id="pentagon-perimeter" class="mathjax ecuation-container-middle">
+							$${l · 5}$$
+						</div>
+						<div class="ecuation-container-equals"><p>=</p></div>
+						<div class="ecuation-container-right">
+							<p id="pentagon-perimeter-result">... u</p>
+						</div>
+					</div>
+
+					<!-- Contenedor de los campos numéricos para asignar valor a las variables -->
+					<div class="ecuation-container data-container">
+						<div class="data-container-left">
+							<div class="number-container">
+								<div class="number-tag"><p>l</p></div>
+								<input id="pentagon-l" type="number" placeholder="lado" step="1" min="1" max="99.99">
+							</div>				
+						</div>
+						<div class="data-container-right">
+							<div class="number-container">
+								<div class="number-tag"><p>a</p></div>
+								<input id="pentagon-a" type="number" placeholder="apotema" step="1" min="1" max="99.99">
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Subtítulo -->
+				<div class="subtitle-card-container">
+					<p class="card-aux-text">Forma regular; polígono de cinco lados y cinco vértices</p>
+				</div>
+
+			</div>
+
+			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	
+			<div id="hexagon-card-aux" class="card-aux-subcontainer">
+
+				<!-- Hexágono -->
+				<div class="card-aux">
+
+					<!-- Contenedor del círculo en el que incluir la imagen de la figura -->
+					<div class="circle-container">
+						<div class="circle-subcontainer">
+							<div class="card-subcontainer">
+								<div id="hexagon-card" class="shape"></div>					
+							</div>
+						</div>
+					</div>
+					
+					<!-- Contenedor de la imagen de carga -->
+					<div class="loading-container">					
+						<div class="loading">
+							<img src="images/loading.gif" alt="" width="50px">
+						</div>
+					</div>
+					
+					<!-- Nombre de la figura geométrica -->
+					<div class="card-title-container">
+						<p class="card-title">Hexágono</p>
+					</div>
+					
+					<!-- Contenedor de la ecuación del área -->
+					<div class="ecuation-container">
+						<div class="ecuation-container-left">
+							<p class="mathjax">$${A}$$</p>
+						</div>
+						<div class="ecuation-container-equals"><p>=</p></div>
+						<div class="ecuation-container-middle division">
+							<p id="hexagon-area" class="mathjax superscript-math">$${l·6·a \over 2}$$</p>
+						</div>
+						<div class="ecuation-container-equals"><p>=</p></div>
+						<div class="ecuation-container-right">
+							<p id="hexagon-area-result" class="superscript">... u<sup>2</sup></p>
+						</div>		
+					</div>
+
+					<!-- Contenedor de la ecuación del perímetro -->
+					<div class="ecuation-container perimeter-container">
+						<div class="ecuation-container-left">
+							<p class="mathjax">$${P}$$</p>
+						</div>
+						<div class="ecuation-container-equals"><p>=</p></div>
+						<div id="hexagon-perimeter" class="mathjax ecuation-container-middle">
+							$${l · 6}$$
+						</div>
+						<div class="ecuation-container-equals"><p>=</p></div>
+						<div class="ecuation-container-right">
+							<p id="hexagon-perimeter-result">... u</p>
+						</div>
+					</div>
+
+					<!-- Contenedor de los campos numéricos para asignar valor a las variables -->
+					<div class="ecuation-container data-container">
+						<div class="data-container-left">
+							<div class="number-container">
+								<div class="number-tag"><p>l</p></div>
+								<input id="hexagon-l" type="number" placeholder="lado" step="1" min="1" max="99.99">
+							</div>				
+						</div>
+						<div class="data-container-right">
+							<div class="number-container">
+								<div class="number-tag"><p>a</p></div>
+								<input id="hexagon-a" type="number" placeholder="apotema" step="1" min="1" max="99.99">
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Subtítulo -->
+				<div class="subtitle-card-container">
+					<p class="card-aux-text">Forma regular; polígono de seis lados y seis vértices</p>
+				</div>
+
+			</div>
+
+		</div>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- FIGURAS CURVAS -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<div id="title-container_2" class="title-container">
+			<hr>
+			<p class="title-pag2">Figuras Curvas</p>
+			<hr>
+		</div>
+		<!-- Contenedor de las tarjetas de figuras curvas -->
+		<div class="card-container">
+
+			<div id="circle-card-aux" class="card-aux-subcontainer">
+
+				<!-- Círculo -->
+				<div class="card-aux">
+
+					<!-- Contenedor del círculo en el que incluir la imagen de la figura -->
+					<div class="circle-container">
+						<div class="circle-subcontainer">
+							<div class="card-subcontainer">
+								<div id="circle-card" class="shape"></div>					
+							</div>
+						</div>
+					</div>
+					
+					<!-- Contenedor de la imagen de carga -->
+					<div class="loading-container">					
+						<div class="loading">
+							<img src="images/loading.gif" alt="" width="50px">
+						</div>
+					</div>
+					
+					<!-- Nombre de la figura geométrica -->
+					<div class="card-title-container">
+						<p class="card-title">Círculo</p>
+					</div>
+					
+					<!-- Contenedor de la ecuación del área -->
+					<div class="ecuation-container">
+						<div class="ecuation-container-left">
+							<p class="mathjax">$${A}$$</p>
+						</div>
+						<div class="ecuation-container-equals"><p>=</p></div>
+						<div class="ecuation-container-middle">
+							<p id="circle-area" class="mathjax superscript-math">$${π·r^2}$$</p>
+						</div>
+						<div class="ecuation-container-equals"><p>=</p></div>
+						<div class="ecuation-container-right">
+							<p id="circle-area-result" class="superscript">... u<sup>2</sup></p>
+						</div>		
+					</div>
+
+					<!-- Contenedor de la ecuación del perímetro -->
+					<div class="ecuation-container perimeter-container">
+						<div class="ecuation-container-left">
+							<p class="mathjax">$${P}$$</p>
+						</div>
+						<div class="ecuation-container-equals"><p>=</p></div>
+						<div id="circle-perimeter" class="mathjax ecuation-container-middle">
+							$${2·π·r}$$
+						</div>
+						<div class="ecuation-container-equals"><p>=</p></div>
+						<div class="ecuation-container-right">
+							<p id="circle-perimeter-result">... u</p>
+						</div>
+					</div>
+
+					<!-- Contenedor de los campos numéricos para asignar valor a las variables -->
+					<div class="ecuation-container data-container">
+						<div class="data-container-left">
+							<div class="number-container">
+								<div class="number-tag"><p>r</p></div>
+								<input id="circle-r" type="number" placeholder="radio" step="1" min="1" max="99.99">
+							</div>				
+						</div>
+					</div>
+				</div>
+
+				<!-- Subtítulo -->
+				<div class="subtitle-card-container">
+					<p class="card-aux-text">Figura plana delimitada por una curva cuyos puntos están a igual distancia del centro</p>
+				</div>
+
+			</div>
+
+			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+			
+			<div id="ellipse-card-aux" class="card-aux-subcontainer">
+
+				<!-- Elipse -->
+				<div class="card-aux">
+
+					<!-- Contenedor del círculo en el que incluir la imagen de la figura -->
+					<div class="circle-container">
+						<div class="circle-subcontainer">
+							<div class="card-subcontainer">
+								<div id="ellipse-card" class="shape"></div>					
+							</div>
+						</div>
+					</div>
+					
+					<!-- Contenedor de la imagen de carga -->
+					<div class="loading-container">					
+						<div class="loading">
+							<img src="images/loading.gif" alt="" width="50px">
+						</div>
+					</div>
+					
+					<!-- Nombre de la figura geométrica -->
+					<div class="card-title-container">
+						<p class="card-title">Elipse</p>
+					</div>
+					
+					<!-- Contenedor de la ecuación del área -->
+					<div class="ecuation-container">
+						<div class="ecuation-container-left">
+							<p class="mathjax">$${A}$$</p>
+						</div>
+						<div class="ecuation-container-equals"><p>=</p></div>
+						<div class="ecuation-container-middle">
+							<p id="ellipse-area" class="mathjax superscript-math">$${π·a·b}$$</p>
+						</div>
+						<div class="ecuation-container-equals"><p>=</p></div>
+						<div class="ecuation-container-right">
+							<p id="ellipse-area-result" class="superscript">... u<sup>2</sup></p>
+						</div>		
+					</div>
+
+					<!-- Contenedor de la ecuación del perímetro -->
+					<div class="ecuation-container perimeter-container">
+						<div class="ecuation-container-left">
+							<p class="mathjax">$${P}$$</p>
+						</div>
+						<div class="ecuation-container-equals"><p>=</p></div>
+						<div id="ellipse-perimeter" class="mathjax ecuation-container-middle division">
+							$${2π\sqrt{a^2 + b^2 \over 2}}$$
+						</div>
+						<div class="ecuation-container-equals"><p>=</p></div>
+						<div class="ecuation-container-right">
+							<p id="ellipse-perimeter-result">... u</p>
+						</div>
+					</div>
+
+					<!-- Contenedor de los campos numéricos para asignar valor a las variables -->
+					<div class="ecuation-container data-container">
+						<div class="data-container-left">
+							<div class="number-container">
+								<div class="number-tag"><p>a</p></div>
+								<input id="ellipse-a" type="number" placeholder="semieje" step="1" min="1" max="99.99">
+							</div>			
+						</div>
+						<div class="data-container-right">
+							<div class="number-container">
+								<div class="number-tag"><p>b</p></div>
+								<input id="ellipse-b" type="number" placeholder="semieje" step="1" min="1" max="99.99">
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Subtítulo -->
+				<div class="subtitle-card-container">
+					<p class="card-aux-text">Figura plana delimitada por una sucesión de puntos cuya suma de distancias a dos puntos llamados focos es constante</p>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</body>
+</html>
