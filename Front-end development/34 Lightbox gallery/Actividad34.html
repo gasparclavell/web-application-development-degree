@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<!-- Idioma español -->
+<html lang="es-ES">
+<head>
+	<meta charset="UTF-8">
+	<title>Actividad34</title>
+
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+	Se trata de realizar una aplicación el JavaScript 
+	que se vea como una galería de fotos del tipo lightbox.
+
+	Al pinchar en la galería de miniaturas, debéis darle 
+	opacidad al resto y disponer dicha fotografía en el centro 
+	de la pantalla. AL volver a clicar, debe recuperar la foto 
+	su estado inicial, así como el resto de la interfaz.
+
+	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+	<!-- Librería jQuery -->
+	<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="https://cdnjs.Cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+	
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	
+	<script>
+
+		$(document).ready(function() {
+
+			/*Declaramos una variable para registrar la imagen seleccionada*/
+			var selectedImage = 1;
+
+			/*Controlamos si está o no visible la imagen ampliada*/
+			var bigImageVisible = false;
+
+			/*Bucle para inicializar las imágenes de las miniaturas*/
+			for (var i = 0; i < 10; i++) {
+				$("#photo" + i).css("background-image", "url(images/" + i + ".jpg)");
+
+				/*Se crea el evento en cada miniatura pero la "i" siempre permanece a 10*/
+				/*$(".photo-wrapper #photo" + i).on("click", function() {
+					$(".image-container").css("background-image", "url(images/" + i + ".jpg)");
+					selectedImage = i;
+				});*/
+			}
+
+			/*Al hacer click sobre alguna de las miniaturas*/
+			$(".photo-wrapper").on("click", function() {
+				showBigImage();
+			});
+
+			/*Dado que no ha fuincionado la asignación de eventos en el for, lo hago uno por uno*/
+			$(".photo-wrapper #photo1").on("click", function() {
+				$(".image-container").css("background-image", "url(images/1.jpg)");
+				selectedImage = 1;
+			});
+			$(".photo-wrapper #photo2").on("click", function() {
+				$(".image-container").css("background-image", "url(images/2.jpg)");
+				selectedImage = 2;
+			});
+			$(".photo-wrapper #photo3").on("click", function() {
+				$(".image-container").css("background-image", "url(images/3.jpg)");
+				selectedImage = 3;
+			});
+			$(".photo-wrapper #photo4").on("click", function() {
+				$(".image-container").css("background-image", "url(images/4.jpg)");
+				selectedImage = 4;
+			});
+			$(".photo-wrapper #photo5").on("click", function() {
+				$(".image-container").css("background-image", "url(images/5.jpg)");
+				selectedImage = 5;
+			});
+			$(".photo-wrapper #photo6").on("click", function() {
+				$(".image-container").css("background-image", "url(images/6.jpg)");
+				selectedImage = 6;
+			});
+			$(".photo-wrapper #photo7").on("click", function() {
+				$(".image-container").css("background-image", "url(images/7.jpg)");
+				selectedImage = 7;
+			});
+			$(".photo-wrapper #photo8").on("click", function() {
+				$(".image-container").css("background-image", "url(images/8.jpg)");
+				selectedImage = 8;
+			});
+			$(".photo-wrapper #photo9").on("click", function() {
+				$(".image-container").css("background-image", "url(images/9.jpg)");
+				selectedImage = 9;
+			});
+
+			/*Al hacer click sobre el fondo que va detrás de la imagen ampliada*/
+			$(".big-picture-background").on("click", function() {
+				fadeBigImage();
+			});
+
+			/*Al hacer click sobre la flecha izquierda*/
+			$(".fa-angle-left").on("click", function() {				
+				previousImage();
+			});
+
+			/*Al hacer click sobre la flecha derecha*/
+			$(".fa-angle-right").on("click", function() {				
+				nextImage();				
+			});
+
+			/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+			/*Avanzar a la siguiente imagen*/
+			function nextImage() {
+
+				if(selectedImage < 9) {
+					selectedImage++;
+				} else {
+					selectedImage = 1;
+				}
+
+				$(".image-container").css("background-image", "url(images/" + selectedImage + ".jpg)");
+			}
+
+			/*Retroceder a la imagen anterior*/
+			function previousImage() {
+
+				if(selectedImage > 1) {
+					selectedImage--;
+				} else {
+					selectedImage = 9;
+				}
+				
+				$(".image-container").css("background-image", "url(images/" + selectedImage + ".jpg)");
+			}
+
+			/*Desvanecer la imagen ampliada*/
+			function fadeBigImage() {
+				bigImageVisible = false;
+				$(".big-picture-container").removeClass("show");
+				$(".big-picture-background").css("pointer-events", "none");
+				$(".image-container").css("pointer-events", "none");
+				$(".arrow").css("pointer-events", "none");
+				$("#wrapper").removeClass("blur");
+			}
+
+			/*Mostrar la imagen ampliada*/
+			function showBigImage() {
+				bigImageVisible = true;
+				$(".big-picture-container").addClass("show");
+				$(".big-picture-background").css("pointer-events", "auto");
+				$(".image-container").css("pointer-events", "auto");
+				$(".arrow").css("pointer-events", "auto");
+				$("#wrapper").addClass("blur");
+			}
+
+			/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+			/*Eventos al pulsar teclas*/
+			$(document).on('keydown',function(e) {
+
+				/*Flecha de dirección izquierda para seleccionar la imagen anterior*/
+			    if(e.which == 37) {
+
+			    	if(bigImageVisible) {
+				        previousImage();
+				    }
+			    }
+			    /*Flecha de dirección derecha para seleccionar la imagen siguiente*/
+			    if(e.which == 39) {
+
+			    	if(bigImageVisible) {
+			    		nextImage();
+			    	}
+			    }
+
+			    /*Esc para ocultar la imagen ampliada*/
+			    if(e.which == 27) {
+			    	if(bigImageVisible) {
+			    		fadeBigImage();
+			    	}
+			    }
+
+			    /*Enter para ampliar la última imagen seleccionada*/
+			    if(e.which == 13) {
+			    	if(!bigImageVisible) {
+			    		showBigImage();
+			    	}
+			    }
+
+			    /*alert(e.which);*/
+			});
+
+			/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+			/*Cada vez que se redimensione el navegador, se paran las transiciones*/
+			$(window).on('resize', function(){
+				$("*").css( "transition-property", "none");
+			});
+
+			/*Una vez se termine de redimensionar, se restablecen las animaciones*/
+			var rtime;
+			var timeout = false;
+			var delta = 200;
+			$(window).resize(function() {
+				rtime = new Date();
+				if (timeout === false) {
+					timeout = true;
+					setTimeout(resizeend, delta);
+				}
+			});
+
+			function resizeend() {
+				if (new Date() - rtime < delta) {
+					setTimeout(resizeend, delta);
+				} else {
+					timeout = false;
+					$("*").css( "transition-property", "initial");
+				}               
+			}
+		});
+		
+	</script>
+
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+	<style>
+
+		/*Aplicamos a todo*/
+		* {
+			margin: 0;
+			padding: 0;
+			overflow: hidden;
+			text-align: center;
+			font-family: Helvetica;
+			transition: .25s;			
+		}
+		
+		/*Página HTML*/
+		html {
+			background-color: rgba(26,26,26);
+		}
+
+		/*Título*/
+		.title {
+			font-family: "Times New Roman", Times, serif;
+			color: white;
+			font-size: 4vw;
+			margin-top: -1vw;
+			margin-bottom: 5.8vw;
+		}
+		
+		/*Subtítulo*/
+		.subtitle {
+			color: white;
+			font-size: .7vw;
+			opacity: .3;
+			margin-top: 1.2vw;
+		}
+
+		/*Clase para centrar Divs*/
+		.center {
+			position: relative;
+		  	display: flex;
+		  	flex-direction: column;
+		  	flex-wrap: wrap;
+		  	vertical-align: middle;
+		  	align-items: center;
+		  	justify-content: center;  
+		  	margin: auto;
+		}
+
+		/*Fondo*/
+		.background {
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			height: 100%;
+			width: 100%;
+			/*background: linear-gradient(to right, #141e30, #243b55);*/
+			z-index: 0;
+		}
+
+		/*Contenedor principal*/
+		.main-container {
+			position: absolute;		
+			width: 100%;
+			height: 100vh;
+			overflow: auto;
+			/*display: flex;*/
+			/*background-color: blue;*/
+		}
+
+		/*Contenedor Flexbox*/
+		#wrapper {
+			margin: auto;
+			display: flex;
+			flex-direction: column;
+			flex-wrap: wrap;
+			justify-content: center;
+			align-items: center;
+			width: 100%;
+			/*background-color: red;*/
+		}
+
+		/*Cada fila que contiene 3 miniaturas*/
+		.row {
+			display: flex;
+			flex-direction: row;
+			/*background-color: blue;*/
+			justify-content: center;
+			width: 80vw;
+		}
+		.row:first-child {
+			margin-top: 10vw;
+		}
+		.row:last-child {
+			margin-bottom: 10vw;
+		}
+		
+		/*Contenedor de cada miniatura*/
+		.photo-wrapper {
+			overflow: hidden;
+			width: 30vw;
+			height: 18vw;
+			margin: .3vw;
+			border: .6vw solid rgba(0,0,0,.2);
+		}
+
+		/*Miniatura*/
+		.photo {
+			width: 100%;
+			height: 100%;
+			/*background-image: url("images/1.jpg");*/
+			background-size: cover;
+			background-position: center;
+			background-repeat: no-repeat;
+		}
+		.photo-wrapper:hover .photo {
+			filter: brightness(40%);
+			transform: scale(1.1);
+			cursor: pointer;
+		}
+		.photo-wrapper:hover {
+			/*border: .6vw solid rgba(0,0,0,.4);*/
+		}
+
+		/*Icono de cada miniatura*/
+		.icon {
+			position: absolute;
+			color: white;
+			font-size: 1.8vw;
+			z-index: 100;
+			margin-top: 8vw;
+			margin-left: -0.8vw;
+			opacity: 0;
+			pointer-events: none;
+			width: 1.9vw;
+		}
+		.photo-wrapper:hover .icon {
+			opacity: 1;
+		}
+
+		/*Contenedor del fondo, flechas de dirección y imagen ampliada*/
+		.big-picture-container {
+			position: fixed;
+			margin: auto;
+			display: flex;
+			flex-direction: column;
+			flex-wrap: wrap;
+			justify-content: center;
+			align-items: center;
+			background-color: black;
+			width: 100%;
+			height: 100%;
+			opacity: 0;
+			pointer-events: none;
+			z-index: 199;		
+		}
+		/*Subcontenedor para integrar el subtítulo de información*/
+		.big-picture-subcontainer {
+			margin: auto;
+			display: flex;
+			flex-direction: column;
+			flex-wrap: wrap;
+			justify-content: center;
+			align-items: center;
+		}
+		
+		/*Clases para añadir al mostrarse la imagen ampliada*/
+		.show {
+			opacity: 1;
+			background-color: rgba(0,0,0,.7);			
+		}
+		.blur {
+			filter: blur(4px);
+		}
+
+		/*Fondo con ligera opacidad*/
+		.big-picture-background {
+			position: absolute;
+			/*background-color: red;*/
+			width: 100%;
+			height: 100%;
+			opacity: .5;
+			z-index: 200;
+		}
+
+		/*Contenedor de las flechas y la imagen ampliada*/
+		.big-picture-wrapper {
+			position: relative;
+			width: 90vw;
+			height: 40vw;
+			/*background-color: red;*/
+			display: flex;
+			flex-direction: row;
+			z-index: 201;
+			margin-left: -1vw;
+			margin-top: 1vw;
+		}
+
+		/*Contenedor de las flechas*/
+		.arrow-container {
+			height: 100%;
+			width: 15%;
+			color: white;
+			font-size: 7vw;			
+			/*background-color: blue;*/
+		}
+		
+		/*Imagen ampliada*/
+		.image-container {
+			width: 70%;
+			height: 97%;
+			background-image: url("images/1.jpg");
+			background-size: cover;
+			background-position: center;
+			background-repeat: no-repeat;
+			border: .6vw solid rgba(255,255,255);
+			transition: 0s;
+			/*box-shadow: 0 0 20px 10px rgba(0, 0, 0, 0.9); */
+		}
+		
+		/*Flechas*/
+		.arrow {
+			opacity: .2;
+			/*pointer-events: auto;*/
+			transition: .0s;
+		}
+		.arrow:hover {
+			opacity: .9;
+			transform: scale(1);
+			cursor: pointer;
+		}
+		.arrow:active {
+			transform: scale(0.9);
+		}
+		
+	</style>
+
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+</head>
+<body>
+
+	<!-- Fondo -->
+	<div class="background"></div>
+
+	<!-- Contenedor general -->
+	<div class="main-container">
+		
+		<!-- Contenedor del fondo, flechas de dirección y imagen ampliada -->
+		<div class="big-picture-container">
+			
+			<!-- Fondo con ligera opacidad -->
+			<div class="big-picture-background">
+
+			</div>
+
+			<div class="big-picture-subcontainer">
+			
+				<!-- Contenedor de las flechas y la imagen ampliada -->
+				<div class="big-picture-wrapper">
+
+					<!-- Flecha izquierda -->
+					<div class="arrow-container center">
+						<i class="fa fa-angle-left arrow"></i>
+					</div>
+
+					<!-- Imagen ampliada -->
+					<div class="image-container">
+						
+					</div>
+
+					<!-- Flecha derecha -->
+					<div class="arrow-container center">
+						<i class="fa fa-angle-right arrow"></i>
+					</div>
+				</div>
+				
+				<!-- Subtítulo de información -->
+				<p class="subtitle">Puede utilizar las flechas de dirección (← →) para navegar, escape para salir y enter (↵) para volver a la imagen ampliada</p>
+			</div>
+		</div>
+
+		<!-- Envoltorio -->
+		<div id="wrapper">
+			
+			<!-- Título -->
+			<!-- <div class="row">
+				<p class="title">— Ligthbox gallery —</p>
+			</div> -->
+	
+			<!-- Fila que contiene 3 miniaturas -->
+			<div class="row">
+
+				<!-- Contenedor de la miniatura -->
+				<div class="photo-wrapper">
+					<div class="icon fa fa-search"></div>
+					<div class="photo" id="photo1"></div>
+				</div>
+				<div class="photo-wrapper">
+					<div class="icon fa fa-search"></div>
+					<div class="photo" id="photo2"></div>
+				</div>
+				<div class="photo-wrapper">
+					<div class="icon fa fa-search"></div>
+					<div class="photo" id="photo3"></div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="photo-wrapper">
+					<div class="icon fa fa-search"></div>
+					<div class="photo" id="photo4"></div>
+				</div>
+				<div class="photo-wrapper">
+					<div class="icon fa fa-search"></div>
+					<div class="photo" id="photo5"></div>
+				</div>
+				<div class="photo-wrapper">
+					<div class="icon fa fa-search"></div>
+					<div class="photo" id="photo6"></div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="photo-wrapper">
+					<div class="icon fa fa-search"></div>
+					<div class="photo" id="photo7"></div>
+				</div>
+				<div class="photo-wrapper">
+					<div class="icon fa fa-search"></div>
+					<div class="photo" id="photo8"></div>
+				</div>
+				<div class="photo-wrapper">
+					<div class="icon fa fa-search"></div>
+					<div class="photo" id="photo9"></div>
+				</div>
+			</div>
+		</div>
+	</div>	
+</body>
+</html>
