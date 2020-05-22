@@ -1,0 +1,1325 @@
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Actividad 37
+
+Se trata de realizar una aplicación en JavaScript 
+para reflejar el resultado de la votación de una 
+sesión de investidura de un presidente.
+
+Para ello, se va a crear una aplicación con JS y 
+Jquery donde se refleje en un marcador/marcadores 
+los votos emitidos de todos los miembros del parlamento.
+
+La posibilidad de voto es SI, NO o ABSTENCIÓN.
+
+A medida que se vayan produciendo la lectura en alto 
+del nombre y apellidos del disputado, este emitirá 
+su voto que deberá sumarse a la pantalla correspondiente 
+(se pueden utilizar botones para sumar a los votos a 
+cada total, como si fueran pulsadores o algo similar).
+
+Y si se quiere completar, se puede dibujar un pequeño 
+diagrama de luces simulando al parlamento con los 
+votos en los diferentes colores (rojo → no, verde→si, 
+abstención→amarillo).
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<!DOCTYPE html>
+<!-- Idioma español -->
+<html lang="es-ES">
+<head>
+	<meta charset="UTF-8">
+	<title>Actividad37</title>
+
+	<!-- Librería jQuery -->
+	<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css"/>
+	
+	<!-- Gráficos de Google -->
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+  	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  	<script>
+	  	$(function() {
+	    	$("#draggable").draggable({containment: 'window'});
+	    	$("#draggable").draggable({disabled: true});
+	 	});
+ 	</script>
+
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+	<style>
+
+		/*Aplicamos a todo*/
+		* {
+			margin: 0;
+			padding: 0;
+			font-family: Helvetica;
+		}
+
+		body {
+			overflow: hidden;
+			background-color: white;
+		}
+
+		/*Clase para centrar Divs*/
+		.center {
+			position: relative;
+		  	display: flex;
+		  	flex-direction: column;
+		  	flex-wrap: wrap;
+		  	vertical-align: middle;
+		  	align-items: center;
+		  	justify-content: center;  
+		  	margin: auto;
+		}
+
+		/*Contenedor principal*/
+		.main-container {
+			position: absolute;		
+			width: 100%;
+			height: 100vh;
+			display: flex;
+			overflow: auto;
+		}
+
+		/*Contenedor Flexbox*/
+		#wrapper {
+			margin: auto;
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+			justify-content: center;
+			align-items: center;
+			width: 100%;
+		}
+
+		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+		
+		/*Contenedor del panel de información superior*/
+		.info-container {
+			position: absolute;
+			top: 20px;
+		}
+
+		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+		/*Panel para el análisis de datos de la izquierda*/
+		.panel {
+			position: fixed;
+			padding: 30px;
+			background-color: rgba(255,255,255);
+			box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.14);
+			border-radius: 5px;
+			z-index: 100;
+    		top: 20px;
+    		left: 20px;
+    		opacity: .97;
+		}
+		/*Ocultamos el contenido del panel si no cabe*/
+		#draggable {
+			overflow: hidden;
+		}	
+		
+		/*Cabecera del panel de datos*/
+		.panel-header {
+			position: relative;			
+			padding-right: 30px;
+			padding-left: 30px;
+			width: 100%;
+			height: 28px;			
+			transform: translate(-30px, -30px);			
+			z-index: 200;
+		}
+		
+		/*Zona superior del panel de datos arrastrable*/
+		.panel-header-dragg {
+			width: 100%;
+			height: 100%;
+			cursor: move;
+			cursor: grab;
+			background: rgba(34,34,34);
+			border-radius: 5px 5px 0 0;
+			transform: translateX(-30px);
+			padding-right: 60px;
+		}
+		
+		/*Contenedor de los botones de la cabecera*/
+		.header-buttons-container {
+			position: absolute;
+			top: 0;
+			right: 0;
+			width: 60px;
+			height: 100%;
+			background-color: transparent;
+			font-size: 13px;
+		}
+		
+		/*Al arrastrar el panel*/
+		.panel-header-dragg:active {
+		    cursor: grabbing;
+		}
+		
+		/*Iconos de la cabecera del panel de datos*/
+		.header-icon {
+			position: relative;
+			width: 28px;
+			height: 100%;
+			color: rgba(255,255,255,.7);		
+		}
+		
+		/*Corrección para centrar el icono de minimizar*/
+		.fa-window-minimize {
+			transform: translateY(-4px);
+		}
+		
+		/*Hover al pasar por los iconos de la cabecera*/
+		.header-icon:hover {
+			color: rgba(255,255,255,1);
+			background-color: rgba(255,255,255,.2);
+			/*cursor: pointer;*/
+		}
+
+		/*Clases que se añaden al minimizar el panel de datos izquierdo*/
+		.min {
+			height: 0;
+			padding-bottom: 0;
+		}
+		.min-panel {
+			box-shadow: none;
+			background-color: transparent;
+		}
+		.min-panel-header-dragg {
+			border-radius: 5px;
+		}
+
+		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+		
+		/*Contenedor de los diferentes tipos de votos en el panel*/
+		.vote-container {
+			margin-bottom: 12px;
+			margin-top: 6px;
+		}
+		
+		/*Líneas de separación*/
+		hr {
+			margin-bottom: 12px;
+			border: 0.5px solid rgba(0,0,0,.1);
+		}
+		
+		/*Texto*/
+		p {
+			margin-bottom: 6px;	
+			opacity: .8;
+		}
+
+		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+		
+		/*Contenedor general de los diputados*/
+		#topparentdiv {
+			position: relative;
+			background-color: transparent;
+			border-radius: 150px;
+			margin: 150px;
+			transform: translateY(290px);
+		}
+
+		/*Subcontenedor de cada línea de diputados*/
+		#parentdiv {
+			position: relative;
+			background-color: transparent;
+			border-radius: 150px;
+			margin: 150px;
+		}
+		
+		/*Diputados*/
+		.congressman {
+			position: absolute;
+			width: 26px;
+			height: 26px;
+			border-radius: 100px;
+			background-color: rgba(0,0,0,.12);
+			cursor: default;
+			outline: none;
+			border-style: none;
+			transition: .2s;
+		}
+		.congressman:hover {
+			transition: none;
+			transform: scale(1.05);
+			border: 2px solid rgba(0,0,0,.4);
+		}
+		.congressman:active {
+			transform: scale(.9);
+			transition: .2s;
+		}
+		
+		/*Formato de los diferentes tipos de votos*/
+		.yes {
+			background-color: rgba(0,255,0,.5);
+		}
+		.no {
+			background-color: rgba(255,0,0,.5);
+		}
+		.abstention {
+			background-color: orange;
+		}
+		.default {
+			background-color: rgba(0,0,0,.2);
+		}
+
+		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+		
+		/*Gráfico de quesito*/
+		#piechart {
+			margin: -50px;
+			margin-right: -47px;
+			margin-bottom: -20px;
+			margin-top: -45px;
+		}
+		
+		/*Botones de voto del panel de datos*/
+		.voting-button {
+			width: 20px;
+			height: 20px;
+			background-color: grey;
+			border-style: none;
+			outline: none;
+			cursor: pointer;
+			color: rgba(255,255,255,.9);
+			/*border-radius: 100px;*/
+		}
+		.voting-button:hover {
+			transform: scale(1);
+		}
+		.voting-button:active {
+			transform: scale(.9);
+		}
+
+		#button_yes {
+			background-color: green;
+		}
+		#button_no {
+			background-color: red;
+		}
+		#button_abstention {
+			background-color: orange;
+		}
+
+		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+		
+		/*Contenedor del interruptor para activar el modo aleatorio*/
+		.switch-container {
+			margin-top: 2px;
+			margin-bottom: 16px;
+		}
+		
+		/*Interruptor para activar el modo aleatorio*/
+		.switch {
+			position: relative;
+			display: inline-block;
+			width: 50px;
+			height: 24px;
+		}
+
+		/*Ocultar los checkboxs por defecto*/
+		.switch input {
+			opacity: 0;
+			width: 0;
+			height: 0;
+		}
+
+		/*El slider*/
+		.slider {
+			position: absolute;
+			cursor: pointer;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background-color: #ccc;
+			-webkit-transition: .3s;
+			transition: .3s;
+		}
+		.slider:before {
+			position: absolute;
+			content: "";
+			height: 16px;
+			width: 16px;
+			left: 4px;
+			bottom: 4px;
+			background-color: white;
+			-webkit-transition: .3s;
+			transition: .3s;
+		}
+
+		input:checked + .slider {
+			background-color: #2196F3;
+		}
+
+		input:focus + .slider {
+			box-shadow: 0 0 1px #2196F3;
+		}
+
+		input:checked + .slider:before {
+			-webkit-transform: translateX(26px);
+			-ms-transform: translateX(26px);
+			transform: translateX(26px);
+		}
+
+		/*Sliders circulares*/
+		.slider.round {
+			border-radius: 24px;
+		}
+
+		.slider.round:before {
+			border-radius: 50%;
+		}
+
+	</style>
+
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+	<script>
+		
+		$(document).ready(function() {
+
+			// Si mantenemos pulsado sobre la cabecera, el panel de datos es arrastrable
+			$(".panel-header-dragg").mousedown(function() {
+				$("#draggable").draggable("enable");
+			});
+			// Si soltamos la cabecera, el panel de datos deja de ser arrastrable
+			$(".panel-header-dragg").mouseup(function() {
+				$("#draggable").draggable({disabled: true});
+			});
+
+			/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+			// Variables para la creación de los diputados
+			var cont = 0;
+			var buttons = [];
+			var rows = 12;
+			var randomArrangement = false;
+
+			// Al hacer cick sobre el interruptor de modo aleatorio
+			$('#check').on("click", function() {
+				if($('#check').prop('checked')) {
+				    randomArrangement = true;
+				} else {
+					randomArrangement = false;
+				}
+			});
+
+			// Primer bucle para crear los contenedores de cada línea de diputados
+			for (var j = 0; j < rows; ++j) {
+
+				// Radio de cada línea de diputados
+				var radius = 100 + 42*j;
+				// Número de diputados
+				var numCircles = 16 + 8*j;
+
+				// Variables necesarias
+				var div = 360 / numCircles;
+				// Guardamos el elemento padre que contendrá todos los diputados
+				var topParentdiv = document.getElementById('topparentdiv');
+				// Creamos el elemento que contendrá cada fila de diputados
+				var childtopdiv = document.createElement('div');
+				// Damos nombre a su clase
+				childtopdiv.className = 'parentdiv';
+				// Damos nombre a su id (uno por cada fila)
+				childtopdiv.id = "p" + (j+1);
+				// Añadimos los contenedores de las filas al contenedor padre
+				topParentdiv.appendChild(childtopdiv);
+
+				// Cambiar el nombre al contenedor para posterior maneja
+				var parentdiv = childtopdiv;
+
+				// Variables necesarias
+				var offsetToParentCenter = parseInt(parentdiv.offsetWidth / 2);
+				var offsetToChildCenter = 20;
+				var totalOffset = offsetToParentCenter - offsetToChildCenter;
+
+				// Segundo bucle para generar cada diputado 
+				for (var i = 1; i <= numCircles; ++i) {
+
+					// Se crea un elemento botón por cada diputado
+					var childdiv = document.createElement('button');
+
+					// Correcciones para ajustar el número de diputados en las últimas filas
+					if(j == (rows-1)) {
+						div = 360 / (numCircles - 14);
+					} else if (j == rows-2) {
+						div = 360 / (numCircles - 12);
+					} else if (j == rows-3) {
+						div = 360 / (numCircles - 10);
+					} else if (j == rows-4) {
+						div = 360 / (numCircles - 8);
+					}
+
+					// Calculamos la posición de cada diputado siguiendo una circunferencia
+					var y = Math.sin((div * i) * (Math.PI / 180)) * radius;
+					var x = Math.cos((div * i) * (Math.PI / 180)) * radius;
+
+					// Se añaden únicamente los círculos que queden por encima de la línea central
+					if(y < 2) {
+
+						// Contador para poder definir el id de cada diputado
+						cont++;
+						childdiv.id = "b" + (cont);
+
+						// Por cada diputado disponemos un array en el que guardar su id y su voto ("0" no ha votado, "1" voto a favor, "2" voto en contra, "3" abstención)
+						buttons.push(["#" + childdiv.id, "0"]);
+						
+						// Damos nombre a la clase de los diputados
+						childdiv.className = 'congressman';
+
+						// Lo posicionamos
+						childdiv.style.position = 'absolute';
+						childdiv.style.top = (y + totalOffset).toString() + "px";
+						childdiv.style.left = (x + totalOffset).toString() + "px";
+
+						// Lo añadimos al contenedor que contiene la fila a la que pertenece el diputado
+						parentdiv.appendChild(childdiv);
+					}
+				}
+			}
+
+			/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+			// Gráfico en quesito
+
+			// Cargamos Google Charts
+			google.load("visualization", "1", {packages:["corechart"], "callback": drawChart});
+			google.setOnLoadCallback(drawChart);
+
+			// Creamos la variable que contendrá la información y las opciones del gráfico
+			var chart;
+
+			// Dibujar el gráfico e inicializar sus valores
+			function drawChart() {
+				var data = google.visualization.arrayToDataTable([
+					['Vote', 'Amount'],
+					['A favor', 0],
+					['En contra', 0],
+					['Abstencion', 0],
+					['No han votado', buttons.length],
+				]);
+
+				// Configuración/formato del gráfico
+				var options = {
+
+					'title': '', 
+					'width': 250, 
+					'height': 250, 
+					"pieHole": 0.6,
+					"backgroundColor": "transparent",
+					"legend": {
+						position: 'none', 
+						textStyle: {
+							color: 'blue', 
+							fontSize: 16
+						},
+						alignment: "start",
+					},
+				  	slices: {
+				  		0: {
+					  		offset: 0.0,
+					  		color: "green",
+					  	},
+					  	1: {
+					  		color: "red",
+					  	},
+					  	2: {
+					  		color: "orange",
+					  	},
+					  	3: {
+					  		color: "rgb(204,204,204)",
+					  	},
+					}
+				};
+
+				// Mostramos el gráfico en quesito
+				chart = new google.visualization.PieChart(document.getElementById('piechart'));
+				chart.draw(data, options);
+			}
+
+			/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+			// Contadores de los votos
+			var contYes = 0;
+			var contNo = 0;
+			var contAbstention = 0;
+			var contDefault = buttons.length;
+
+			// Al clickar sobre alguno de los diputados
+			for (var i=0; i < buttons.length; i++) {				
+			  	(function(i) {
+			    	$(buttons[i][0]).click(function() {
+
+			    		// Controlar si el diputado a votado abstención, para que cuando se vuelva a clickar torne el diputado a "a favor" en lugar de a gris (no ha votado)
+			    		var orange = false;
+			    		if(buttons[i][1] == 3) {
+			    			orange = true;
+			    		}
+
+			    		// Vamos tornando entre cada uno de los tipos de votos: no ha votado -> a favor -> en contra -> abstención
+			    		if(buttons[i][1] >= 0 && buttons[i][1] < 3) {
+			    			buttons[i][1] = (+buttons[i][1] + 1);
+			    		} else {
+			    			buttons[i][1] = 1;
+			    		}
+
+			    		// Si el voto cambia a "a favor"
+						if (buttons[i][1] == 1) {
+			    			$(buttons[i][0]).removeClass("no");
+			    			$(buttons[i][0]).removeClass("abstention");
+			    			$(buttons[i][0]).removeClass("default");
+			    			$(buttons[i][0]).addClass("yes");
+			    			if(orange) {
+			    				contAbstention--;
+			    			} else {
+			    				contDefault--;
+			    			}			    			
+			    			contYes++;			    			
+			    		} 
+			    		// Si el voto cambia a "en contra"
+			    		else if (buttons[i][1] == 2) {
+			    			$(buttons[i][0]).removeClass("yes");
+			    			$(buttons[i][0]).removeClass("abstention");
+			    			$(buttons[i][0]).removeClass("default");
+			    			$(buttons[i][0]).addClass("no");
+			    			contYes--;
+			    			contNo++;
+			    		} 
+			    		// Si el voto cambia a "abstención"
+			    		else if (buttons[i][1] == 3) {
+			    			$(buttons[i][0]).removeClass("yes");
+			    			$(buttons[i][0]).removeClass("no");
+			    			$(buttons[i][0]).removeClass("default");
+			    			$(buttons[i][0]).addClass("abstention");
+			    			contNo--;
+			    			contAbstention++;
+			    		}
+
+			    		// Actualizamos los paneles de información
+			    		updatePanel();
+			    		updateInfo(i);		
+			    	});
+
+			    	// Al pasar por encima de alguno de los diputados, mostramos su número en el panel superior
+			    	$(buttons[i][0]).hover(function() {
+			    		updateInfo(i);
+					}, function() {
+						$("#info").text("");
+					});
+			  	}(i));
+			}
+
+			// Función para actalizar el nombre del diputado mostrado arriba
+			function updateInfo(i) {
+				var vote = "";
+
+	    		if(buttons[i][1] == 0) {
+	    			vote = "no ha votado";
+	    		} else if (buttons[i][1] == 1) {
+    				vote = "a favor";
+	    		} else if (buttons[i][1] == 2) {
+	    			vote = "en contra";
+	    		} else if (buttons[i][1] == 3) {
+	    			vote = "abstención";
+	    		}
+				$("#info").text("Diputado " + (i + 1) + ": " + vote);
+			}
+
+			/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+			/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+			// Variables para controlar los tiempos al pulsar los botones de voto
+			var timeoutId = 0;
+			var interval;
+			var voteTimeLap = 45;
+			var firstVoteLap = 300;
+
+			// Al pulsar sobre el botón de añadir votos a favor
+			$("#button_yes").click(function() {
+				whileYesDown();
+			});
+
+			$('#button_yes').on('mousedown', function() {
+			    timeoutId = setTimeout(function() {
+			    	interval = window.setInterval(function(){
+						whileYesDown();
+					}, voteTimeLap);			    	
+			    }, firstVoteLap);
+			}).on('mouseup mouseleave', function() {
+			    clearTimeout(timeoutId);
+			    window.clearInterval(interval);
+			});
+
+			function whileYesDown() {
+			    var done = false;
+
+			    // Si la distribución de votos es aleatoria
+			    if(randomArrangement) {
+
+				    while(!done && contDefault > 0) {
+
+				    	var random = Math.floor((Math.random() * buttons.length));
+
+				    	// Si encuentra un diputado en gris
+				    	if(buttons[random][1] == 0) {
+			    			buttons[random][1] = "1";
+			    			$(buttons[random][0]).addClass("yes");
+			    			done = true;
+			    			contDefault--;
+			    		}
+			    	}
+
+				    while(!done && contAbstention > 0) {
+
+			    		var random = Math.floor((Math.random() * buttons.length));
+
+				    	// Si encuentra un diputado en naranja
+				    	if(buttons[random][1] == 3) {
+			    			buttons[random][1] = "1";
+			    			$(buttons[random][0]).removeClass("abstention");
+			    			$(buttons[random][0]).addClass("yes");
+			    			done = true;
+			    			contAbstention--;
+			    		}
+			    	}
+
+			    	while(!done && contNo > 0) {
+
+			    		var random = Math.floor((Math.random() * buttons.length));
+
+				    	// Si encuentra un diputado en rojo
+				    	if(buttons[random][1] == 2) {
+			    			buttons[random][1] = "1";
+			    			$(buttons[random][0]).removeClass("no");
+			    			$(buttons[random][0]).addClass("yes");
+			    			done = true;
+			    			contNo--;
+			    		}
+			    	};
+
+			    } 
+			    // Si la distribución de votos es lineal
+			    else {
+
+			    	for (var i=0; i < buttons.length && !done; i++) {
+
+				    	var random = Math.floor((Math.random() * buttons.length));
+				    	// Si encuentra un diputado en gris
+				    	if(buttons[i][1] == 0) {
+			    			buttons[i][1] = "1";
+			    			$(buttons[i][0]).addClass("yes");
+			    			done = true;
+			    			contDefault--;
+			    		}
+			    	}
+
+				    if(!done) {
+
+				    	for (var i=0; i < buttons.length && !done; i++) {
+
+					    	// Si encuentra un diputado en naranja
+					    	if(buttons[i][1] == 3) {
+				    			buttons[i][1] = "1";
+				    			$(buttons[i][0]).removeClass("abstention");
+				    			$(buttons[i][0]).addClass("yes");
+				    			done = true;
+				    			contAbstention--;
+				    		}
+				    	}
+				    }
+
+				    if(!done) {
+
+				    	for (var i=0; i < buttons.length && !done; i++) {
+
+					    	// Si encuentra un diputado en rojo
+					    	if(buttons[i][1] == 2) {
+				    			buttons[i][1] = "1";
+				    			$(buttons[i][0]).removeClass("no");
+				    			$(buttons[i][0]).addClass("yes");
+				    			done = true;
+				    			contNo--;
+				    		}
+				    	}
+				    }
+			    }
+
+			    if(done) {
+			    	contYes++;
+			    	updatePanel();
+			    }
+			}
+
+			/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+			// Al pulsar sobre el botón de añadir votos en contra
+			$("#button_no").click(function() {
+				whileNoDown();
+			});
+
+			$('#button_no').on('mousedown', function() {
+			    timeoutId = setTimeout(function() {
+			    	interval = window.setInterval(function(){
+						whileNoDown();
+					}, voteTimeLap);			    	
+			    }, firstVoteLap);
+			}).on('mouseup mouseleave', function() {
+			    clearTimeout(timeoutId);
+			    window.clearInterval(interval);
+			});
+
+			function whileNoDown() {
+
+			    var done = false;
+
+			    // Si la distribución de votos es aleatoria
+			    if(randomArrangement) {
+				    while(!done && contDefault > 0) {
+
+				    	var random = Math.floor((Math.random() * buttons.length));
+
+				    	if(buttons[random][1] == 0) {
+			    			buttons[random][1] = "2";
+			    			$(buttons[random][0]).addClass("no");
+			    			done = true;
+			    			contDefault--;
+			    		}
+				    }
+
+				    while(!done && contAbstention > 0) {
+
+				    	var random = Math.floor((Math.random() * buttons.length));
+
+				    	if(buttons[random][1] == 3) {
+			    			buttons[random][1] = "2";
+			    			$(buttons[random][0]).removeClass("abstention");
+			    			$(buttons[random][0]).addClass("no");
+			    			done = true;
+			    			contAbstention--;
+			    		}
+				    }
+
+				    while(!done && contYes > 0) {
+
+				    	var random = Math.floor((Math.random() * buttons.length));
+
+				    	if(buttons[random][1] == 1) {
+			    			buttons[random][1] = "2";
+			    			$(buttons[random][0]).removeClass("yes");
+			    			$(buttons[random][0]).addClass("no");
+			    			done = true;
+			    			contYes--;
+			    		}
+				    }
+				} 
+				// Si la distribución de votos es lineal
+				else {
+					for (var i=0; i < buttons.length && !done; i++) {
+
+				    	if(buttons[i][1] == 0) {
+			    			buttons[i][1] = "2";
+			    			$(buttons[i][0]).addClass("no");
+			    			done = true;
+			    			contDefault--;
+			    		}
+				    }
+				    for (var i=0; i < buttons.length && !done; i++) {
+
+				    	if(buttons[i][1] == 3) {
+			    			buttons[i][1] = "2";
+			    			$(buttons[i][0]).removeClass("abstention");
+			    			$(buttons[i][0]).addClass("no");
+			    			done = true;
+			    			contAbstention--;
+			    		}
+				    }
+				    for (var i=0; i < buttons.length && !done; i++) {
+
+				    	if(buttons[i][1] == 1) {
+			    			buttons[i][1] = "2";
+			    			$(buttons[i][0]).removeClass("yes");
+			    			$(buttons[i][0]).addClass("no");
+			    			done = true;
+			    			contYes--;
+			    		}
+				    }
+				}
+
+			    if(done) {
+			    	contNo++;
+			    	updatePanel();
+			    }
+			};
+
+			/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+			// Al pulsar sobre el botón de añadir votos de "abstención"
+			$("#button_abstention").click(function() {
+				whileAbstentionDown();
+			});
+
+			$('#button_abstention').on('mousedown', function() {
+			    timeoutId = setTimeout(function() {
+			    	interval = window.setInterval(function(){
+						whileAbstentionDown();
+					}, voteTimeLap);			    	
+			    }, firstVoteLap);
+			}).on('mouseup mouseleave', function() {
+			    clearTimeout(timeoutId);
+			    window.clearInterval(interval);
+			});
+
+			function whileAbstentionDown() {
+
+				var done = false;
+
+				// Si la distribución de votos es aleatorio
+			    if(randomArrangement) {
+				    while(!done && contDefault > 0) {
+
+				    	var random = Math.floor((Math.random() * buttons.length));
+
+				    	if(buttons[random][1] == 0) {
+			    			buttons[random][1] = "3";
+			    			$(buttons[random][0]).addClass("abstention");
+			    			done = true;
+			    			contDefault--;
+			    		}
+				    }
+
+				    while(!done && contNo > 0) {
+
+				    	var random = Math.floor((Math.random() * buttons.length));
+
+				    	if(buttons[random][1] == 2) {
+			    			buttons[random][1] = "3";
+			    			$(buttons[random][0]).removeClass("no");
+			    			$(buttons[random][0]).addClass("abstention");
+			    			done = true;
+			    			contNo--;
+			    		}
+				    }
+
+				    while(!done && contYes > 0) {
+
+				    	var random = Math.floor((Math.random() * buttons.length));
+
+				    	if(buttons[random][1] == 1) {
+			    			buttons[random][1] = "3";
+			    			$(buttons[random][0]).removeClass("yes");
+			    			$(buttons[random][0]).addClass("abstention");
+			    			done = true;
+			    			contYes--;
+			    		}
+				    }
+				} 
+				// Si la distribución de votos es lineal
+				else {
+					for (var i=0; i < buttons.length && !done; i++) {
+
+				    	if(buttons[i][1] == 0) {
+			    			buttons[i][1] = "3";
+			    			$(buttons[i][0]).addClass("abstention");
+			    			done = true;
+			    			contDefault--;
+			    		}
+				    }
+				    for (var i=0; i < buttons.length && !done; i++) {
+
+				    	if(buttons[i][1] == 2) {
+			    			buttons[i][1] = "3";
+			    			$(buttons[i][0]).removeClass("no");
+			    			$(buttons[i][0]).addClass("abstention");
+			    			done = true;
+			    			contNo--;
+			    		}
+				    }
+				    for (var i=0; i < buttons.length && !done; i++) {
+
+				    	if(buttons[i][1] == 1) {
+			    			buttons[i][1] = "3";
+			    			$(buttons[i][0]).removeClass("yes");
+			    			$(buttons[i][0]).addClass("abstention");
+			    			done = true;
+			    			contYes--;
+			    		}
+				    }
+				}
+
+			    if(done) {
+			    	contAbstention++;
+			    	updatePanel();
+			    }
+			};
+
+			/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+			/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+			// Si clicamos sobre el botón de tornar todos los votos a "a favor"
+			$("#button_yes_all").click(function() {
+
+				var votesChanged = false;
+
+				// Primero convertimos los default
+				if(!votesChanged && contDefault > 0) {
+					for (var i=0; i < buttons.length; i++) {
+
+				    	// Si encuentra un diputado en gris
+				    	if(buttons[i][1] == 0) {
+			    			buttons[i][1] = "1";
+			    			$(buttons[i][0]).addClass("yes");
+			    			contYes++;
+			    			contDefault--;
+			    		}
+				    }
+				    votesChanged = true;
+				}
+				// Después las abstenciones
+				if(!votesChanged && contAbstention > 0) {
+					for (var i=0; i < buttons.length; i++) {
+
+				    	// Si encuentra un diputado en naranja
+				    	if(buttons[i][1] == 3) {
+			    			buttons[i][1] = "1";
+			    			$(buttons[i][0]).removeClass("abstention");
+			    			$(buttons[i][0]).addClass("yes");
+			    			contYes++;
+			    			contAbstention--;
+			    		}
+				    }
+				    votesChanged = true;
+				}
+				// Después los noes
+				if(!votesChanged && contNo > 0) {
+					for (var i=0; i < buttons.length; i++) {
+
+				    	// Si encuentra un diputado en rojo
+				    	if(buttons[i][1] == 2) {
+			    			buttons[i][1] = "1";
+			    			$(buttons[i][0]).removeClass("no");
+			    			$(buttons[i][0]).addClass("yes");
+			    			contYes++;
+			    			contNo--;
+			    		}
+				    }
+				    votesChanged = true;
+				}
+				
+				if(votesChanged) {
+					updatePanel();
+				}    
+			});
+
+			/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+			// Si clicamos sobre el botón de tornar todos los votos a "en contra"
+			$("#button_no_all").click(function() {
+
+			    var votesChanged = false;
+
+				// Primero convertimos los default
+				if(!votesChanged && contDefault > 0) {
+					for (var i=0; i < buttons.length; i++) {
+
+				    	// Si encuentra un diputado en gris
+				    	if(buttons[i][1] == 0) {
+			    			buttons[i][1] = "2";
+			    			$(buttons[i][0]).addClass("no");
+			    			contNo++;
+			    			contDefault--;
+			    		}
+				    }
+				    votesChanged = true;
+				}
+				// Después las abstenciones
+				if(!votesChanged && contAbstention > 0) {
+					for (var i=0; i < buttons.length; i++) {
+
+				    	// Si encuentra un diputado en naranja
+				    	if(buttons[i][1] == 3) {
+			    			buttons[i][1] = "2";
+			    			$(buttons[i][0]).removeClass("abstention");
+			    			$(buttons[i][0]).addClass("no");
+			    			contNo++;
+			    			contAbstention--;
+			    		}
+				    }
+				    votesChanged = true;
+				}
+				// Después los síes
+				if(!votesChanged && contYes > 0) {
+					for (var i=0; i < buttons.length; i++) {
+
+				    	// Si encuentra un diputado en verde
+				    	if(buttons[i][1] == 1) {
+			    			buttons[i][1] = "2";
+			    			$(buttons[i][0]).removeClass("yes");
+			    			$(buttons[i][0]).addClass("no");
+			    			contNo++;
+			    			contYes--;
+			    		}
+				    }
+				    votesChanged = true;
+				}
+				
+				if(votesChanged) {
+					updatePanel();
+				}
+			});
+
+			/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+			// Si clicamos sobre el botón de tornar todos los votos a "abstención"
+			$("#button_abstention_all").click(function() {
+
+			    var votesChanged = false;
+
+				// Primero convertimos los default
+				if(!votesChanged && contDefault > 0) {
+					for (var i=0; i < buttons.length; i++) {
+
+				    	// Si encuentra un diputado en gris
+				    	if(buttons[i][1] == 0) {
+			    			buttons[i][1] = "3";
+			    			$(buttons[i][0]).addClass("abstention");
+			    			contAbstention++;
+			    			contDefault--;
+			    		}
+				    }
+				    votesChanged = true;
+				}
+				// Después los noes
+				if(!votesChanged && contNo > 0) {
+					for (var i=0; i < buttons.length; i++) {
+
+				    	// Si encuentra un diputado en rojo
+				    	if(buttons[i][1] == 2) {
+			    			buttons[i][1] = "3";
+			    			$(buttons[i][0]).removeClass("no");
+			    			$(buttons[i][0]).addClass("abstention");
+			    			contAbstention++;
+			    			contNo--;
+			    		}
+				    }
+				    votesChanged = true;
+				}
+				// Después los síes
+				if(!votesChanged && contYes > 0) {
+					for (var i=0; i < buttons.length; i++) {
+
+				    	// Si encuentra un diputado en verde
+				    	if(buttons[i][1] == 1) {
+			    			buttons[i][1] = "3";
+			    			$(buttons[i][0]).removeClass("yes");
+			    			$(buttons[i][0]).addClass("abstention");
+			    			contAbstention++;
+			    			contYes--;
+			    		}
+				    }
+				    votesChanged = true;
+				}
+				
+				if(votesChanged) {
+					updatePanel();
+				}
+			});
+
+			/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+			/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+			// Función a la que llamamos cada vez que queramos actulizar los datos del panel izquierdo
+			function updatePanel() {
+				$("#yes").text("A favor: " + contYes);
+			    $("#no").text("En contra: " + contNo);
+			    $("#abstention").text("Abstenciones: " + contAbstention);
+			    $("#default").text("No han votado: " + contDefault);
+
+		        var data = google.visualization.arrayToDataTable([
+					['Vote', 'Amount'],
+					['A favor', contYes],
+					['En contra', contNo],
+					['Abstencion', contAbstention],
+					['No han votado', contDefault]
+				]);
+
+				// Optional; add a title and set the width and height of the chart
+				var options = {
+
+					'title': '', 
+					'width': 250, 
+					'height': 250, 
+					"pieHole": 0.6,
+					"backgroundColor": "transparent",
+					"legend": {
+						position: 'none', 
+						textStyle: {
+							color: 'blue', 
+							fontSize: 16
+						},
+						alignment: "start",
+					},
+				  	slices: {
+				  		0: {
+					  		offset: 0.0,
+					  		color: "green",
+					  	},
+					  	1: {
+					  		color: "red",
+					  	},
+					  	2: {
+					  		color: "orange",
+					  	},
+					  	3: {
+					  		color: "rgb(204,204,204)",
+					  	},
+					}
+				};
+
+				chart.draw(data, options);	        
+			}
+
+			/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+			// Cuando pulsamos sobre el botón para reiniciar todos los votos
+			$("#refresh").on("click", function() {
+
+				if(contDefault < buttons.length) {
+					var answer = confirm("¿Está seguro de que quiere reiniciar los votos?");
+
+					if(answer) {
+						for (var i=0; i < buttons.length; i++) {
+			    			buttons[i][1] = "0";
+			    			$(buttons[i][0]).removeClass("yes");
+			    			$(buttons[i][0]).removeClass("no");
+			    			$(buttons[i][0]).removeClass("abstention");
+						}
+						contYes = 0;
+						contNo = 0;
+						contAbstention = 0;
+						contDefault = buttons.length;
+						updatePanel();
+					} else {
+
+					}
+				}				
+			});
+
+			// Cuando pulsamos sobre el botón de minimizar/maximizar el panel izquierdo
+			$("#minimize").on("click", function() {
+				$("#draggable").toggleClass("min");
+				$(".panel").toggleClass("min-panel");
+				$(".panel-header-dragg").toggleClass("min-panel-header-dragg");
+				$("#minimize .fas").toggleClass('fa-window-minimize fa-window-maximize')
+			});
+
+			updatePanel();
+		});
+	</script>
+</head>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<body>
+	<!-- Contenedor general -->
+	<div class="main-container">
+		
+		<!-- Panel para el análisis de datos de la izquierda -->
+		<div id="draggable" class="panel ui-widget-content">
+			
+			<!-- Cabecera del panel de información -->
+			<div class="panel-header">
+				
+				<!-- Área arrastrable -->
+				<div class="panel-header-dragg"></div>
+				
+				<!-- Contenedor de los botones alineados a la derecha -->
+				<div class="header-buttons-container center">
+
+					<!-- Minimizar/maximizar -->
+					<div id="minimize" class="header-icon center">
+						<div class="fas fa-window-minimize"></div>
+					</div>
+
+					<!-- Reiniciar los votos -->
+					<div id="refresh" class="header-icon center">
+						<div class="fas fa-redo"></div>
+					</div>					
+				</div>				
+			</div>
+			
+			<!-- Gráfico en quesito -->
+			<div id="piechart"></div>
+
+			<hr>
+			
+			<!-- Contenedor del interruptor para el modo aleatorio -->
+			<div class="switch-container">
+				<p>Modo aleatorio</p>
+				<label class="switch">
+				 	<input type="checkbox" id="check">
+				  	<span class="slider round"></span>
+				</label>
+			</div>
+
+			<hr>
+			
+			<!-- Contenedor para el voto a favor -->
+			<div class="vote-container">
+				<!-- Título -->
+				<p id="yes">A favor: </p>
+				<!-- Botón para añadir un nuevo voto a favor -->
+				<button class="voting-button fa fa-thumbs-up" id="button_yes"></button>
+				<!-- Botón para tornar todos los votos a a favor -->
+				<button class="voting-button fa fa-arrows-alt" id="button_yes_all"></button>
+			</div>
+			
+			<!-- Contenedor para el voto en contra -->
+			<div class="vote-container">
+				<!-- Título -->
+				<p id="no">En contra: </p>
+				<!-- Botón para añadir un nuevo voto en contra -->
+				<button class="voting-button fa fa-thumbs-down" id="button_no"></button>
+				<!-- Botón para tornar todos los votos a en contra -->
+				<button class="voting-button fa fa-arrows-alt" id="button_no_all"></button>
+			</div>
+			
+			<!-- Contenedor para las abstenciones -->
+			<div class="vote-container">
+				<!-- Título -->
+				<p id="abstention">Abstenciones: </p>
+				<!-- Botón para añadir un nuevo voto de abstención -->
+				<button class="voting-button fa fa-plus" id="button_abstention"></button>
+				<!-- Botón para tornar todos los votos a abstención -->
+				<button class="voting-button fa fa-arrows-alt" id="button_abstention_all"></button>
+			</div>
+			
+			<!-- Contenedor para quienes aún no han votado -->
+			<div class="vote-container">
+				<!-- Título -->
+				<p id="default">No han votado: </p>
+			</div>
+		</div>
+
+		<!-- Envoltorio -->
+		<div id="wrapper">
+
+			<!-- Contenedor de el panel de información superior -->
+			<div class="info-container center">
+				<p id="info"></p>
+			</div>
+			
+			<!-- En este div se crearán los botones para cada diputado, simulando la forma del parlamento -->
+			<div id="topparentdiv"></div>
+		</div>
+	</div>
+</body>
+</html>
